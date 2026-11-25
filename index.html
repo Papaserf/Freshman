@@ -4227,9 +4227,9 @@ async function m7End(){
   const rows=[['TESS',L.tess1],['PRIYA',L.priya8],['THE LAST GAME',L.reg],['BOX SCORE',L.box8],['LOU',L.lou8],['THE BANQUET',L.seat],['THE LETTER',L.letter]].filter(r=>r[1]);
   card.innerHTML=`<h2 style="margin-top:0">SEASON ONE · YOUR CHOICES</h2><div class="rows">${rows.map(r=>`<div class="row"><b>${r[0]}</b><span>You ${r[1]}.</span></div>`).join('')}
     <div class="row"><b>AWARD</b><span>${S.f.award||'Most Improved'}</span></div><div class="row"><b>YOUR HEART</b><span>${romance}</span></div><div class="row"><b>NEXT SEASON'S COACH</b><span>Mr. Hollis. Bring a coat.</span></div></div>
-    <h2>SEASON TWO</h2><p>In development. Everything you chose is saved on this device.</p><button class="go">Back to title</button>`;card.classList.add('on');card.scrollTop=0;sfx('thud');
-  await waitable(done=>{const b=card.querySelector('.go');b.addEventListener('pointerdown',e=>{e.stopPropagation();done();});let armed=false;setTimeout(()=>armed=true,1500);const off=onIn((x,t)=>{if(x==='A'&&t==='down'&&armed)done();});return()=>off();});
-  card.classList.remove('on');return{goto:0};
+    <h2>SEASON TWO: SOPHOMORE</h2><p>Your season is saved on this device. Sophomore year picks up everything you chose.</p><button class="go" data-g="100">${glyphA()}Start Season Two: Sophomore</button><button class="go" data-g="0" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Back to title</button>`;card.classList.add('on');card.scrollTop=0;sfx('thud');
+  const bs=[...card.querySelectorAll('.go')];const g=await waitable(done=>{let armed=false;setTimeout(()=>armed=true,1500);bs.forEach(b=>b.addEventListener('pointerdown',e=>{e.stopPropagation();done(+b.dataset.g);}));const off=onIn((x,t)=>{if(t!=='down'||!armed)return;if(x==='A')done(100);else if(x==='X')done(0);});return()=>off();});
+  card.classList.remove('on');return{goto:g};
 }
 
 function MAL(){return EX.malik;}
@@ -4413,9 +4413,9 @@ async function nEnd(){
   hideAll();setAmb({rain:0,hum:0});for(const c of chars)unsuit(c);save('ep9');const card=$('#card');
   card.innerHTML=`<h1 style="font-size:clamp(54px,11vw,120px)">SOPHOMORE</h1><h2>SEASON TWO · EPISODE 1 · SUMMER RERUNS</h2>`;card.classList.add('on');sfx('thud');await waitSkip(3000);
   const L=S.log;const rows=[['THE FRESHMAN',L.malik],['PURDUE',L.purdue],['CAPTAIN',L.captain],['THE SUMMER',L.summer2],['YOUR HEART',L.heart2],['SCRIMMAGE',L.box9],['THE TRANSFER',L.stroud2]].filter(r=>r[1]);
-  card.innerHTML=`<h2 style="margin-top:0">YOUR CHOICES</h2><p>Episode 2 picks up every one of these.</p><div class="rows">${rows.map(r=>`<div class="row"><b>${r[0]}</b><span>${/^\d/.test(r[1])?r[1]:'You '+r[1]+'.'}</span></div>`).join('')}</div><h2>NEXT: SEASON TWO · EPISODE 2</h2><p>In development. Your season is saved on this device.</p><button class="go">Back to title</button>`;card.scrollTop=0;
-  await waitable(done=>{const b=card.querySelector('.go');b.addEventListener('pointerdown',e=>{e.stopPropagation();done();});let armed=false;setTimeout(()=>armed=true,1500);const off=onIn((x,t)=>{if(x==='A'&&t==='down'&&armed)done();});return()=>off();});
-  card.classList.remove('on');return{goto:0};
+  card.innerHTML=`<h2 style="margin-top:0">YOUR CHOICES</h2><p>Episode 2 picks up every one of these.</p><div class="rows">${rows.map(r=>`<div class="row"><b>${r[0]}</b><span>${/^\d/.test(r[1])?r[1]:'You '+r[1]+'.'}</span></div>`).join('')}</div><h2>NEXT: SEASON TWO · EPISODE 2</h2><p>Your season is saved on this device.</p><button class="go" data-g="110">${glyphA()}Continue to Episode 2</button><button class="go" data-g="0" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Back to title</button>`;card.scrollTop=0;
+  const bs=[...card.querySelectorAll('.go')];const g=await waitable(done=>{let armed=false;setTimeout(()=>armed=true,1500);bs.forEach(b=>b.addEventListener('pointerdown',e=>{e.stopPropagation();done(+b.dataset.g);}));const off=onIn((x,t)=>{if(t!=='down'||!armed)return;if(x==='A')done(110);else if(x==='X')done(0);});return()=>off();});
+  card.classList.remove('on');return{goto:g};
 }
 
 /* ================= SEASON TWO · EPISODE 2: ROAD GREYS ================= */
@@ -4566,9 +4566,9 @@ async function pEnd(){
   hideAll();setAmb({rain:0,hum:0});for(const c of chars)unsuit(c);save('ep10');const card=$('#card');
   card.innerHTML=`<h1 style="font-size:clamp(54px,11vw,120px)">SOPHOMORE</h1><h2>SEASON TWO · EPISODE 2 · ROAD GREYS</h2>`;card.classList.add('on');sfx('thud');await waitSkip(3000);
   const L=S.log;const rows=[['JALEN',L.stroud3],['THE SHOES',L.shoes],['THE NIGHT BEFORE',L.heart3],['THE BUS',L.bus3],['HALFTIME',L.half3],['LAST SHOT',L.last3],['BOX SCORE',L.box10],['THE HALLWAY',L.tunnel]].filter(r=>r[1]);
-  card.innerHTML=`<h2 style="margin-top:0">YOUR CHOICES</h2><p>${S.f.west==='W'?'Halston wins at Westbury.':'Westbury holds on.'}</p><div class="rows">${rows.map(r=>`<div class="row"><b>${r[0]}</b><span>You ${r[1]}.</span></div>`).join('')}</div><h2>NEXT: SEASON TWO · EPISODE 3</h2><p>In development. Your season is saved on this device.</p><button class="go">Back to title</button>`;card.scrollTop=0;
-  await waitable(done=>{const b=card.querySelector('.go');b.addEventListener('pointerdown',e=>{e.stopPropagation();done();});let armed=false;setTimeout(()=>armed=true,1500);const off=onIn((x,t)=>{if(x==='A'&&t==='down'&&armed)done();});return()=>off();});
-  card.classList.remove('on');return{goto:0};
+  card.innerHTML=`<h2 style="margin-top:0">YOUR CHOICES</h2><p>${S.f.west==='W'?'Halston wins at Westbury.':'Westbury holds on.'}</p><div class="rows">${rows.map(r=>`<div class="row"><b>${r[0]}</b><span>You ${r[1]}.</span></div>`).join('')}</div><h2>NEXT: SEASON TWO · EPISODE 3</h2><p>Your season is saved on this device.</p><button class="go" data-g="120">${glyphA()}Continue to Episode 3</button><button class="go" data-g="0" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Back to title</button>`;card.scrollTop=0;
+  const bs=[...card.querySelectorAll('.go')];const g=await waitable(done=>{let armed=false;setTimeout(()=>armed=true,1500);bs.forEach(b=>b.addEventListener('pointerdown',e=>{e.stopPropagation();done(+b.dataset.g);}));const off=onIn((x,t)=>{if(t!=='down'||!armed)return;if(x==='A')done(120);else if(x==='X')done(0);});return()=>off();});
+  card.classList.remove('on');return{goto:g};
 }
 
 /* ================= THEO'S GAME: ratings + moves taught by mentors ================= */
@@ -4910,9 +4910,9 @@ async function rEnd(){
   card.innerHTML=`<h1 style="font-size:clamp(54px,11vw,120px)">SOPHOMORE</h1><h2>SEASON TWO · EPISODE 3 · STANDINGS</h2>`;card.classList.add('on');sfx('thud');await waitSkip(3000);
   const L=S.log;const rows=[['DAD',L.job],['DECEMBER',L.dec],['YOUR ROLE',L.role],['WINTER FORMAL',L.route],['LOU',L.lou3],['JALEN',L.stroud4],['MALIK',L.malik3],['CHRISTMAS EVE',L.xmas]].filter(r=>r[1]);
   card.innerHTML=`<h2 style="margin-top:0">YOUR CHOICES</h2><div class="rows">${rows.map(r=>`<div class="row"><b>${r[0]}</b><span>You ${r[1]}.</span></div>`).join('')}</div><h2>WHERE YOU STAND</h2>${seasonHTML()}
-    <h2>NEXT: SEASON TWO · EPISODE 4 · THE FORK</h2><p>January 5th. Rick Vance wants an answer. Some doors close after this one.</p><button class="go">Back to title</button>`;card.scrollTop=0;
-  await waitable(done=>{const b=card.querySelector('.go');b.addEventListener('pointerdown',e=>{e.stopPropagation();done();});let armed=false;setTimeout(()=>armed=true,1500);const off=onIn((x,t)=>{if(x==='A'&&t==='down'&&armed)done();});return()=>off();});
-  card.classList.remove('on');return{goto:0};
+    <h2>NEXT: SEASON TWO · EPISODE 4 · THE FORK</h2><p>January 5th. Rick Vance wants an answer. Some doors close after this one.</p><button class="go" data-g="130">${glyphA()}Continue to Episode 4</button><button class="go" data-g="0" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Back to title</button>`;card.scrollTop=0;
+  const bs=[...card.querySelectorAll('.go')];const g=await waitable(done=>{let armed=false;setTimeout(()=>armed=true,1500);bs.forEach(b=>b.addEventListener('pointerdown',e=>{e.stopPropagation();done(+b.dataset.g);}));const off=onIn((x,t)=>{if(t!=='down'||!armed)return;if(x==='A')done(130);else if(x==='X')done(0);});return()=>off();});
+  card.classList.remove('on');return{goto:g};
 }
 
 /* ================= SEASON TWO · EPISODE 4: THE FORK ================= */
@@ -5103,9 +5103,9 @@ async function tEnd(){
   card.innerHTML=`<h1 style="font-size:clamp(54px,11vw,120px)">SOPHOMORE</h1><h2>SEASON TWO · EPISODE 4 · THE FORK</h2><p style="letter-spacing:.3em">YOUR PATH: ${PATHNAME[S.f.path]}${S.f.mole?' (UNDERCOVER)':''}</p>`;card.classList.add('on');sfx('thud');await waitSkip(3400);
   const L=S.log;const rows=[['DAD’S FIRST DAY',L.drive],['JALEN',L.stroud5],['NICO',L.nico5],['LOU',L.lou5],['MALIK',L.malik5],['THE FORK',L.fork],[S.f.path==='program'?'THE ENVELOPE':'THE FALLOUT',L.env],['NORTH VIGO',L.vigo],[S.f.path==='program'?'THE GLOVEBOX':'WHITFIELD',L.end4]].filter(r=>r[1]);
   card.innerHTML=`<h2 style="margin-top:0">YOUR CHOICES</h2><div class="rows">${rows.map(r=>`<div class="row"><b>${r[0]}</b><span>You ${r[1]}.</span></div>`).join('')}</div><h2>WHERE YOU STAND</h2>${seasonHTML()}
-    <h2>NEXT: EPISODE 5 · ${PATHNAME[S.f.path]}</h2><p>${S.f.path==='program'?'You\'re inside now. So is your father. So is Malik.':'You\'re on the outside. Vance has ninety days, and he\'s using all of them.'}</p><button class="go">Back to title</button>`;card.scrollTop=0;
-  await waitable(done=>{const b=card.querySelector('.go');b.addEventListener('pointerdown',e=>{e.stopPropagation();done();});let armed=false;setTimeout(()=>armed=true,1500);const off=onIn((x,t)=>{if(x==='A'&&t==='down'&&armed)done();});return()=>off();});
-  card.classList.remove('on');return{goto:0};
+    <h2>NEXT: EPISODE 5 · ${PATHNAME[S.f.path]}</h2><p>${S.f.path==='program'?'You\'re inside now. So is your father. So is Malik.':'You\'re on the outside. Vance has ninety days, and he\'s using all of them.'}</p><button class="go" data-g="140">${glyphA()}Continue to Episode 5</button><button class="go" data-g="0" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Back to title</button>`;card.scrollTop=0;
+  const bs=[...card.querySelectorAll('.go')];const g=await waitable(done=>{let armed=false;setTimeout(()=>armed=true,1500);bs.forEach(b=>b.addEventListener('pointerdown',e=>{e.stopPropagation();done(+b.dataset.g);}));const off=onIn((x,t)=>{if(t!=='down'||!armed)return;if(x==='A')done(140);else if(x==='X')done(0);});return()=>off();});
+  card.classList.remove('on');return{goto:g};
 }
 
 /* ================= SEASON TWO · EPISODE 5: (THE PROGRAM | THE OUTSIDE) ================= */
@@ -5293,9 +5293,9 @@ async function wEnd(){
   card.innerHTML=`<h1 style="font-size:clamp(54px,11vw,120px)">SOPHOMORE</h1><h2>SEASON TWO · EPISODE 5 · ${PROG()?'THE PROGRAM':'THE OUTSIDE'}</h2>`;card.classList.add('on');sfx('thud');await waitSkip(3000);
   const L=S.log;const rows=[[PROG()?'COACH DRE':'DANTE',PROG()?L.dre:L.dante],['HOME',L.home5],['YOUR HEART',L.heart5],['THE GAME',L.game5],['THE TEAM',L.team5],[PROG()?'AFTER HOURS':'9:14 PM',L.end5]].filter(r=>r[1]);
   card.innerHTML=`<h2 style="margin-top:0">YOUR CHOICES</h2><div class="rows">${rows.map(r=>`<div class="row"><b>${r[0]}</b><span>You ${r[1]}.</span></div>`).join('')}</div><h2>WHERE YOU STAND</h2>${seasonHTML()}
-    <h2>NEXT: EPISODE 6</h2><p>In development. Your season is saved on this device.</p><button class="go">Back to title</button>`;card.scrollTop=0;
-  await waitable(done=>{const b=card.querySelector('.go');b.addEventListener('pointerdown',e=>{e.stopPropagation();done();});let armed=false;setTimeout(()=>armed=true,1500);const off=onIn((x,t)=>{if(x==='A'&&t==='down'&&armed)done();});return()=>off();});
-  card.classList.remove('on');return{goto:0};
+    <h2>NEXT: EPISODE 6</h2><p>Your season is saved on this device.</p><button class="go" data-g="150">${glyphA()}Continue to Episode 6</button><button class="go" data-g="0" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Back to title</button>`;card.scrollTop=0;
+  const bs=[...card.querySelectorAll('.go')];const g=await waitable(done=>{let armed=false;setTimeout(()=>armed=true,1500);bs.forEach(b=>b.addEventListener('pointerdown',e=>{e.stopPropagation();done(+b.dataset.g);}));const off=onIn((x,t)=>{if(t!=='down'||!armed)return;if(x==='A')done(150);else if(x==='X')done(0);});return()=>off();});
+  card.classList.remove('on');return{goto:g};
 }
 
 /* ================= SEASON TWO · EPISODE 6: REMATCH ================= */
@@ -5445,9 +5445,9 @@ async function yEnd(){
   card.innerHTML=`<h1 style="font-size:clamp(54px,11vw,120px)">SOPHOMORE</h1><h2>SEASON TWO · EPISODE 6 · REMATCH</h2>`;card.classList.add('on');sfx('thud');await waitSkip(3000);
   const L=S.log;const rows=[['THE PLAN',L.plan],['DAD',L.dad6],['PRACTICE',L.drill],['BEFORE THE GAME',L.pre6],['WESTBURY',L.game6],['10:01 PM',L.end6]].filter(r=>r[1]);
   card.innerHTML=`<h2 style="margin-top:0">YOUR CHOICES</h2><div class="rows">${rows.map(r=>`<div class="row"><b>${r[0]}</b><span>You ${r[1]}.</span></div>`).join('')}</div><h2>WHERE YOU STAND</h2>${seasonHTML()}
-    <h2>NEXT: EPISODE 7 · SECTIONALS</h2><p>In development. Your season is saved on this device.</p><button class="go">Back to title</button>`;card.scrollTop=0;
-  await waitable(done=>{const b=card.querySelector('.go');b.addEventListener('pointerdown',e=>{e.stopPropagation();done();});let armed=false;setTimeout(()=>armed=true,1500);const off=onIn((x,t)=>{if(x==='A'&&t==='down'&&armed)done();});return()=>off();});
-  card.classList.remove('on');return{goto:0};
+    <h2>NEXT: EPISODE 7 · SECTIONALS</h2><p>Your season is saved on this device.</p><button class="go" data-g="160">${glyphA()}Continue to Episode 7</button><button class="go" data-g="0" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Back to title</button>`;card.scrollTop=0;
+  const bs=[...card.querySelectorAll('.go')];const g=await waitable(done=>{let armed=false;setTimeout(()=>armed=true,1500);bs.forEach(b=>b.addEventListener('pointerdown',e=>{e.stopPropagation();done(+b.dataset.g);}));const off=onIn((x,t)=>{if(t!=='down'||!armed)return;if(x==='A')done(160);else if(x==='X')done(0);});return()=>off();});
+  card.classList.remove('on');return{goto:g};
 }
 
 /* ================= IHSAA hearing room (Indianapolis) ================= */
@@ -5595,9 +5595,9 @@ async function zEnd(){
   card.innerHTML=`<h1 style="font-size:clamp(54px,11vw,120px)">SOPHOMORE</h1><h2>SEASON TWO · EPISODE 7 · SECTIONALS</h2>`;card.classList.add('on');sfx('thud');await waitSkip(3000);
   const L=S.log;const rows=[['THE HEARING',L.hear],['THE RULING',L.verdict],['SEMIFINAL',L.semi],['SECTIONAL FINAL',L.final2],['THE HALLWAY',L.end7]].filter(r=>r[1]);
   card.innerHTML=`<h2 style="margin-top:0">YOUR CHOICES</h2><div class="rows">${rows.map(r=>`<div class="row"><b>${r[0]}</b><span>You ${r[1]}.</span></div>`).join('')}</div><h2>WHERE YOU STAND</h2>${seasonHTML()}
-    <h2>NEXT: EPISODE 8 · SEASON FINALE</h2><p>In development. Your season is saved on this device.</p><button class="go">Back to title</button>`;card.scrollTop=0;
-  await waitable(done=>{const b=card.querySelector('.go');b.addEventListener('pointerdown',e=>{e.stopPropagation();done();});let armed=false;setTimeout(()=>armed=true,1500);const off=onIn((x,t)=>{if(x==='A'&&t==='down'&&armed)done();});return()=>off();});
-  card.classList.remove('on');return{goto:0};
+    <h2>NEXT: EPISODE 8 · SEASON FINALE</h2><p>Your season is saved on this device.</p><button class="go" data-g="170">${glyphA()}Continue to the finale</button><button class="go" data-g="0" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Back to title</button>`;card.scrollTop=0;
+  const bs=[...card.querySelectorAll('.go')];const g=await waitable(done=>{let armed=false;setTimeout(()=>armed=true,1500);bs.forEach(b=>b.addEventListener('pointerdown',e=>{e.stopPropagation();done(+b.dataset.g);}));const off=onIn((x,t)=>{if(t!=='down'||!armed)return;if(x==='A')done(170);else if(x==='X')done(0);});return()=>off();});
+  card.classList.remove('on');return{goto:g};
 }
 
 /* ================= SEASON TWO · EPISODE 8: THE LONG HALLWAY (finale, Kubrick) ================= */
