@@ -580,6 +580,7 @@ const LOC={};let curLoc=null;
 const hemi=new THREE.HemisphereLight(0xffffff,0x444444,.6),key=new THREE.DirectionalLight(0xffffff,.8),rim=new THREE.DirectionalLight(0xffffff,.5);
 key.position.set(3,10,6);rim.position.set(-6,6,-8);scene.add(hemi,key,rim);
 let HOOP=V(-12.6,3.05,0);
+function fig(x,cx,hy,r){x.beginPath();x.arc(cx,hy,r,0,7);x.fill();x.fillRect(cx-r*.42,hy+r*.5,r*.84,r*1.1);const sw=r*1.75,top=hy+r*1.35,h=r*5.2;x.beginPath();x.moveTo(cx-sw*.92,top+h);x.lineTo(cx-sw,top+r*.8);x.quadraticCurveTo(cx-sw,top,cx-sw+r*.9,top);x.lineTo(cx+sw-r*.9,top);x.quadraticCurveTo(cx+sw,top,cx+sw,top+r*.8);x.lineTo(cx+sw*.92,top+h);x.closePath();x.fill();}
 function txt(x,s,px,y,font,col,align='center',stroke){x.font=px+'px '+font;x.textAlign=align;x.textBaseline='middle';if(stroke){x.strokeStyle=stroke;x.lineWidth=px/10;x.strokeText(s,...y);}x.fillStyle=col;x.fillText(s,...y);}
 function buildGym(){
   const g=new THREE.Group();scene.add(g);
@@ -659,7 +660,7 @@ function buildHall(){
   box(.35,.9,2.2,toon(0x5a3a22),tc,V(0,.45,0));
   const glass=new THREE.Mesh(new THREE.BoxGeometry(.33,1.1,2.1),new THREE.MeshBasicMaterial({color:0xaee0ff,transparent:true,opacity:.12,depthWrite:false}));glass.position.y=1.45;tc.add(glass);glass.add(new THREE.LineSegments(new THREE.EdgesGeometry(glass.geometry),edgeMat));
   const ph=ctex(512,320,(x,w,h)=>{x.fillStyle='#d9cfb4';x.fillRect(0,0,w,h);x.fillStyle='#7a6e58';x.fillRect(18,18,w-36,h-90);
-    for(let i=0;i<9;i++){const px=50+i*50,sz=i===8?.8:1;x.fillStyle=i===8?'#1e1a16':'#3a2e24';x.beginPath();x.arc(px,110,13*sz,0,7);x.fill();x.fillRect(px-17*sz,124,34*sz,80);if(i<8){x.fillStyle='#e8dcc0';x.fillRect(px-12,135,24,30);}}
+    for(let i=0;i<9;i++){const px=50+i*50,sz=i===8?.8:1;x.fillStyle=i===8?'#1e1a16':'#3a2e24';fig(x,px,110,13*sz);if(i<8){x.fillStyle='#e8dcc0';x.fillRect(px-12,135,24,30);}}
     x.fillStyle='#fff';x.fillRect(440,135,18,6);
     txt(x,'1997 STATE CHAMPIONS',40,[w/2,h-40],'Anton','#2a2018');
     const gr=x.createLinearGradient(0,0,w,h);gr.addColorStop(0,'rgba(255,230,160,.25)');gr.addColorStop(1,'rgba(80,50,10,.3)');x.fillStyle=gr;x.fillRect(0,0,w,h);});
@@ -834,7 +835,7 @@ function buildOffice(){
   const win=new THREE.Mesh(new THREE.PlaneGeometry(3.2,1.5),basic(0xffffff,view));win.position.set(0,1.8,-2.38);g.add(win);
   box(1.8,.08,.9,toon(0x6a4a2a),g,V(0,.78,-.6));box(1.7,.72,.8,toon(0x5a3e22),g,V(0,.38,-.6));
   box(.5,1.4,.5,toon(0x55606a),g,V(-2.5,.7,-1.9));box(.55,.5,.5,toon(0x2a2a2e),g,V(0,.25,-1.65));box(.55,.6,.08,toon(0x2a2a2e),g,V(0,.8,-1.92));
-  const ph=ctex(256,160,(x,w,h)=>{x.fillStyle='#d9cfb4';x.fillRect(0,0,w,h);x.fillStyle='#3a2e24';for(let i=0;i<8;i++){x.beginPath();x.arc(20+i*30,60,9,0,7);x.fill();x.fillRect(10+i*30,70,20,45);}txt(x,'1997',28,[w/2,140],'Anton','#2a2018');});
+  const ph=ctex(256,160,(x,w,h)=>{x.fillStyle='#d9cfb4';x.fillRect(0,0,w,h);x.fillStyle='#3a2e24';for(let i=0;i<8;i++){fig(x,20+i*30,60,9);}txt(x,'1997',28,[w/2,140],'Anton','#2a2018');});
   const pm=new THREE.Mesh(new THREE.PlaneGeometry(.8,.5),toon(0xffffff,ph));pm.position.set(-2.88,1.9,0);pm.rotation.y=PI/2;g.add(pm);
   mesh(new THREE.CylinderGeometry(.045,.04,.1,12),toon(0xf2ead6),g,V(.5,.88,-.5),.005);
   for(const x of[-.8,0,.8]){const cm=toon(0x3a3a40);box(.44,.05,.44,cm,g,V(x,.45,.55));box(.44,.46,.05,cm,g,V(x,.71,.77));for(const a of[-.19,.19])for(const b of[-.19,.19])box(.04,.43,.04,cm,g,V(x+a,.215,.55+b),false);}
@@ -943,7 +944,7 @@ function decorate(){
   const cyl=(r1,r2,h,col,par,pos,ink=.006,seg=14)=>mesh(new THREE.CylinderGeometry(r1,r2,h,seg),toon(col),par,pos,ink);
   const ball=(par,pos,r=.12)=>mesh(new THREE.SphereGeometry(r,12,10),toon(0xd86a24),par,pos,.006);
   const photo=(title,n=6,tone='#7a6e58',bg='#d9cfb4')=>ctex(256,180,(x,w,h)=>{x.fillStyle=bg;x.fillRect(0,0,w,h);x.fillStyle=tone;x.fillRect(10,10,w-20,h-46);
-    for(let i=0;i<n;i++){const px=26+i*(w-52)/Math.max(1,n-1);x.fillStyle='#2a2018';x.beginPath();x.arc(px,58,10,0,7);x.fill();x.fillRect(px-12,70,24,56);}
+    for(let i=0;i<n;i++){const px=n===1?w/2:26+i*(w-52)/Math.max(1,n-1);x.fillStyle='#2a2018';fig(x,px,58,10);}
     txt(x,title,22,[w/2,h-18],'Anton','#2a2018');const gr=x.createLinearGradient(0,0,w,h);gr.addColorStop(0,'rgba(255,230,160,.22)');gr.addColorStop(1,'rgba(60,40,10,.3)');x.fillStyle=gr;x.fillRect(0,0,w,h);});
   const poster=(lines,bg,fg,acc)=>ctex(256,340,(x,w,h)=>{x.fillStyle=bg;x.fillRect(0,0,w,h);x.fillStyle=acc;x.fillRect(0,0,w,14);x.fillRect(0,h-14,w,14);
     lines.forEach((l,i)=>txt(x,l[0],l[1],[w/2,l[2]||60+i*62],l[3]||'Anton',l[4]||fg));});
@@ -1137,7 +1138,7 @@ function buildBedroom(){
   P(.7,.92,post([['HALSTON',44],['HEIGHTS',44],['HOOPS',64,200],['2025–26',30,270,'Barlow Condensed']],'#6e1f2a','#e8c35a','#e8c35a'),V(-2.19,1.75,-.9),PI/2,.03);
   P(.7,.92,post([['WORK',60],['IN',60],['SILENCE',52],['let success',28,240,'Barlow Condensed'],['make the noise',28,276,'Barlow Condensed']],'#111','#f2f2f2','#d86a24'),V(-2.19,1.8,.4),PI/2,-.04);
   P(.8,1.05,post([['BOILER',52],['UP',72],['(someday)',30,230,'Barlow Condensed']],'#111','#cfb991','#cfb991'),V(.2,1.65,-1.99),0,.02);
-  const clip=ctex(256,320,(x,w,h)=>{x.fillStyle='#e8dcc0';x.fillRect(0,0,w,h);txt(x,'THE HALSTON HERALD',22,[w/2,24],'Georgia','#222');x.fillStyle='#222';x.fillRect(10,36,w-20,3);txt(x,'REYES DROPS 61',36,[w/2,72],'Anton','#111');txt(x,'Sectional, March 1995',18,[w/2,104],'Georgia','#333');x.fillStyle='#8a7e68';x.fillRect(24,120,w-48,120);x.fillStyle='#2a2018';x.beginPath();x.arc(w/2,160,18,0,7);x.fill();x.fillRect(w/2-22,178,44,60);for(let i=0;i<6;i++){x.fillStyle='#999';x.fillRect(20,252+i*10,w-40,4);}});
+  const clip=ctex(256,320,(x,w,h)=>{x.fillStyle='#e8dcc0';x.fillRect(0,0,w,h);txt(x,'THE HALSTON HERALD',22,[w/2,24],'Georgia','#222');x.fillStyle='#222';x.fillRect(10,36,w-20,3);txt(x,'REYES DROPS 61',36,[w/2,72],'Anton','#111');txt(x,'Sectional, March 1995',18,[w/2,104],'Georgia','#333');x.fillStyle='#8a7e68';x.fillRect(24,120,w-48,120);x.fillStyle='#2a2018';fig(x,w/2,150,14);for(let i=0;i<6;i++){x.fillStyle='#999';x.fillRect(20,252+i*10,w-40,4);}});
   const fr=new THREE.Group();fr.position.set(1.5,1.7,-1.99);g.add(fr);box(.5,.62,.03,toon(0x1a1a1a),fr,V(0,0,0),false);const cm=new THREE.Mesh(new THREE.PlaneGeometry(.44,.56),toon(0xffffff,clip));cm.position.z=.02;fr.add(cm);
   // window with night sky + string lights
   const night=ctex(256,192,(x,w,h)=>{const gr=x.createLinearGradient(0,0,0,h);gr.addColorStop(0,'#0a1024');gr.addColorStop(1,'#23304e');x.fillStyle=gr;x.fillRect(0,0,w,h);for(let i=0;i<40;i++){x.fillStyle='rgba(255,255,255,.7)';x.fillRect(Math.random()*w,Math.random()*h*.6,1.5,1.5);}x.fillStyle='#111622';x.fillRect(0,h-50,w,50);x.fillStyle='#ffd88a';x.fillRect(40,h-38,10,10);x.fillRect(180,h-42,12,12);x.strokeStyle='#2a2e38';x.lineWidth=8;x.strokeRect(0,0,w,h);x.beginPath();x.moveTo(w/2,0);x.lineTo(w/2,h);x.stroke();});
