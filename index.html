@@ -262,7 +262,7 @@ function audioInit(){
     applyAmb();}catch(e){AC=null;}
 }
 function setAmb(a){amb=a;applyAmb();}
-let SKY='rain';const skyFor=i=>i<20?'rain':i<30?'clear':i<40?'snow':i<50?'clear':i<70?'snow':i<80?'clear':i<100?'clear':i<110?'clear':i<120?'snow':i<130?'snow':i<140?'snow':'clear';
+let SKY='rain';const skyFor=i=>i<20?'rain':i<30?'clear':i<40?'snow':i<50?'clear':i<70?'snow':i<80?'clear':i<100?'clear':i<110?'clear':i<120?'snow':i<130?'snow':i<140?'snow':i<150?'snow':'clear';
 function setSky(w){SKY=w;for(const k in LOC)LOC[k].sky&&LOC[k].sky(w);applyAmb();}
 function applyAmb(){if(!AC)return;const t=AC.currentTime;rainG.gain.setTargetAtTime(amb.rain*.2*(SKY==='rain'?1:0),t,.5);humG.gain.setTargetAtTime(amb.hum*.022,t,.5);}
 function tone(f,dur,type='sine',vol=.2,slide=0,delay=0){if(!AC)return;const t=AC.currentTime+delay;const o=AC.createOscillator();o.type=type;o.frequency.setValueAtTime(f,t);if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(20,f*slide),t+dur);const g=AC.createGain();g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g).connect(MG);o.start(t);o.stop(t+dur+.05);}
@@ -360,6 +360,7 @@ const CFG={
  x2:{name:'PARK',h:1.78,skin:0xe2b994,hair:0x111111,hs:'short',shirt:0x6e1f2a,shirtTxt:'HHHS',txtCol:'#e8c35a',shorts:0x1a1a1a,shoe:0x222222,shoeAcc:0xffffff,brow:4},
  x3:{name:'BRISCOE',h:1.84,skin:0xcc8254,hair:0x6a4a2a,hs:'messy',shirt:0x6e1f2a,shirtTxt:'HHHS',txtCol:'#e8c35a',shorts:0x1a1a1a,shoe:0xdddddd,shoeAcc:0x2463c9,brow:4,mouth:'smile'},
  malik:{name:'MALIK',h:1.83,skin:0x8a5a3c,hair:0x141010,hs:'fade',shirt:0x6e1f2a,shirtTxt:'HHHS',txtCol:'#e8c35a',shorts:0x1a1a1a,shoe:0xf2f2f2,shoeAcc:0xd03030,brow:3,mouth:'smirk'},
+dre:{name:'COACH DRE',h:1.93,skin:0x4a2c1c,hair:0x1a1410,hs:'fade',shirt:0x0b2a5b,shirtTxt:'SELECT',txtCol:'#3fa9f5',sleeve:true,sleeveCol:0x0b2a5b,shorts:0x2a2a30,long:true,shoe:0x111111,shoeAcc:0x3fa9f5,brow:4,mouth:'flat'},
 x4:{name:'DUFF',h:1.8,skin:0xe59b76,hair:0xc8a060,hs:'short',shirt:0x6e1f2a,shirtTxt:'HHHS',txtCol:'#e8c35a',shorts:0x1a1a1a,shoe:0xffffff,shoeAcc:0x111111,brow:3,freckles:true},
  o1:{name:'CEDAR #4',h:1.83,skin:0xa46239,hair:0x0d0a08,hs:'buzz',shirt:0x1d2b4f,shorts:0x1d2b4f,shoe:0xffffff,shoeAcc:0x1d2b4f,brow:5,mouth:'flat'},
  o2:{name:'CEDAR #10',h:1.88,skin:0xe6c0a0,hair:0x3a2a1a,hs:'fade',shirt:0x1d2b4f,shorts:0x1d2b4f,shoe:0x111111,shoeAcc:0xaaaaaa,brow:4,mouth:'flat'},
@@ -423,7 +424,7 @@ function makeChar(key){
 /* ================= GLB character bodies (ChatGPT cast generator) ================= */
 let GLB=null;const GLB_HAIR={};
 const MORPHMAP={theo:{slim:.35},nico:{slim:.7},kai:{slim:.15},dante:{broad:.55},reggie:{broad:1},lou:{heavy:1},coach:{adult:.9,heavy:.3},dad:{adult:.8,heavy:.15},priya:{curvy:.45,slim:.8},
-  x1:{broad:.6},x2:{slim:.3},x3:{},x4:{slim:.2},o1:{broad:.3},o2:{},o3:{broad:.9},o4:{slim:.5},o5:{broad:.4},vance:{adult:.4,slim:.2},stroud:{broad:.35,slim:.2},mom:{curvy:.5,adult:.5,slim:.45},hollis:{adult:.7,slim:.35},whit:{curvy:.35,adult:.6,slim:.45},tess:{curvy:.4,slim:.8}};
+  x1:{broad:.6},x2:{slim:.3},x3:{},x4:{slim:.2},o1:{broad:.3},o2:{},o3:{broad:.9},o4:{slim:.5},o5:{broad:.4},vance:{adult:.4,slim:.2},dre:{adult:.5,slim:.35},stroud:{broad:.35,slim:.2},mom:{curvy:.5,adult:.5,slim:.45},hollis:{adult:.7,slim:.35},whit:{curvy:.35,adult:.6,slim:.45},tess:{curvy:.4,slim:.8}};
 const HAIRMAP={short:'short',buzz:'buzz',fade:'fade',curly:'curly',locs:'locs',messy:'messy',long:'long',bald:'bald_ring'};
 async function loadModels(){
   if(!THREE.GLTFLoader)return false;
@@ -869,16 +870,16 @@ function buildDiner(){
 function gymDawn(){const L=LOC.gym;hemi.color.setHex(0x8ea7d6);hemi.groundColor.setHex(0x2a2430);hemi.intensity=.48;key.color.setHex(0xffb98a);key.intensity=.5;key.position.set(16,4,-6);rim.color.setHex(0x6f8fd4);rim.intensity=.55;scene.background=new THREE.Color(0x0e1220);scene.fog=new THREE.Fog(0x0e1220,14,44);setAmb({rain:0,hum:.5});}
 /* ================= game-night infrastructure ================= */
 const jerseyCache={};
-const TEAMS={Cedar:{base:'#1d2b4f',ink:'#e9e4d6',stroke:'#000',name:'CEDAR',sh:0x1d2b4f,wall:0x1d2b4f},Westbury:{base:'#0f4d3a',ink:'#e8c35a',stroke:'#000',name:'WESTBURY',sh:0x0f4d3a,wall:0x0f4d3a},Lakeport:{base:'#3b2a6b',ink:'#f2f2f2',stroke:'#000',name:'LAKEPORT',sh:0x3b2a6b,wall:0x3b2a6b},Hale:{base:'#1a1a1a',ink:'#f08a24',stroke:'#000',name:'HALE',sh:0x1a1a1a,wall:0x1a1a1a},Purdue:{base:'#111',ink:'#cfb991',stroke:'#000',name:'PURDUE',sh:0x111111,wall:0x8a7650},Select:{base:'#0b2a5b',ink:'#ffffff',stroke:'#000',name:'MW SELECT',sh:0x0b2a5b,wall:0x0b2a5b}};
-function jerseyTex(num,home){const TM=TEAMS[S.oppName]||TEAMS.Cedar;const k=num+(home?'h':'a'+TM.name);if(jerseyCache[k])return jerseyCache[k];
+const TEAMS={Cedar:{base:'#1d2b4f',ink:'#e9e4d6',stroke:'#000',name:'CEDAR',sh:0x1d2b4f,wall:0x1d2b4f},Westbury:{base:'#0f4d3a',ink:'#e8c35a',stroke:'#000',name:'WESTBURY',sh:0x0f4d3a,wall:0x0f4d3a},Lakeport:{base:'#3b2a6b',ink:'#f2f2f2',stroke:'#000',name:'LAKEPORT',sh:0x3b2a6b,wall:0x3b2a6b},Hale:{base:'#1a1a1a',ink:'#f08a24',stroke:'#000',name:'HALE',sh:0x1a1a1a,wall:0x1a1a1a},Purdue:{base:'#111',ink:'#cfb991',stroke:'#000',name:'PURDUE',sh:0x111111,wall:0x8a7650},Select:{base:'#0b2a5b',ink:'#ffffff',stroke:'#000',name:'MW SELECT',sh:0x0b2a5b,wall:0x0b2a5b},Elite:{base:'#2a2a2e',ink:'#e85a1a',stroke:'#000',name:'INDY ELITE',sh:0x2a2a2e,wall:0x2a2a2e}};
+function jerseyTex(num,home,tm){const TM=TEAMS[tm||S.oppName]||TEAMS.Cedar;const k=num+(home?'h':'a'+TM.name);if(jerseyCache[k])return jerseyCache[k];
   const t=ctex(512,256,(x,w,h)=>{const base=home?'#f2f0ea':TM.base,ink=home?'#6e1f2a':TM.ink;x.fillStyle=base;x.fillRect(0,0,w,h);
     x.fillStyle=home?'#6e1f2a':'#c9ced8';x.fillRect(0,0,w,10);x.fillRect(w/2-70,0,140,14);
     x.fillStyle=home?'rgba(0,0,0,.1)':'rgba(0,0,0,.25)';x.fillRect(0,0,90,h);x.fillRect(w-90,0,90,h);dots(x,300,0,130,h,'rgba(0,0,0,.18)',2.6,7);
     const T=(s,px,y,st)=>{x.save();x.translate(w/2,y);x.scale(GLB?1.12:1.55,GLB?.95:.72);x.font=px+'px Anton';x.textAlign='center';x.textBaseline='middle';if(st){x.strokeStyle=home?'#e8c35a':'#000';x.lineWidth=7;x.strokeText(s,0,0);}x.fillStyle=ink;x.fillText(s,0,0);x.restore();};
     T(home?'HALSTON':TM.name,40,62,0);T(String(num),120,150,1);});
   if(GLB)t.flipY=false;jerseyCache[k]=t;return t;}
-function suit(c,num,home=true){if(!c.orig)c.orig={map:c.chest.material.map,short:c.shortM.color.getHex(),up:c.upArms.map(m=>m.material)};
-  c.chest.material.map=jerseyTex(num,home);c.chest.material.needsUpdate=true;c.shortM.color.setHex(home?0xf2f0ea:(TEAMS[S.oppName]||TEAMS.Cedar).sh);c.upArms.forEach(m=>m.material=c.skinM);}
+function suit(c,num,home=true,tm){if(!c.orig)c.orig={map:c.chest.material.map,short:c.shortM.color.getHex(),up:c.upArms.map(m=>m.material)};
+  c.chest.material.map=jerseyTex(num,home,tm);c.chest.material.needsUpdate=true;c.shortM.color.setHex(home?0xf2f0ea:(TEAMS[tm||S.oppName]||TEAMS.Cedar).sh);c.upArms.forEach(m=>m.material=c.skinM);}
 function unsuit(c){if(!c.orig)return;c.chest.material.map=c.orig.map;c.chest.material.needsUpdate=true;c.shortM.color.setHex(c.orig.short);c.upArms.forEach((m,i)=>m.material=c.orig.up[i]);c.orig=null;}
 let crowdI=null,crowdG=null,boardTex=null,boardCtx=null,gameOn=false,crowdGain=null,clock='',crowdMeshes=[];
 function buildCrowd(){
@@ -1473,7 +1474,12 @@ async function teach(k){if(taught.has(k))return;taught.add(k);const el=$('#teach
   await wait(250);
 }
 async function qShot(o){await teach('shot');return qShot0(o);}
-async function qStop(b,o){await teach('stop');return qStop0(b,o);}
+function shuffleBeats(b){const nNone=b.filter(x=>x.dir==='none').length,n=b.length,out=[];const noneAt=new Set();
+  while(noneAt.size<Math.min(nNone,n-1))noneAt.add(1+((Math.random()*(n-1))|0));
+  for(let i=0;i<n;i++){let d;if(noneAt.has(i))d='none';else{do{const r=Math.random();d=r<.4?'left':r<.8?'right':'up';}while(i>=2&&out[i-1].dir===d&&out[i-2].dir===d);}
+    out.push({dir:d,t:(b[i].t||.8)*(.88+Math.random()*.24)});}
+  return out;}
+async function qStop(b,o={}){await teach('stop');return qStop0(o.fixed?b:shuffleBeats(b),o);}
 async function qPass(o){await teach('pass');return qPass0(o);}
 function qFT(i,n){return waitable(done=>{
   const per=60/(64+S.nerves*.9),tol=.17*[1,.78,.58][step()],hide=hidden();let t=0,fin=false,armed=0,beats=0,last=0;
@@ -1533,7 +1539,7 @@ async function build(){
   sweep=new THREE.PointLight(0xffa64a,0,14,1.4);LOC.lot.g.add(sweep);
   CARS.dante=makeCar(0x23262c,'sedan');CARS.kai=makeCar(0x0e0f12,'suv');CARS.dad=makeCar(0xc9c2ae,'truck','REYES ROOFING');
   for(const k in CARS){LOC.lot.g.add(CARS[k].g);}
-  for(const k of['x1','x2','x3','x4','o1','o2','o3','o4','o5','vance','stroud','tess','malik'])EX[k]=await makeChar(k);buildCrowd();
+  for(const k of['x1','x2','x3','x4','o1','o2','o3','o4','o5','vance','stroud','tess','malik','dre'])EX[k]=await makeChar(k);buildCrowd();
   hideAll();
 }
 const lean=(c,dir,amt=.35)=>{const r=V(Math.cos(c.g.rotation.y),0,-Math.sin(c.g.rotation.y));const p=c.g.position.clone().add(r.multiplyScalar(dir*amt));walkNow(c,p.x,p.z,{speed:4,face:c.yaw,back:true,after:c.pose});};
@@ -1627,7 +1633,7 @@ async function driveKick(o){ensureBox();hideAll();setScore(S.score[0],S.score[1]
 /* ================= SCENES ================= */
 const glyphA=()=>IN.last==='pad'?'<b style="background:#2f9e44;color:#fff;border-radius:50%;padding:0 8px;margin-right:8px">A</b>':IN.last==='kb'?'<b style="margin-right:8px">[Space]</b>':'';
 const glyphX=()=>IN.last==='pad'?'<b style="background:#2463c9;color:#fff;border-radius:50%;padding:0 8px;margin-right:8px">X</b>':IN.last==='kb'?'<b style="margin-right:8px">[2]</b>':'';
-const EPISODES=[[1,'ZERO','Open Gym',null],[10,'1','Cut List','ep0'],[20,'2','Splinters & Spotlights','ep1'],[30,'3','The Holiday Classic','ep2'],[40,'4','Ineligible','ep3'],[50,'5','Improper Benefits','ep4'],[70,'6','The Inquiry','ep5'],[80,'7','The Hearing','ep6'],[90,'8','The Last Practice','ep7'],[100,'SOPH · EP 1','Summer Reruns','ep8'],[110,'SOPH · EP 2','Road Greys','ep9'],[120,'SOPH · EP 3','Standings','ep10'],[130,'SOPH · EP 4','The Fork','ep11']];
+const EPISODES=[[1,'ZERO','Open Gym',null],[10,'1','Cut List','ep0'],[20,'2','Splinters & Spotlights','ep1'],[30,'3','The Holiday Classic','ep2'],[40,'4','Ineligible','ep3'],[50,'5','Improper Benefits','ep4'],[70,'6','The Inquiry','ep5'],[80,'7','The Hearing','ep6'],[90,'8','The Last Practice','ep7'],[100,'SOPH · EP 1','Summer Reruns','ep8'],[110,'SOPH · EP 2','Road Greys','ep9'],[120,'SOPH · EP 3','Standings','ep10'],[130,'SOPH · EP 4','The Fork','ep11'],[140,'SOPH · EP 5','Program / Outside','ep12']];
 function episodePick(){const card=$('#card');
   card.innerHTML=`<h1 style="font-size:clamp(46px,9vw,96px)">EPISODES</h1><h2>SEASON ONE · SOPHOMORE</h2><div class="hgrid">${EPISODES.map(([g,n,t,req],i)=>{const ok=!req||hasSave(req);return `<button class="hb ep${ok?'':' lk'}" data-i="${i}" ${ok?'':'disabled'}><b>${n.includes('·')?n:'EPISODE '+n}</b><em>${ok?t:'Locked'}</em>${hasSave(i===0?'ep0':'ep'+i)?'<i>✓ Played</i>':''}</button>`;}).join('')}</div><p style="opacity:.7">${IN.last==='touch'?'Tap an episode':'Arrows to move · '+glyphA()+'to play · B / [4] to go back'}</p>`;
   card.classList.add('on');card.scrollTop=0;
@@ -1645,7 +1651,7 @@ async function prevRecap(){const L=Object.values(S.log||{}).filter(x=>typeof x==
 async function sTitle(){
   hideAll();setLoc('gym');put(kai,-8,-1.5,-PI/2);hold(ball2,kai);
   shot(V(4,2.2,5),V(-6,2,-2),{fov:42});setAmb({rain:.3,hum:.6});
-  const card=$('#card');card.innerHTML=`<h1>FRESHMAN</h1><h2>EPISODE ZERO · OPEN GYM</h2><p>One rainy afternoon before tryouts. Every choice, every shot, and every silence will be remembered.</p><p style="opacity:.7">Controller, keyboard or touch. Sound on.</p>${hasSave('ep11')?`<button class="go" data-g="130">${glyphA()}Continue: SOPHOMORE · Episode 4 · The Fork</button><button class="go" data-g="120" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Sophomore Episode 3</button>`:hasSave('ep10')?`<button class="go" data-g="120">${glyphA()}Continue: SOPHOMORE · Episode 3 · Standings</button><button class="go" data-g="110" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Sophomore Episode 2</button>`:hasSave('ep9')?`<button class="go" data-g="110">${glyphA()}Continue: SOPHOMORE · Episode 2 · Road Greys</button><button class="go" data-g="100" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Sophomore Episode 1</button>`:hasSave('ep8')?`<button class="go" data-g="100">${glyphA()}Continue: SOPHOMORE · Episode 1 · Summer Reruns</button><button class="go" data-g="90" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay the Season 1 Finale</button>`:hasSave('ep7')?`<button class="go" data-g="90">${glyphA()}Continue: Episode 8 · The Last Practice (Finale)</button><button class="go" data-g="80" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 7</button>`:hasSave('ep6')?`<button class="go" data-g="80">${glyphA()}Continue: Episode 7 · The Hearing</button><button class="go" data-g="70" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 6</button>`:hasSave('ep5')?`<button class="go" data-g="70">${glyphA()}Continue: Episode 6 · The Inquiry</button><button class="go" data-g="50" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 5</button>`:hasSave('ep4')?`<button class="go" data-g="50">${glyphA()}Continue: Episode 5 · Improper Benefits</button><button class="go" data-g="40" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 4</button>`:hasSave('ep3')?`<button class="go" data-g="40">${glyphA()}Continue: Episode 4 · Ineligible</button><button class="go" data-g="30" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 3</button>`:hasSave('ep2')?`<button class="go" data-g="30">${glyphA()}Continue: Episode 3 · The Holiday Classic</button><button class="go" data-g="20" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 2</button>`:hasSave('ep1')?`<button class="go" data-g="20">${glyphA()}Continue: Episode 2 · Splinters & Spotlights</button><button class="go" data-g="10" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 1</button>`:hasSave()?`<button class="go" data-g="10">${glyphA()}Continue: Episode 1 · Cut List</button><button class="go" data-g="1" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Start over: Episode Zero</button>`:`<button class="go" data-g="1">${glyphA()}Begin: Episode Zero</button><button class="go" data-g="10" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Skip to Episode 1 (default choices)</button>`}<button class="go" data-g="60" style="background:#f2ead6;animation:none;margin-top:12px">${IN.last==='pad'?'<b style="background:#e0b400;color:#111;border-radius:50%;padding:0 8px;margin-right:8px">Y</b>':IN.last==='kb'?'<b style="margin-right:8px">[3]</b>':''}🐴 H-O-R-S-E</button><button class="go" data-g="-2" style="background:#f2ead6;animation:none;margin-top:12px">${IN.last==='pad'?'<b style="background:#c92a2a;color:#fff;border-radius:50%;padding:0 8px;margin-right:8px">B</b>':IN.last==='kb'?'<b style="margin-right:8px">[4]</b>':''}📺 Episodes</button>`;
+  const card=$('#card');card.innerHTML=`<h1>FRESHMAN</h1><h2>EPISODE ZERO · OPEN GYM</h2><p>One rainy afternoon before tryouts. Every choice, every shot, and every silence will be remembered.</p><p style="opacity:.7">Controller, keyboard or touch. Sound on.</p>${hasSave('ep12')?`<button class="go" data-g="140">${glyphA()}Continue: SOPHOMORE · Episode 5</button><button class="go" data-g="130" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Sophomore Episode 4</button>`:hasSave('ep11')?`<button class="go" data-g="130">${glyphA()}Continue: SOPHOMORE · Episode 4 · The Fork</button><button class="go" data-g="120" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Sophomore Episode 3</button>`:hasSave('ep10')?`<button class="go" data-g="120">${glyphA()}Continue: SOPHOMORE · Episode 3 · Standings</button><button class="go" data-g="110" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Sophomore Episode 2</button>`:hasSave('ep9')?`<button class="go" data-g="110">${glyphA()}Continue: SOPHOMORE · Episode 2 · Road Greys</button><button class="go" data-g="100" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Sophomore Episode 1</button>`:hasSave('ep8')?`<button class="go" data-g="100">${glyphA()}Continue: SOPHOMORE · Episode 1 · Summer Reruns</button><button class="go" data-g="90" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay the Season 1 Finale</button>`:hasSave('ep7')?`<button class="go" data-g="90">${glyphA()}Continue: Episode 8 · The Last Practice (Finale)</button><button class="go" data-g="80" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 7</button>`:hasSave('ep6')?`<button class="go" data-g="80">${glyphA()}Continue: Episode 7 · The Hearing</button><button class="go" data-g="70" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 6</button>`:hasSave('ep5')?`<button class="go" data-g="70">${glyphA()}Continue: Episode 6 · The Inquiry</button><button class="go" data-g="50" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 5</button>`:hasSave('ep4')?`<button class="go" data-g="50">${glyphA()}Continue: Episode 5 · Improper Benefits</button><button class="go" data-g="40" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 4</button>`:hasSave('ep3')?`<button class="go" data-g="40">${glyphA()}Continue: Episode 4 · Ineligible</button><button class="go" data-g="30" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 3</button>`:hasSave('ep2')?`<button class="go" data-g="30">${glyphA()}Continue: Episode 3 · The Holiday Classic</button><button class="go" data-g="20" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 2</button>`:hasSave('ep1')?`<button class="go" data-g="20">${glyphA()}Continue: Episode 2 · Splinters & Spotlights</button><button class="go" data-g="10" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 1</button>`:hasSave()?`<button class="go" data-g="10">${glyphA()}Continue: Episode 1 · Cut List</button><button class="go" data-g="1" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Start over: Episode Zero</button>`:`<button class="go" data-g="1">${glyphA()}Begin: Episode Zero</button><button class="go" data-g="10" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Skip to Episode 1 (default choices)</button>`}<button class="go" data-g="60" style="background:#f2ead6;animation:none;margin-top:12px">${IN.last==='pad'?'<b style="background:#e0b400;color:#111;border-radius:50%;padding:0 8px;margin-right:8px">Y</b>':IN.last==='kb'?'<b style="margin-right:8px">[3]</b>':''}🐴 H-O-R-S-E</button><button class="go" data-g="-2" style="background:#f2ead6;animation:none;margin-top:12px">${IN.last==='pad'?'<b style="background:#c92a2a;color:#fff;border-radius:50%;padding:0 8px;margin-right:8px">B</b>':IN.last==='kb'?'<b style="margin-right:8px">[4]</b>':''}📺 Episodes</button>`;
   card.classList.add('on');await fade(false,900);
   bg(async()=>{while(card.classList.contains('on')){await shootBall(ball2,kai,'make');await fly(ball2,handPos(kai),.7,.8);hold(ball2,kai);await wait(700);}});
   bg(async()=>{let a=0;while(card.classList.contains('on')){a+=.0035;shot(V(-2+Math.cos(a)*9,2.4,Math.sin(a)*6),V(-8,1.8,-1),{fov:42,cut:false,sp:.8});await wait(30);}});
@@ -1653,7 +1659,7 @@ async function sTitle(){
   const g=await waitable(done=>{const go=n=>{audioInit();done(n);};bs.forEach(b=>b.addEventListener('pointerdown',e=>{e.stopPropagation();if(e.pointerType==='touch')setLast('touch');go(+b.dataset.g);}));const off=onIn((x,t)=>{if(t!=='down')return;if(x==='A')go(+bs[0].dataset.g);else if(x==='X'&&bs.length>2)go(+bs[1].dataset.g);else if(x==='Y')go(60);else if(x==='B')go(-2);});return()=>off();});
   if(g===-2){const keep=card.innerHTML;const pick=await episodePick();if(pick<0){card.classList.remove('on');return{goto:0};}g=pick;}
   await fade(true,600);card.classList.remove('on');hideAll();
-  if(g===130){S=loadSave('ep11')||loadSave('ep10')||loadSave()||S0();}else if(g===120){S=loadSave('ep10')||loadSave('ep9')||loadSave()||S0();}else if(g===110){S=loadSave('ep9')||loadSave('ep8')||loadSave()||S0();}else if(g===100){S=loadSave('ep8')||loadSave('ep7')||loadSave()||S0();}else if(g===90){S=loadSave('ep7')||loadSave('ep6')||loadSave('ep5')||loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0();}else if(g===80){S=loadSave('ep6')||loadSave('ep5')||loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0();}else if(g===70){S=loadSave('ep5')||loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0();}else if(g===60){S=loadSave('ep5')||loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0();}else if(g===50){S=loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0();}else if(g===40){S=loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0();}else if(g===30){S=loadSave('ep2')||loadSave('ep1')||loadSave()||S0();}else if(g===20){S=loadSave('ep1')||loadSave()||S0();}else if(g===10){S=loadSave()||S0();}else S=S0();dbg();return{goto:g};
+  if(g===140){S=loadSave('ep12')||loadSave('ep11')||loadSave()||S0();}else if(g===130){S=loadSave('ep11')||loadSave('ep10')||loadSave()||S0();}else if(g===120){S=loadSave('ep10')||loadSave('ep9')||loadSave()||S0();}else if(g===110){S=loadSave('ep9')||loadSave('ep8')||loadSave()||S0();}else if(g===100){S=loadSave('ep8')||loadSave('ep7')||loadSave()||S0();}else if(g===90){S=loadSave('ep7')||loadSave('ep6')||loadSave('ep5')||loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0();}else if(g===80){S=loadSave('ep6')||loadSave('ep5')||loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0();}else if(g===70){S=loadSave('ep5')||loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0();}else if(g===60){S=loadSave('ep5')||loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0();}else if(g===50){S=loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0();}else if(g===40){S=loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0();}else if(g===30){S=loadSave('ep2')||loadSave('ep1')||loadSave()||S0();}else if(g===20){S=loadSave('ep1')||loadSave()||S0();}else if(g===10){S=loadSave()||S0();}else S=S0();dbg();return{goto:g};
 }
 
 async function s1(){
@@ -2443,7 +2449,7 @@ function slideFns(att){return{
 async function isoStop(att,o){ensureBox();hideAll();setScore(S.score[0],S.score[1],!o.noBoard);lay(o.lay||[]);
   put(att,-8.4,-5.2,PI/2,'ready');put(theo,-9.6,-4.3,0,'stance');face(theo,att.g.position,true);face(att,theo.g.position,true);hold(ball,att,'dribble');
   shot(V(-7.4,1.15,-2.6),headPos(att),{fov:34,roll:.1});await wait(400);if(o.line)await say(att,o.line);
-  const st=await qStop(o.beats,Object.assign({label:o.label||'GUARD HIM'},slideFns(att)));hold(ball,att);camSide();
+  const st=await qStop(o.beats,Object.assign({label:o.label||'GUARD HIM',fixed:o.fixed},slideFns(att)));hold(ball,att);camSide();
   if(st.ok){await shootBall(ball,att,'front',{noPose:true});theo.pose='idle';S.box.stops++;fx({respect:1});await react(o.good);}
   else{await shootBall(ball,att,'make');if(!o.noScore)them(2);theo.pose='idle';fx({nerves:4});await react(o.bad);}
   return st.ok;}
@@ -4561,7 +4567,9 @@ const MOVES={
   pullup:{name:'Pull-Up',by:'Kai Monroe',note:'Off-the-dribble jumpers get a wider window. New play: Pull-up at the elbow.',bump:{shoot:3,handle:4}},
   lob:{name:'Two-Man Lob',by:'Jalen Stroud',note:'New play with Stroud on the floor: throw it up, he goes and gets it.',bump:{pass:8}},
   read:{name:'Film Study',by:'Coach Hollis',note:'Clutch Time shows the defense’s coverage before you choose, and scouting reports slow their best scorer’s moves.',bump:{iq:10,def:5}},
-  hesi:{name:'Hesitation',by:'Malik Grant',note:'New iso option: freeze your man with a hesi and get to the rim.',bump:{handle:10}}};
+  hesi:{name:'Hesitation',by:'Malik Grant',note:'New iso option: freeze your man with a hesi and get to the rim.',bump:{handle:10}},
+  euro:{name:'Euro Step',by:'Coach Dre Whitlow',note:'New iso option: two long steps through traffic. Big men can\u2019t time it.',bump:{handle:5,iq:3}},
+  bully:{name:'Bully Drive',by:'Dante Price',note:'New iso option: lower the shoulder and finish through contact. Sometimes they foul you anyway.',bump:{handle:3,shoot:1}}};
 function skInit(){if(!S.sk)S.sk={shoot:S.shoot||58,handle:50,def:50,pass:50,iq:50};if(!S.moves)S.moves={};
   if(S.season===2&&S.f.summer&&!S.f.summer_move){S.f.summer_move=true;const m={okafor:'pumpfake',kai:'pullup',roofs:'stepback',both:'stepback'}[S.f.summer];if(m&&!S.moves[m]){S.moves[m]=1;for(const k in MOVES[m].bump)S.sk[k]+=MOVES[m].bump[k];}}
   S.shoot=S.sk.shoot;return S.sk;}
@@ -4615,6 +4623,11 @@ async function isoMove(o){ensureBox();hideAll();setScore(S.score[0],S.score[1]);
     const r=await qShot({mod:has('pullup')?0:1,shooter:theo,label:'PULL-UP'});camSide();await shootBall(ball,theo,r==='green'?'make':r==='early'?'front':'back');if(r==='green'){pts=2;us(2,2);}}
   else if(o.move==='lob'){walkNow(o.lobber,HOOP.x+2.6,-1.6,{speed:5.4,after:'ready'});await wait(600);const ok=await qPass({label:'THROW IT UP'});
     if(ok){await passTo(ball,theo,o.lobber,.7,.6);const mk=roll(.9);await layup(ball,o.lobber,mk);if(mk){pts=2;us(2,0,1);cheer(1.4);}}else{await passTo(ball,theo,o.myDef,.6,.4);}}
+  else if(o.move==='euro'){walkNow(theo,HOOP.x+3.4,0,{speed:4.4,dribble:true,after:'dribble'});put(o.myDef,HOOP.x+2,0,-PI/2,'stance');await until(()=>!theo.move);
+    const ok=await qPass({label:'EURO STEP'});walkNow(theo,HOOP.x+1.3,ok?-.8:.2,{speed:5,dribble:true});await until(()=>!theo.move);const mk=roll(ok?.82:.34);await layup(ball,theo,mk);if(mk){pts=2;us(2,2);}}
+  else if(o.move==='bully'){walkNow(theo,HOOP.x+2.4,.3,{speed:4,dribble:true});walkNow(o.myDef,HOOP.x+1.8,.2,{speed:4,after:'stance'});await until(()=>!theo.move);
+    const ok=await qScrap({label:'BULLY',need:6,time:1.7});sfx('thud');const mk=roll(ok?.8:.3);await layup(ball,theo,mk);if(mk){pts=2;us(2,2);}
+    if(ok&&roll(.45)){await cap('AND ONE.',900);ots(theo,{head:{getWorldPosition:v=>v.copy(HOOP)}},{fov:30,d:1.2,h:.25,s:-1});const r=await qFT(1,1);camSide();await shootBall(ball,theo,r?'make':'back');if(r){pts++;us(1,1);}}}
   else if(o.move==='pumpfake'){walkNow(o.myDef,SPOT.top.x-1,0,{speed:5,after:'contest'});await wait(300);const ok=await qPass({label:'PUMP FAKE'});
     if(ok){walkNow(theo,HOOP.x+1.4,.5,{speed:5.4,dribble:true});await until(()=>!theo.move);const mk=roll(.8);await layup(ball,theo,mk);if(mk){pts=2;us(2,2);}}else{camRim();const r=await qShot({mod:2,shooter:theo,label:'CONTESTED'});await shootBall(ball,theo,r==='green'?'make':'front');if(r==='green'){pts=3;us(3,3);}}}
   return pts;}
@@ -4634,8 +4647,10 @@ async function clutch(o){ensureBox();skInit();await teach('clutch');
       if(has('pullup'))plays.push({t:'Pull-up at the elbow',k:'pullup'});
       if(has('lob')&&lobber)plays.push({t:`Two-man lob to <b>${lobber.name}</b>`,k:'lob'});
       if(has('pumpfake'))plays.push({t:'Catch, <b>pump fake</b>, go',k:'pumpfake'});
+      if(has('euro'))plays.push({t:'Iso: <b>Euro step</b>',k:'euro'});
+      if(has('bully'))plays.push({t:'Iso: <b>Bully drive</b>',k:'bully'});
       // pick up to four: the three base plays rotate, moves always offered first
-      const moves=plays.slice(3),base=plays.slice(0,3);const offer=moves.slice(0,2).concat(base).slice(0,4);
+      const moves=plays.slice(3).sort(()=>Math.random()-.5),base=plays.slice(0,3).sort(()=>Math.random()-.5);const offer=moves.slice(0,2).concat(base).slice(0,4);
       hideAll();put(hollis,-6.2,-7.4,0,'cross');face(hollis,V(-9,0,0),true);
       shot(V(-4.6,1.5,-5.2),headPos(hollis),{fov:36});
       await say(hollis,S.f.captain==='yes'||S.f.captain==='silent'?'<i>(holding up a whiteboard)</i> Your call, captain.':'<i>(pointing at the whiteboard)</i> Pick one. Quickly.',1400);
@@ -4654,7 +4669,7 @@ async function clutch(o){ensureBox();skInit();await teach('clutch');
       if(scouted){await cap(`SCOUTING: ${star.name} goes ${pref.toUpperCase()}. Every time.`,1400);}
       if(pos%3===2)await helpD({driver:star,from:'lw',man:O[1],manSpot:'lc',lay:[[T.wing,'rw'],[O[3],'rw','g'],[T.big,'rb'],[O[2],'rb','g',.6]],blocker:T.big,manPct:.42,
         helpGood:[T.big,'ROTATION!'],helpBurn:[O[1],'Thanks.'],stayGood:[T.wing,'GET THAT OUT!'],stayBurn:[star,'Too easy.'],stealGood:[T.wing,'HANDS!'],stealBurn:[star,'Guessed wrong.']});
-      else{const ok=await isoStop(star,{beats,label:'THEIR BEST',line:pos<3?o.trash||'You again?':null,lay:[[T.wing,'lw'],[O[1],'lw','g'],[T.big,'rb'],[O[2],'rb','g',.6]],noScore:true});
+      else{const ok=await isoStop(star,{beats,fixed:true,label:'THEIR BEST',line:pos<3?o.trash||'You again?':null,lay:[[T.wing,'lw'],[O[1],'lw','g'],[T.big,'rb'],[O[2],'rb','g',.6]],noScore:true});
         if(!ok){const three=roll(.25);them(three?3:2);}}
     }
     secs-=14+Math.random()*10|0;if(secs<0)secs=0;setClock(fmt(secs));
@@ -5079,11 +5094,201 @@ async function tEnd(){
   card.classList.remove('on');return{goto:0};
 }
 
+/* ================= SEASON TWO · EPISODE 5: (THE PROGRAM | THE OUTSIDE) ================= */
+const PROG=()=>S.f.path!=='outside';
+async function w0(){
+  hideAll();clearUI();fadeEl.style.opacity=1;setAmb({rain:0,hum:0});await prevRecap();S.log={};S.ep=13;S.season=2;season();skInit();
+  const card=$('#card');card.innerHTML=`<h1 style="font-size:clamp(54px,11vw,120px)">SOPHOMORE</h1><h2>SEASON TWO · EPISODE 5 · ${PROG()?'THE PROGRAM':'THE OUTSIDE'}</h2><p>${PROG()?'Inside the machine, everybody has a job. Some of them are even honest.':'On the outside, nobody hands you anything. That includes the truth.'}</p>`;
+  card.classList.add('on');sfx('thud');await waitSkip(3800);card.classList.remove('on');
+}
+async function w1(){ // the mentor
+  for(const c of chars)unsuit(c);setScore(0,0,false);
+  if(PROG()){const D=EX.dre;setLoc('dome');hideAll();cine(true);
+    put(D,-8.6,-1.2,PI/2,'cross');put(theo,-6.8,-.6,-PI/2,'idle');hold(ball,theo,'tuck');face(D,theo.g.position,true);face(theo,D.g.position,true);
+    if(S.f.malik_deep)put(MAL(),-10.6,2.6,PI*.4,'dribble');
+    kDolly(V(2,3.2,6),V(-2,1.8,3.2),V(-8,2.6,-2),V(-7.8,1.4,-.9),7,50,38);await fade(false,900);
+    await cap('Saturday, January 23. The Dome. 7 AM. Court 3. Nobody else is here yet except the man in the folding chair.',3000);
+    cu(D,{d:1.3,fov:28});
+    await say(D,"Andre Whitlow. Coach Dre. I run the seventeens. I played six years in Spain, two in Lithuania, and one very confusing season in Bahrain.");
+    await say(D,"Rick pays the bills. I teach the game. Those are two different jobs, and I only do one of them. You understand?");
+    cu(theo,{d:1,fov:26});
+    let i=await choose([{t:'“I understand.”'},{t:'“Do you know about the envelopes?”'},{t:'“Then teach me something.”'}],7);i=i<0?2:i;
+    S.f.dre_first=['understand','envelopes','teach'][i];S.log.dre=['told Coach Dre you understand','asked Coach Dre about the envelopes','asked Coach Dre to teach you something'][i];
+    cu(D,{d:1.3,fov:28});
+    if(i===1){await say(D,'<i>(a long pause. He looks at the door.)</i> I know there\'s a lot of things in this building I don\'t touch. Ask me again in a month. Not in here.',3000);fx({flag:'dre_knows'});}
+    else if(i===0)await say(D,'Good. Most kids nod. You look like you actually heard it.');
+    else await say(D,'<i>(the first real smile)</i> Okay. Okay, sophomore.');
+    await say(D,"You go straight at people. Big men eat that in Europe. So you don't go straight. Long step left, long step right, finish. They call it a Euro. I call it rent money.");
+    hideAll();at(theo,'top','dribble');hold(ball,theo,'dribble');put(D,HOOP.x+2,0,-PI/2,'stance');camWide();
+    const ok=await qPass({label:'EURO STEP'});walkNow(theo,HOOP.x+1.4,ok?-.8:.2,{speed:5,dribble:true});await until(()=>!theo.move);await layup(ball,theo,ok);
+    cu(D,{d:1.3,fov:28});await say(D,ok?'<i>(clapping once)</i> There it is. Again. Fifty more.':'Close. Long steps. Like you\'re stepping over a puddle you\'re mad at. Again.');
+    await fade(true,600);await learn('euro');
+  }else{
+    setLoc('gym');gymAway(null);hideAll();cine(true);gymDawn();
+    put(dante,-8.4,-1,PI/2,'idle');put(theo,-6.6,-.4,-PI/2,'idle');hold(ball,dante,'tuck');face(dante,theo.g.position,true);face(theo,dante.g.position,true);
+    shot(V(-2,1.7,4.6),V(-8,1.3,-1),{fov:42});await fade(false,900);
+    await cap('Saturday, January 23. 6:50 AM. Halston gym. Dante Price still has a key. Nobody has asked for it back.',3000);
+    cu(dante,{d:1.2,fov:26});
+    await say(dante,"Ivy Tech's on break. HVAC certificate, second semester. I fix boilers now. I fixed THIS boiler. You're welcome for the heat.");
+    await say(dante,'Nico told me about your dad. And Vance. And the library in Carmel.');
+    await say(dante,"My cousin Terrell played for Vance. Eighth grade to senior year. Got a car. Got a 'job.' Then he got hurt and Vance stopped answering. That's the business.");
+    cu(theo,{d:1,fov:26});
+    let i=await choose([{t:'“Would Terrell talk to Whitfield?”'},{t:'“I’m sorry, man.”'},{t:'“Why are you telling me?”'}],7);i=i<0?2:i;
+    S.f.dante_cousin=i===0;S.log.dante=['asked if Dante’s cousin would talk to Whitfield','told Dante you’re sorry about his cousin','asked Dante why he’s telling you'][i];
+    cu(dante,{d:1.2,fov:26});
+    await say(dante,['<i>(thinks about it)</i> …Maybe. If somebody else goes first. Nobody wants to go first.','<i>(shrugs, but it lands)</i> Yeah. Me too.','Because you told him no. To his face. Nobody does that. <i>(he tosses Theo the ball)</i> Now. You still finish like you\'re apologizing.'][i],2800);
+    await say(dante,"Stop going around people. Lower your shoulder. Make them pay for being there. You're not small anymore, freshman.");
+    hideAll();at(theo,'top','dribble');hold(ball,theo,'dribble');put(dante,HOOP.x+1.8,.2,-PI/2,'stance');camWide();
+    const ok=await qScrap({label:'BULLY',need:7,time:1.8});walkNow(theo,HOOP.x+1.2,.3,{speed:4.4,dribble:true});await until(()=>!theo.move);sfx('thud');await layup(ball,theo,ok);
+    cu(dante,{d:1.2,fov:26});await say(dante,ok?'<i>(rubbing his chest, grinning)</i> THERE he is. Okay. That hurt. Good.':'Again. You flinched. Don\'t flinch. Flinching is for people who aren\'t sure.');
+    await fade(true,600);await learn('bully');
+  }
+}
+async function w2(){ // the consequence of last episode's ending
+  for(const c of chars)unsuit(c);setLoc('home');hideAll();cine(true);LOC.home.quiz.visible=false;const e=S.f.s2e4_end;
+  sitOn(theo,0,.75,PI,.47);
+  if(PROG()){
+    if(e==='table'){sitOn(dad,-1,0,PI/2,.47);sitOn(mom,0,-.75,0,.47);shot(V(2.1,1.6,1.8),V(-.3,.95,0),{fov:42});await fade(false,700);
+      await cap('Three days after the notebook. Nobody has moved it off the table. Mom has been eating around it.',2600);
+      cu(dad,{d:1.2,fov:28});await say(dad,"It's gas money. Gear. Camp fees. Families who can't afford it, Rick takes care of it. I drive it over. That's the job they don't put on the card.");
+      await say(dad,"Is it allowed? For AAU it's a gray area. For high school it isn't. I know which one Malik is. I know.");
+      cu(mom,{d:1.15,fov:28});await say(mom,'<i>(finally)</i> Ray. Say the rest.');
+      cu(dad,{d:1.2,fov:28});await say(dad,'<i>(he can\'t look at Theo)</i> Seventy-one thousand dollars doesn\'t come from tournament fees, mijo. It comes from a shoe company. And shoe companies want to know which kids are coming.',3200);
+      cu(theo,{d:1,fov:26});let i=await choose([{t:'“Quit. Tonight.”'},{t:'“Help me end it.”'},{t:'“I’m not quitting Select.”'}],8);i=i<0?1:i;
+      S.f.dad_side=['quit','help','stay'][i];S.log.home5=['told Dad to quit Vance tonight','asked Dad to help you end it','told Dad you’re not quitting Select'][i];
+      cu(dad,{d:1.2,fov:28});await say(dad,['If I quit, he calls Purdue. You know he does. <i>(beat)</i> …Let me think. One week.','<i>(a long breath out, like he\'s been holding it since June)</i> …Okay. Okay. Tell me what you need.','<i>(relief, and he hates that it\'s relief)</i> Okay. Then we\'re both in. Eyes open.'][i],2800);
+      fx({family:i===1?3:i===0?1:-1});}
+    else{sitOn(mom,0,-.75,0,.47);shot(V(2.1,1.6,1.8),V(-.3,.95,0),{fov:42});await fade(false,700);
+      await cap(e==='photo'?'Monday night. 41 photos of a notebook on Theo\'s phone. He hasn\'t opened them since.':'Monday night. The notebook is back in the glovebox. Theo can still see it with his eyes closed.',2800);
+      cu(mom,{d:1.15,fov:28});await say(mom,"Your father's been sleeping in the chair. He says it's his back. It's not his back.");
+      await say(mom,'You know something. I can see it on you. You look like him when he knows something.');
+      cu(theo,{d:1,fov:26});let i=await choose([{t:'Tell her about the notebook'},{t:'“It’s just basketball stuff.”'},{t:'“Ask Dad.”'}],8);i=i<0?1:i;
+      S.f.mom_knows=i===0;S.log.home5=['told Mom about Dad’s notebook','told Mom it’s just basketball stuff','told Mom to ask Dad'][i];
+      cu(mom,{d:1.15,fov:28});await say(mom,['<i>(she listens to all of it without moving)</i> …Okay. Thank you for telling me. Now go to bed. This is mine for tonight.','<i>(she doesn\'t believe it and lets him see that)</i> Okay, mijo.','<i>(quiet)</i> I did. He said "it\'s just basketball stuff."'][i],2800);
+      fx({family:i===0?2:-1});
+      if(e==='photo'){sfx('phone');await phonePost({init:'PS',who:'Priya Shah',time:'11:20 PM',text:'I\'m not publishing anything until you say so. I need you to know that. I also need you to know I\'ve matched four of the names. Four families, Theo.',rx:'Text',comments:[]});}}
+  }else{
+    sitOn(dad,-1,0,PI/2,.47);shot(V(2.1,1.6,1.8),V(-.3,.95,0),{fov:42});await fade(false,700);
+    await cap('Day 23 of 90. Dad has a notebook too. Different kind.',2400);
+    cu(dad,{d:1.2,fov:28});
+    await say(dad,S.f.dad_log?'Twenty-three days. Every call, every text, every time Brent with the podcast says "per Rick." Whitfield wants copies.':'Whitfield called. She asked if I keep records. I said I keep receipts in a shoebox. She said that counts.');
+    await say(dad,e==='see'?'She read me the last line of that complaint. "Ask Ray Reyes how he got his job." He wrote that so I\'d be scared to talk. And I am.':'Whoever sent that complaint wanted you benched and me quiet. Two birds.');
+    cu(theo,{d:1,fov:26});let i=await choose([{t:'“Give Whitfield everything.”'},{t:'“Wait until the season’s over.”'},{t:'“What do YOU want to do?”'}],8);i=i<0?2:i;
+    S.f.dad_whit=['all','wait','ask'][i];S.log.home5=['told Dad to give Whitfield everything','told Dad to wait until the season’s over','asked Dad what he wants to do'][i];
+    cu(dad,{d:1.2,fov:28});await say(dad,['<i>(nods slowly)</i> Everything. Okay. Then I\'m done there by Friday. You know that, right?','That\'s eight weeks of Brent, mijo. …But okay. Okay.','<i>(surprised to be asked)</i> …I want to not be scared of a man in a quarter-zip. That\'s what I want.'][i],2800);
+    fx({family:i===2?3:1});
+  }
+  await fade(true,700);
+}
+async function w3(){ // the heart, wherever it landed
+  for(const c of chars)unsuit(c);const r=S.f.route||'none',T=EX.tess;
+  if(r==='priya'){setLoc('diner');hideAll();cine(true);sitOn(theo,1.85,-1.72,PI,.5);sitOn(priya,1.85,-3.08,0,.5);shot(V(-.6,1.6,-1),V(2.2,1,-2.4),{fov:42});await fade(false,700);
+    await cap("Sal's. Since the formal, this booth has been theirs on Tuesdays. Sal put a little reserved sign on it. It's a napkin.",2800);
+    cu(priya,{d:1.2,fov:28});await say(priya,PROG()?"I need to ask you something as your girlfriend, and then something as a journalist, and I need you to tell me which one you're answering.":"Whitfield asked if the Diaries would hold a story. I said I don't hold stories. Then I held it. For you. I've never done that.");
+    cu(theo,{d:1,fov:26});let i=await choose([{t:'“Girlfriend first.”'},{t:'“Journalist first.”'},{t:'“Both. Always both.”'}],8);i=i<0?2:i;
+    cu(priya,{d:1.2,fov:28});await say(priya,['<i>(softer)</i> Are you okay? Like actually. You look tired in a way that isn\'t basketball.','When this comes out, and it will, do you want to be a source or a subject? Because you get to pick that. Not for long.','<i>(she laughs, and puts her pen down)</i> Okay. Yeah. That\'s the right answer and I hate it.'][i],2800);
+    fx({chem:{priya:2}});S.log.heart5=['answered Priya as her boyfriend first','answered Priya as a source first','told Priya you’re always both'][i];}
+  else if(r==='tess'){setLoc('lot');hideAll();cine(true);put(T,-.6,-.2,PI*.9);put(theo,-.4,-1.7,0);face(T,theo.g.position,true);face(theo,T.g.position,true);
+    shot(V(1.8,1.6,-2.8),V(-.5,1.1,-.8),{fov:40});await fade(false,700);
+    await cap('Wednesday. Tess drove over from Hale again. Since the formal, this is a thing she does.',2400);
+    cu(T,{d:1.15,fov:28});await say(T,PROG()?"Half my volleyball team plays Midwest Select basketball's sister program. They get free shoes. They think I'm weird for thinking that's weird.":"Lou says your dad got demoted for you saying no. That's the most romantic thing I've ever heard and also the worst. Both.");
+    cu(theo,{d:1,fov:26});let i=await choose([{t:'“Is Lou still mad?”'},{t:'“I’m glad you came.”'},{t:'“You think I’m doing the right thing?”'}],8);i=i<0?1:i;
+    cu(T,{d:1.15,fov:28});await say(T,[S.f.lou_cold?'Furious. He made a second slideshow. It\'s just one slide. It says "WHY."':'He\'s fine. He made a slideshow about being fine. It\'s eleven slides.','<i>(bumping his shoulder)</i> Don\'t be weird. <i>(beat)</i> Me too.','I think you\'re doing a hard thing. I don\'t know if it\'s right. I don\'t think you know either. That\'s how you know it\'s hard.'][i],2800);
+    fx({chem:{tess:2}});S.log.heart5=['asked Tess if Lou is still mad','told Tess you’re glad she came','asked Tess if you’re doing the right thing'][i];}
+  else{setLoc('bedroom');hideAll();cine(true);sitOn(theo,-.78,-.2,PI/2,.5);shot(V(1.2,1.45,1.2),V(-.9,1,-.5),{fov:46});await fade(false,700);
+    await cap('Thursday. Lou\'s Warhammer tournament was, as promised, both the best and worst night of Theo\'s life.',2800);
+    await phonePost({init:'NV',who:'Nico Vela',time:'10:40 PM',text:PROG()?'Film update: the guy in the stands at every Select game? He wears a shoe-company lanyard under his jacket. I zoomed in. I zoomed in a LOT.':'Film update: the guy in the stands at every Select game was at OUR game Friday. Sat behind Whitfield. Left at halftime.',rx:'Text',comments:[{n:'Lou K.',t:'(added to chat) i am also a film guy now',new:true}]});
+    S.log.heart5='spent the night with Nico and Lou instead';fx({chem:{nico:1,lou:1}});}
+  await fade(true,700);
+}
+async function w4(){ // the game: Clutch Time
+  const prog=PROG(),O=[EX.o1,EX.o2,EX.o3,EX.o4,EX.o5];
+  if(prog){setLoc('dome');hideAll();cine(true);gameMode(true,'Elite');suitUp();
+    // at the Dome Theo wears Select navy; Indy Elite wear charcoal
+    suit(theo,12,false,'Select');suit(MAL(),23,false,'Select');suit(EX.x1,3,false,'Select');suit(EX.x2,14,false,'Select');suit(EX.x3,21,false,'Select');}
+  else{setLoc('gym');hideAll();cine(true);gameMode(true,'Hale');gymAway('Hale');suitUp();teamNames(true);if(!S.f.stroud_gone)suit(EX.stroud,7);}
+  newBox();setScore(prog?61:52,prog?63:55);setClock('Q4  2:00');shot(V(-2,5.5,9),V(-9,0,0),{fov:46});await fade(false,600);
+  await cap(prog?'Sunday. The Dome. Midwest Select vs. Indy Elite. A Purdue assistant is in the bleachers. So is Rick Vance, standing next to him, talking.':'Friday, January 29. At Bishop Hale. Tess is in the student section wearing Hale orange and a Halston pin. Both teams have noticed.',3200);
+  if(prog)await say(EX.dre,'<i>(at the whistle, quiet, only to Theo)</i> Forget who\'s watching. Watch the big man\'s feet. He\'s slow left.',2400);
+  else await say(hollis,'<i>(whiteboard)</i> Their #4 goes right. He went right 31 times last week. I counted. Twice.',2400);
+  const T=prog?{big:EX.x3,shooter:S.f.malik_deep?MAL():EX.x1,wing:EX.x2,post:EX.x1,lobber:null}:{big:lou,shooter:S.f.stroud_gone?kai:EX.stroud,wing:S.f.stroud_gone?MAL():kai,post:MAL(),lobber:S.f.stroud_gone?null:EX.stroud};
+  if(prog){EX.x1.name='COLE';EX.x2.name='DEVONTE';EX.x3.name='BIG RO';}
+  const won=await clutch({team:T,opp:O,us:S.score[0],them:S.score[1],secs:120,oppKey:prog?'elite':'hale',tell:prog?'left':'right',trash:prog?'Halston kid. Small school. Small game.':'Tess says hi. She\'s lying.'});
+  if(!prog)result(won);S.purdue=clamp(S.purdue+(won?(prog?.75:.4):-.3),0,5);
+  S.f.w5game=won?'W':'L';S.log.game5=(won?'won ':'lost ')+(prog?'at the Dome against Indy Elite':'at Bishop Hale')+' in Clutch Time';
+  camWide();await cap(won?(prog?'WIN · MIDWEST SELECT vs. INDY ELITE':'WIN · at BISHOP HALE'):(prog?'LOSS · MIDWEST SELECT vs. INDY ELITE':'LOSS · at BISHOP HALE'),2200);
+  if(prog){teamNames(false);}
+  gameMode(false);setScore(0,0,false);for(const c of chars)unsuit(c);await fade(true,600);
+  if(prog&&won){sfx('phone');await phonePost({init:'PU',who:'Purdue Basketball (Asst.)',time:'4:02 PM',text:'Good to see you today. Strong finish. We\'ll be in touch through Mr. Vance. — D. Morris',rx:'Email',comments:[]});heart=true;await say(null,'<i>"Through Mr. Vance."</i>',1800);heart=false;}
+}
+async function w5(){ // Malik / the team
+  for(const c of chars)unsuit(c);const M=MAL();
+  setLoc('locker');hideAll();cine(true);put(theo,-2.4,-.5,-PI/2);sitOn(M,-.4,-1.6,0,.54);put(kai,.9,-2.7,0);put(lou,S.f.lou_cold?3.6:-1.2,-3.2,0);put(reggie,2.6,-1.4,-PI/2);
+  face(kai,theo.g.position,true);face(theo,kai.g.position,true);shot(V(1.2,1.6,1.2),V(-1.4,1,-1),{fov:42});await fade(false,700);
+  if(PROG()){
+    await cap('Monday practice. Theo is wearing Midwest Select socks. He didn\'t think about it. Everyone else did.',2600);
+    cu(kai,{d:1.2,fov:26});await say(kai,'<i>(not loud, which is worse)</i> Nice socks, captain. They give you those, or do you have to earn them?');
+    if(S.f.malik_deep){cu(M,{d:1.2,fov:26});await say(M,'<i>(defensive, too fast)</i> They\'re just socks. I got them too. My mom\'s car note got paid too, and that\'s just— that\'s just a car.',2800);}
+    cu(theo,{d:1,fov:26});
+    let i=await choose([{t:'Take the socks off. Right there.'},{t:'“Say what you mean, Kai.”'},{t:S.f.malik_deep?'“Malik. Who paid the car note?”':'“They’re just socks.”'}],8);i=i<0?1:i;
+    S.log.team5=['took the Select socks off in front of the team','told Kai to say what he means',S.f.malik_deep?'asked Malik who paid his mom’s car note':'told the team they’re just socks'][i];
+    if(i===0){cu(kai,{d:1.2,fov:26});await say(kai,'<i>(a long look, then a nod)</i> …Okay. Okay, Reyes.');fx({chem:{kai:2,team:2}});}
+    else if(i===1){cu(kai,{d:1.2,fov:26});await say(kai,'I mean my dad played for a guy like Vance. I mean I know what it looks like when it starts. I mean be careful.');fx({chem:{kai:1}});}
+    else if(S.f.malik_deep){cu(M,{d:1.2,fov:26});await say(M,'<i>(very quiet)</i> …Your dad dropped it off. In an envelope. He said "for the car."',2400);heart=true;kStare(theo);await wait(1200);heart=false;S.f.malik_told_dad=true;}
+    else{cu(kai,{d:1.2,fov:26});await say(kai,'Sure. Just socks.');fx({chem:{kai:-1,team:-1}});}
+  }else{
+    await cap('Monday practice. Day 25 of 90. The team knows. Halston is a small school.',2400);
+    cu(reggie,{d:1.2,fov:26});await say(reggie,'<i>(the senior, for once not joking)</i> We took a vote. Well. Lou took a vote. We\'re wearing black tape on our wrists Friday. For your dad.');
+    if(S.f.lou_cold){cu(lou,{d:1.2,fov:26});await say(lou,'<i>(from the far end, still not looking at him)</i> I didn\'t vote. I just counted. I counted fair.',2400);}
+    else{cu(lou,{d:1.2,fov:26});await say(lou,'It was unanimous. Malik voted twice. We let it go.');}
+    cu(theo,{d:1,fov:26});
+    let i=await choose([{t:'“You don’t have to do that.”'},{t:'“Thank you.” [Mean it]'},{t:'“Then we better win.”'}],8);i=i<0?1:i;
+    S.log.team5=['told the team they don’t have to wear the tape','thanked the team for the black tape','told the team you’d better win then'][i];
+    cu(kai,{d:1.2,fov:26});await say(kai,['We know. That\'s the point.','<i>(nods)</i> Yeah.','<i>(almost a smile)</i> That\'s the captain answer.'][i]);
+    fx({chem:{team:2,lou:S.f.lou_cold?1:0}});if(S.f.lou_cold&&i===1&&(S.chem.lou||0)>=-2){S.f.lou_cold=false;cu(lou,{d:1.2,fov:26});await say(lou,'<i>(he moves his bag back. One locker over. Not all the way. But one.)</i>',2400);}
+  }
+  await fade(true,700);
+}
+async function w6(){ // the cliffhanger
+  for(const c of chars)unsuit(c);
+  if(PROG()){setLoc('dome');hideAll();cine(true);const D=EX.dre;
+    put(D,-9.6,-6.2,PI*.25,'idle');put(theo,-8.4,-5,PI*1.25);face(D,theo.g.position,true);face(theo,D.g.position,true);
+    shot(V(-6,1.5,-3),V(-9.2,1.4,-5.8),{fov:38});await fade(false,800);
+    await cap('After the Dome empties. Coach Dre is stacking chairs that don\'t need stacking.',2400);
+    cu(D,{d:1.3,fov:28});
+    await say(D,S.f.dre_knows?'You asked me a month early. I\'m answering a month early.':'You keep looking at Rick\'s office like it\'s going to bite you. It might.');
+    await say(D,"I keep a notebook too. Different kind. Every kid he's 'taken care of' since 2019. Who paid. Who got paid. Who got dropped.");
+    await say(D,"I can't be the one who starts it. I've got a daughter and a lease. But if somebody else starts it, I'll finish it.");
+    heart=true;kStare(theo);await wait(1500);heart=false;
+    let i=await choose([{t:'“Then I’ll start it.”'},{t:'“Why tell me?”'},{t:'“My dad is in that notebook.”'},{t:'[Stay Silent]',silent:true}],9);i=i<0?3:i;
+    S.f.s2e5_end=['start','why','dad','silent'][i];S.log.end5=['told Coach Dre you’ll start it','asked Coach Dre why he’s telling you','told Coach Dre your dad is in his notebook','said nothing to Coach Dre'][i];
+    cu(D,{d:1.3,fov:28});
+    await say(D,['<i>(he stops stacking chairs)</i> …Okay. Then do it smart. Get it to somebody who prints things.','Because you\'re the only kid in this building who looks at the money like it\'s heavy.','<i>(quiet)</i> I know. Page nine. He\'s the only one who wrote down that it bothered him.','<i>(he puts the chair down and waits a long time)</i> …Okay. I\'ll be here Saturday.'][i],3000);
+  }else{setLoc('bedroom');hideAll();cine(true);sitOn(theo,-.78,-.2,PI/2,.5);shot(V(1.2,1.45,1.2),V(-.9,1,-.5),{fov:46});await fade(false,700);
+    await cap('Sunday night, 9:14 PM. Theo\'s phone. An Indianapolis number.',2400);
+    sfx('phone');await phonePost({init:'DM',who:'D. Morris · Purdue Basketball',time:'9:14 PM',text:'Theo, wanted to reach you directly. I had a conversation this week with Rick Vance. He described you as "difficult" and "a family with problems." I wanted to hear from you before I take that back to Coach. Can you talk this week?',rx:'Message',comments:[]});
+    heart=true;kStare(theo);await wait(1400);heart=false;
+    let i=await choose([{t:'“Yes. And I’ll tell you everything.”'},{t:'“Yes. Just basketball.”'},{t:'“Ask my coach. Mr. Hollis.”'},{t:'[Don’t answer]',silent:true}],9);i=i<0?3:i;
+    S.f.s2e5_end=['all','ball','hollis','none'][i];S.log.end5=['told Purdue you’d tell them everything about Vance','told Purdue you’d only talk basketball','sent Purdue to Mr. Hollis','left Purdue on read'][i];
+    if(i<3){await phonePost({init:'DM',who:'D. Morris · Purdue Basketball',time:'9:31 PM',text:['…Okay. Thursday. I\'ll bring a notepad. Theo, be careful what you put in writing.','Thursday then. Basketball. We\'ll see what comes up.','I\'ll call him tomorrow. A coach who answers for his player tells me a lot.'][i],rx:'Message',comments:[]});}
+  }
+  await fade(true,1300);cine(false);
+}
+async function wEnd(){
+  hideAll();setAmb({rain:0,hum:0});for(const c of chars)unsuit(c);save('ep13');const card=$('#card');
+  card.innerHTML=`<h1 style="font-size:clamp(54px,11vw,120px)">SOPHOMORE</h1><h2>SEASON TWO · EPISODE 5 · ${PROG()?'THE PROGRAM':'THE OUTSIDE'}</h2>`;card.classList.add('on');sfx('thud');await waitSkip(3000);
+  const L=S.log;const rows=[[PROG()?'COACH DRE':'DANTE',PROG()?L.dre:L.dante],['HOME',L.home5],['YOUR HEART',L.heart5],['THE GAME',L.game5],['THE TEAM',L.team5],[PROG()?'AFTER HOURS':'9:14 PM',L.end5]].filter(r=>r[1]);
+  card.innerHTML=`<h2 style="margin-top:0">YOUR CHOICES</h2><div class="rows">${rows.map(r=>`<div class="row"><b>${r[0]}</b><span>You ${r[1]}.</span></div>`).join('')}</div><h2>WHERE YOU STAND</h2>${seasonHTML()}
+    <h2>NEXT: EPISODE 6</h2><p>In development. Your season is saved on this device.</p><button class="go">Back to title</button>`;card.scrollTop=0;
+  await waitable(done=>{const b=card.querySelector('.go');b.addEventListener('pointerdown',e=>{e.stopPropagation();done();});let armed=false;setTimeout(()=>armed=true,1500);const off=onIn((x,t)=>{if(x==='A'&&t==='down'&&armed)done();});return()=>off();});
+  card.classList.remove('on');return{goto:0};
+}
+
 /* ================= runner, menu, loop ================= */
-const SCENES=[sTitle,s1,s2,s3,s4,s5,s6,s7,s8,sEnd,eTitle,e1,e2,e3,e4,e5,e6,e7,e8,eEnd,e2Title,f1,f2,f3,f4,f5,f6,f7End,null,null,g0,g1,g2,g3,g4,g5,g6,g7End,null,null,h0,h1,h2,h3,h4,h5,h6,h7,h8End,null,i0,i1,i2,i3,i4,i5,i6,i7,i8End,null,horseMode,null,null,null,null,null,null,null,null,null,j0,j1,j2,j3,j4,j5,j6,j7,j8End,null,k0,k1,k2,k3,k4,k5,k6,k7,k8End,null,m0,m1,m2,m3,m4,m5,m6,m7End,null,null,n0,n1,n2,n3,n4,n5,n6,nEnd,null,null,p0,p1,p2,p3,p4,p5,p6,pEnd,null,null,r0,r1,r2,r3,r4,r5,r6,r7,rEnd,null,t0,t1,t2,t3,t4,t5,t6,t7,tEnd];
+const SCENES=[sTitle,s1,s2,s3,s4,s5,s6,s7,s8,sEnd,eTitle,e1,e2,e3,e4,e5,e6,e7,e8,eEnd,e2Title,f1,f2,f3,f4,f5,f6,f7End,null,null,g0,g1,g2,g3,g4,g5,g6,g7End,null,null,h0,h1,h2,h3,h4,h5,h6,h7,h8End,null,i0,i1,i2,i3,i4,i5,i6,i7,i8End,null,horseMode,null,null,null,null,null,null,null,null,null,j0,j1,j2,j3,j4,j5,j6,j7,j8End,null,k0,k1,k2,k3,k4,k5,k6,k7,k8End,null,m0,m1,m2,m3,m4,m5,m6,m7End,null,null,n0,n1,n2,n3,n4,n5,n6,nEnd,null,null,p0,p1,p2,p3,p4,p5,p6,pEnd,null,null,r0,r1,r2,r3,r4,r5,r6,r7,rEnd,null,t0,t1,t2,t3,t4,t5,t6,t7,tEnd,null,w0,w1,w2,w3,w4,w5,w6,wEnd];
 let runToken=0;
 async function run(from){const my=++runToken;try{for(let i=from;i<SCENES.length;i++){if(my!==runToken)return;if(!SCENES[i])continue;setSky(skyFor(i));const r=await SCENES[i]();if(r&&r.goto!=null)i=r.goto-1;}if(my===runToken)run(0);}catch(e){if(e!==ABORT){console.error(e);}}}
-function jump(n){abortAll();clearUI();S=n>=130?(loadSave('ep11')||loadSave('ep10')||loadSave('ep9')||loadSave()||S0()):n>=120?(loadSave('ep10')||loadSave('ep9')||loadSave('ep8')||loadSave()||S0()):n>=110?(loadSave('ep9')||loadSave('ep8')||loadSave()||S0()):n>=100?(loadSave('ep8')||loadSave('ep7')||loadSave()||S0()):n>=90?(loadSave('ep7')||loadSave('ep6')||loadSave('ep5')||loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0()):n>=80?(loadSave('ep6')||loadSave('ep5')||loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0()):n>=70?(loadSave('ep5')||loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0()):n>=50?(loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0()):n>=40?(loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0()):n>=30?(loadSave('ep2')||loadSave('ep1')||loadSave()||S0()):n>=20?(loadSave('ep1')||loadSave()||S0()):n>=10?(loadSave()||S0()):S0();if(n>=10&&n<20){S.ep=1;}if(n>=20&&n<30)S.ep=2;if(n>=30&&n<40)S.ep=3;if(n>=40&&n<50)S.ep=4;if(n>=50&&n<70)S.ep=5;if(n>=70&&n<80)S.ep=6;if(n>=80&&n<90)S.ep=7;if(n>=90&&n<100)S.ep=8;if(n>=100&&n<110)S.ep=9;if(n>=110&&n<120)S.ep=10;if(n>=120&&n<130)S.ep=11;if(n>=130)S.ep=12;if(n>=6&&n<10){S.tie=19;setScore(19,19,false);}LOC.gym.setWin('half');for(const c of chars)c.o.mouth=CFG[c.key].mouth;fadeEl.style.opacity=1;closeMenu();dbg();run(n);}
+function jump(n){abortAll();clearUI();S=n>=140?(loadSave('ep12')||loadSave('ep11')||loadSave('ep10')||loadSave()||S0()):n>=130?(loadSave('ep11')||loadSave('ep10')||loadSave('ep9')||loadSave()||S0()):n>=120?(loadSave('ep10')||loadSave('ep9')||loadSave('ep8')||loadSave()||S0()):n>=110?(loadSave('ep9')||loadSave('ep8')||loadSave()||S0()):n>=100?(loadSave('ep8')||loadSave('ep7')||loadSave()||S0()):n>=90?(loadSave('ep7')||loadSave('ep6')||loadSave('ep5')||loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0()):n>=80?(loadSave('ep6')||loadSave('ep5')||loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0()):n>=70?(loadSave('ep5')||loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0()):n>=50?(loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0()):n>=40?(loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0()):n>=30?(loadSave('ep2')||loadSave('ep1')||loadSave()||S0()):n>=20?(loadSave('ep1')||loadSave()||S0()):n>=10?(loadSave()||S0()):S0();if(n>=10&&n<20){S.ep=1;}if(n>=20&&n<30)S.ep=2;if(n>=30&&n<40)S.ep=3;if(n>=40&&n<50)S.ep=4;if(n>=50&&n<70)S.ep=5;if(n>=70&&n<80)S.ep=6;if(n>=80&&n<90)S.ep=7;if(n>=90&&n<100)S.ep=8;if(n>=100&&n<110)S.ep=9;if(n>=110&&n<120)S.ep=10;if(n>=120&&n<130)S.ep=11;if(n>=130&&n<140)S.ep=12;if(n>=140)S.ep=13;if(n>=6&&n<10){S.tie=19;setScore(19,19,false);}LOC.gym.setWin('half');for(const c of chars)c.o.mouth=CFG[c.key].mouth;fadeEl.style.opacity=1;closeMenu();dbg();run(n);}
 let menuOpen=false;
 function togglePause(){menuOpen?closeMenu():openMenu();}
 function openMenu(){menuOpen=true;paused=true;$('#menu').classList.add('on');$('#mResume').focus();}
@@ -5092,7 +5297,7 @@ function menuNav(b){const items=[...document.querySelectorAll('#menu button')];l
 $('#pause').addEventListener('pointerdown',e=>{e.stopPropagation();});$('#pause').addEventListener('click',togglePause);
 $('#mResume').onclick=closeMenu;$('#mRestart').onclick=()=>jump(1);
 $('#mStats').onclick=()=>{showDbg=!showDbg;$('#mStats').textContent='Show hidden stats: '+(showDbg?'on':'off');dbg();};
-$('#mScenes').innerHTML=[1,2,3,4,5,6,7,8].map(n=>`<button data-n="${n}">0·${n}</button>`).join('')+[1,2,3,4,5,6,7,8].map(n=>`<button data-n="${n+10}">1·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+20}">2·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+30}">3·${n}</button>`).join('')+[1,2,3,4,5,6,7].map(n=>`<button data-n="${n+40}">4·${n}</button>`).join('')+[1,2,3,4,5,6,7].map(n=>`<button data-n="${n+50}">5·${n}</button>`).join('')+[1,2,3,4,5,6,7].map(n=>`<button data-n="${n+70}">6·${n}</button>`).join('')+[1,2,3,4,5,6,7].map(n=>`<button data-n="${n+80}">7·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+90}">8·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+100}">S2E1·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+110}">S2E2·${n}</button>`).join('')+[1,2,3,4,5,6,7].map(n=>`<button data-n="${n+120}">S2E3·${n}</button>`).join('')+[1,2,3,4,5,6,7].map(n=>`<button data-n="${n+130}">S2E4·${n}</button>`).join('');
+$('#mScenes').innerHTML=[1,2,3,4,5,6,7,8].map(n=>`<button data-n="${n}">0·${n}</button>`).join('')+[1,2,3,4,5,6,7,8].map(n=>`<button data-n="${n+10}">1·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+20}">2·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+30}">3·${n}</button>`).join('')+[1,2,3,4,5,6,7].map(n=>`<button data-n="${n+40}">4·${n}</button>`).join('')+[1,2,3,4,5,6,7].map(n=>`<button data-n="${n+50}">5·${n}</button>`).join('')+[1,2,3,4,5,6,7].map(n=>`<button data-n="${n+70}">6·${n}</button>`).join('')+[1,2,3,4,5,6,7].map(n=>`<button data-n="${n+80}">7·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+90}">8·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+100}">S2E1·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+110}">S2E2·${n}</button>`).join('')+[1,2,3,4,5,6,7].map(n=>`<button data-n="${n+120}">S2E3·${n}</button>`).join('')+[1,2,3,4,5,6,7].map(n=>`<button data-n="${n+130}">S2E4·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+140}">S2E5·${n}</button>`).join('');
 document.querySelectorAll('#mScenes button').forEach(b=>b.onclick=()=>jump(+b.dataset.n));
 let last=performance.now(),T=0,RT=0;
 function loop(now){requestAnimationFrame(loop);const dt=Math.min(.05,(now-last)/1000);last=now;RT+=dt;pollPad();
