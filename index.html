@@ -362,6 +362,7 @@ const CFG={
  x2:{name:'PARK',h:1.78,skin:0xe2b994,hair:0x111111,hs:'short',shirt:0x6e1f2a,shirtTxt:'HHHS',txtCol:'#e8c35a',shorts:0x1a1a1a,shoe:0x222222,shoeAcc:0xffffff,brow:4},
  x3:{name:'BRISCOE',h:1.84,skin:0xcc8254,hair:0x6a4a2a,hs:'messy',shirt:0x6e1f2a,shirtTxt:'HHHS',txtCol:'#e8c35a',shorts:0x1a1a1a,shoe:0xdddddd,shoeAcc:0x2463c9,brow:4,mouth:'smile'},
  malik:{name:'MALIK',h:1.83,skin:0x8d5736,hair:0x141010,hs:'fade',shirt:0x6e1f2a,shirtTxt:'HHHS',txtCol:'#e8c35a',shorts:0x1a1a1a,shoe:0xf2f2f2,shoeAcc:0xd03030,brow:3,mouth:'smirk'},
+morris:{name:'COACH MORRIS',h:1.86,skin:0xe2b48e,hair:0x6a5a4a,hs:'short',shirt:0x111111,shirtTxt:'PURDUE',txtCol:'#cfb991',sleeve:true,sleeveCol:0x111111,shorts:0x2a2a30,long:true,shoe:0x111111,shoeAcc:0xcfb991,brow:3,mouth:'flat'},
 panel:{name:'PANEL CHAIR',h:1.66,skin:0xd6a47c,hair:0xb8b4ac,hs:'long',shirt:0x2b3a5c,shirtTxt:'',sleeve:true,sleeveCol:0x2b3a5c,shorts:0x2a2a30,long:true,shoe:0x1a1a1a,shoeAcc:0x1a1a1a,brow:3,mouth:'flat'},
 dre:{name:'COACH DRE',h:1.93,skin:0x894627,hair:0x1a1410,hs:'fade',shirt:0x0b2a5b,shirtTxt:'SELECT',txtCol:'#3fa9f5',sleeve:true,sleeveCol:0x0b2a5b,shorts:0x2a2a30,long:true,shoe:0x111111,shoeAcc:0x3fa9f5,brow:4,mouth:'flat'},
 x4:{name:'DUFF',h:1.8,skin:0xe59b76,hair:0xc8a060,hs:'short',shirt:0x6e1f2a,shirtTxt:'HHHS',txtCol:'#e8c35a',shorts:0x1a1a1a,shoe:0xffffff,shoeAcc:0x111111,brow:3,freckles:true},
@@ -427,7 +428,7 @@ function makeChar(key){
 /* ================= GLB character bodies (ChatGPT cast generator) ================= */
 let GLB=null;const GLB_HAIR={};
 const MORPHMAP={theo:{slim:.35},nico:{slim:.7},kai:{slim:.15},dante:{broad:.55},reggie:{broad:1},lou:{heavy:1},coach:{adult:.9,heavy:.3},dad:{adult:.8,heavy:.15},priya:{curvy:.45,slim:.8},
-  x1:{broad:.6},x2:{slim:.3},x3:{},x4:{slim:.2},o1:{broad:.3},o2:{},o3:{broad:.9},o4:{slim:.5},o5:{broad:.4},vance:{adult:.4,slim:.2},dre:{adult:.5,slim:.35},panel:{curvy:.4,adult:.7,slim:.5},stroud:{broad:.35,slim:.2},mom:{curvy:.5,adult:.5,slim:.45},hollis:{adult:.7,slim:.35},whit:{curvy:.35,adult:.6,slim:.45},tess:{curvy:.4,slim:.8}};
+  x1:{broad:.6},x2:{slim:.3},x3:{},x4:{slim:.2},o1:{broad:.3},o2:{},o3:{broad:.9},o4:{slim:.5},o5:{broad:.4},vance:{adult:.4,slim:.2},dre:{adult:.5,slim:.35},panel:{curvy:.4,adult:.7,slim:.5},morris:{adult:.6,slim:.3},stroud:{broad:.35,slim:.2},mom:{curvy:.5,adult:.5,slim:.45},hollis:{adult:.7,slim:.35},whit:{curvy:.35,adult:.6,slim:.45},tess:{curvy:.4,slim:.8}};
 const HAIRMAP={short:'short',buzz:'buzz',fade:'fade',curly:'curly',locs:'locs',messy:'messy',long:'long',bald:'bald_ring'};
 async function loadModels(){
   if(!THREE.GLTFLoader)return false;
@@ -1545,7 +1546,7 @@ async function build(){
   sweep=new THREE.PointLight(0xffa64a,0,14,1.4);LOC.lot.g.add(sweep);
   CARS.dante=makeCar(0x23262c,'sedan');CARS.kai=makeCar(0x0e0f12,'suv');CARS.dad=makeCar(0xc9c2ae,'truck','REYES ROOFING');
   for(const k in CARS){LOC.lot.g.add(CARS[k].g);}
-  for(const k of['x1','x2','x3','x4','o1','o2','o3','o4','o5','vance','stroud','tess','malik','dre','panel'])EX[k]=await makeChar(k);buildCrowd();
+  for(const k of['x1','x2','x3','x4','o1','o2','o3','o4','o5','vance','stroud','tess','malik','dre','panel','morris'])EX[k]=await makeChar(k);buildCrowd();
   hideAll();
 }
 const lean=(c,dir,amt=.35)=>{const r=V(Math.cos(c.g.rotation.y),0,-Math.sin(c.g.rotation.y));const p=c.g.position.clone().add(r.multiplyScalar(dir*amt));walkNow(c,p.x,p.z,{speed:4,face:c.yaw,back:true,after:c.pose});};
@@ -4269,25 +4270,25 @@ async function n1(){ // first day, sophomore year
 }
 async function n2(){ // FLASHBACK: June, Purdue camp
   for(const c of chars)unsuit(c);setLoc('gym');gymAway('Purdue');hideAll();cine(true);setScore(0,0,false);flashback(true,'JUNE · WEST LAFAYETTE');
-  put(theo,-5.6,0,-PI/2,'idle');put(coach,-5.4,-3.2,0,'cross');coach.name0=coach.name;coach.name='PURDUE ASST.';
+  put(theo,-5.6,0,-PI/2,'idle');put(EX.morris,-5.4,-3.2,0,'cross');
   shot(V(-1.2,1.6,3),V(-8,1.3,-1),{fov:44});await fade(false,700);
   await cap(S.f.season1_end==='dad'?'June. Purdue Elite Camp. Dad drove. He didn\'t say a word for three hours. He was too happy.':'June. Purdue Elite Camp. Two hundred kids. One of them is from Halston Heights.',3000);
-  cu(coach,{d:1.3,fov:28});await say(coach,"Reyes. Halston Heights. I watched the regional tape. Hollis sent it. With footnotes.");
-  await say(coach,'Top of the key. Ten shots. Don\'t look at me while you shoot, I\'m not interesting.');
+  cu(EX.morris,{d:1.3,fov:28});await say(EX.morris,"Reyes. Halston Heights. I watched the regional tape. Hollis sent it. With footnotes.");
+  await say(EX.morris,'Top of the key. Ten shots. Don\'t look at me while you shoot, I\'m not interesting.');
   let made=0;
   for(let k=0;k<2;k++){at(theo,'top','ready');hold(ball,theo);camRim();const r=await qShot({mod:1,shooter:theo,label:k?'SHOT TEN':'SHOT ONE'});await shootBall(ball,theo,r==='green'?'make':r==='early'?'front':'back');if(r==='green')made++;await wait(300);}
   S.f.purdue_shots=made;
-  cu(coach,{d:1.3,fov:28});await say(coach,made===2?'<i>(writes something, underlines it)</i> Huh.':made===1?'<i>(writes something)</i> Okay.':'<i>(writes something short)</i>',1800);
-  await say(coach,"Who do you play for in the summer, son? AAU?");
+  cu(EX.morris,{d:1.3,fov:28});await say(EX.morris,made===2?'<i>(writes something, underlines it)</i> Huh.':made===1?'<i>(writes something)</i> Okay.':'<i>(writes something short)</i>',1800);
+  await say(EX.morris,"Who do you play for in the summer, son? AAU?");
   cu(theo,{d:1,fov:26});
   const sm=S.f.summer||'okafor';
   let i=await choose([{t:sm==='kai'?'“A team in Indy. Parents pay what they can.”':sm==='roofs'?'“I work roofs with my dad. I play at night.”':'“My old coach runs a free league.”'},{t:'“I almost played for Midwest Select.”'},{t:'“Does it matter?”'}],7);i=i<0?0:i;
   S.log.purdue=['told Purdue the truth about your summer','told Purdue you almost played for Midwest Select','asked Purdue if it matters'][i];
-  cu(coach,{d:1.3,fov:28});
-  if(i===0){await say(coach,sm==='roofs'?'<i>(he looks at Theo\'s hands)</i> Roofs. Okay. That explains the legs.':'<i>(nodding)</i> Good. We don\'t need you in a shoe company\'s van. We need you in a gym.');fx({grounded:1,flag:'purdue_honest'});}
-  else if(i===1){await say(coach,'"Almost." <i>(he writes that down)</i> I know Rick. Everybody knows Rick. "Almost" is the right answer.');fx({flag:'purdue_honest'});}
-  else{await say(coach,'<i>(a short laugh)</i> No. But how you answer it does.');fx({hype:1});}
-  coach.name=coach.name0;flashback(false);gymAway(null);await fade(true,700);
+  cu(EX.morris,{d:1.3,fov:28});
+  if(i===0){await say(EX.morris,sm==='roofs'?'<i>(he looks at Theo\'s hands)</i> Roofs. Okay. That explains the legs.':'<i>(nodding)</i> Good. We don\'t need you in a shoe company\'s van. We need you in a gym.');fx({grounded:1,flag:'purdue_honest'});}
+  else if(i===1){await say(EX.morris,'"Almost." <i>(he writes that down)</i> I know Rick. Everybody knows Rick. "Almost" is the right answer.');fx({flag:'purdue_honest'});}
+  else{await say(EX.morris,'<i>(a short laugh)</i> No. But how you answer it does.');fx({hype:1});}
+  flashback(false);gymAway(null);await fade(true,700);
 }
 async function n3(){ // Hollis's first practice
   for(const c of chars)unsuit(c);setLoc('gym');gymAway(null);hideAll();cine(true);setScore(0,0,false);
