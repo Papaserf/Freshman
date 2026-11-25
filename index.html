@@ -1101,7 +1101,7 @@ function decorate(){
     box(.9,.05,.08,toon(0x9aa2ad),g,V(5.36,1.5,-.4),false);box(.05,.6,.5,tw,g,V(5.33,1.22,-.4),false);
   }
   /* ---------- PARKING LOT ---------- */
-  {const g=LOC.lot.g;
+  {const g=LOC.lot.g;const d0=g.children.length;
     const warm=basic(0xffd48a),dim=basic(0x2a3044),blue=basic(0x9ab8ff);
     for(const y of[1.8,4.7])for(let x=-18;x<=18;x+=2.6){if(Math.abs(x)<4.4)continue;const r=Math.random();const m=new THREE.Mesh(new THREE.PlaneGeometry(1.5,1.1),r<.35?warm:r<.45?blue:dim);m.position.set(x,y,-3.98);g.add(m);box(1.6,.06,.1,toon(0x8a8a86),g,V(x,y-.6,-3.95),false);}
     const sch=ctex(1024,128,(x,w,h)=>{x.clearRect(0,0,w,h);txt(x,'HALSTON HEIGHTS HIGH SCHOOL',78,[w/2,h/2+4],'Anton','#f2ead6','center','#2a1a12');});
@@ -1117,6 +1117,7 @@ function decorate(){
     [[-12,12],[-6,12.4],[7,11.8],[13,12.3],[-9,17],[10,17.2]].forEach(([x,z],i)=>{const cg=new THREE.Group();cg.position.set(x,0,z);cg.rotation.y=(i%2?0:PI);g.add(cg);
       box(1.8,.6,4.2,toon(carC[i]),cg,V(0,.55,0));box(1.6,.5,2.2,toon(shade(carC[i],.8)),cg,V(0,1.1,-.2));box(1.55,.42,.05,basic(0x1a2030),cg,V(0,1.1,.91),false);
       for(const a of[-.8,.8])for(const b of[-1.4,1.4]){const w=mesh(new THREE.CylinderGeometry(.32,.32,.2,12),toon(0x111111),cg,V(a,.32,b),0);w.rotation.z=PI/2;}});
+    LOC.lot.decor=g.children.slice(d0);
   }
   /* ---------- SAL'S DINER ---------- */
   {const g=LOC.diner.g;
@@ -1322,12 +1323,13 @@ function buildClass(){
   let acc=0,sec=0;L.upd=(dt,t)=>{acc+=dt;if(acc>=1){acc-=1;sec++;sh.rotation.z=-sec*PI/30;mh.rotation.z=-(sec/60+1)*PI/30;if(L.tick&&g.visible)tone(2300,.025,'square',.035);}};
   return L;
 }
+function lotMode(m){(LOC.lot.decor||[]).forEach(o=>o.visible=m==='school');}
 function setLoc(n){
   for(const k in LOC)LOC[k].g.visible=(k===n);curLoc=LOC[n];const L=curLoc;
   scene.background=new THREE.Color(L.bg);scene.fog=new THREE.Fog(L.fog[0],L.fog[1],L.fog[2]);
   hemi.color.setHex(L.hemi[0]);hemi.groundColor.setHex(L.hemi[1]);hemi.intensity=L.hemi[2];
   key.color.setHex(L.key[0]);key.intensity=L.key[1];key.position.copy(L.key[2]);rim.color.setHex(L.rim[0]);rim.intensity=L.rim[1];rim.position.copy(L.rim[2]);
-  setAmb(L.amb);if(n==='gym'&&L.wain)gymAway(null);
+  setAmb(L.amb);if(n==='gym'&&L.wain)gymAway(null);if(n==='lot')lotMode('school');
 }
 function hideAll(){if(mop)mop.visible=false;if(clip){clip.visible=false;mug.visible=true;}for(const c of chars){c.g.visible=false;c.move=null;c.talk=false;if(c.g.parent!==scene)scene.add(c.g);}hideBall(ball);hideBall(ball2);for(const k in CARS)CARS[k].g.visible=false;}
 
@@ -1660,7 +1662,7 @@ async function prevRecap(){const L=Object.values(S.log||{}).filter(x=>typeof x==
 async function sTitle(){
   hideAll();setLoc('gym');put(kai,-8,-1.5,-PI/2);hold(ball2,kai);
   shot(V(4,2.2,5),V(-6,2,-2),{fov:42});setAmb({rain:.3,hum:.6});
-  const card=$('#card');card.innerHTML=`<h1>FRESHMAN</h1><h2>EPISODE ZERO · OPEN GYM</h2><p>One rainy afternoon before tryouts. Every choice, every shot, and every silence will be remembered.</p><p style="opacity:.7">Controller, keyboard or touch. Sound on.</p>${hasSave('ep15')?`<button class="go" data-g="170">${glyphA()}Continue: SOPHOMORE · Episode 8 · The Long Hallway (Finale)</button><button class="go" data-g="160" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Sophomore Episode 7</button>`:hasSave('ep14')?`<button class="go" data-g="160">${glyphA()}Continue: SOPHOMORE · Episode 7 · Sectionals</button><button class="go" data-g="150" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Sophomore Episode 6</button>`:hasSave('ep13')?`<button class="go" data-g="150">${glyphA()}Continue: SOPHOMORE · Episode 6 · Rematch</button><button class="go" data-g="140" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Sophomore Episode 5</button>`:hasSave('ep12')?`<button class="go" data-g="140">${glyphA()}Continue: SOPHOMORE · Episode 5</button><button class="go" data-g="130" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Sophomore Episode 4</button>`:hasSave('ep11')?`<button class="go" data-g="130">${glyphA()}Continue: SOPHOMORE · Episode 4 · The Fork</button><button class="go" data-g="120" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Sophomore Episode 3</button>`:hasSave('ep10')?`<button class="go" data-g="120">${glyphA()}Continue: SOPHOMORE · Episode 3 · Standings</button><button class="go" data-g="110" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Sophomore Episode 2</button>`:hasSave('ep9')?`<button class="go" data-g="110">${glyphA()}Continue: SOPHOMORE · Episode 2 · Road Greys</button><button class="go" data-g="100" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Sophomore Episode 1</button>`:hasSave('ep8')?`<button class="go" data-g="100">${glyphA()}Continue: SOPHOMORE · Episode 1 · Summer Reruns</button><button class="go" data-g="90" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay the Season 1 Finale</button>`:hasSave('ep7')?`<button class="go" data-g="90">${glyphA()}Continue: Episode 8 · The Last Practice (Finale)</button><button class="go" data-g="80" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 7</button>`:hasSave('ep6')?`<button class="go" data-g="80">${glyphA()}Continue: Episode 7 · The Hearing</button><button class="go" data-g="70" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 6</button>`:hasSave('ep5')?`<button class="go" data-g="70">${glyphA()}Continue: Episode 6 · The Inquiry</button><button class="go" data-g="50" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 5</button>`:hasSave('ep4')?`<button class="go" data-g="50">${glyphA()}Continue: Episode 5 · Improper Benefits</button><button class="go" data-g="40" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 4</button>`:hasSave('ep3')?`<button class="go" data-g="40">${glyphA()}Continue: Episode 4 · Ineligible</button><button class="go" data-g="30" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 3</button>`:hasSave('ep2')?`<button class="go" data-g="30">${glyphA()}Continue: Episode 3 · The Holiday Classic</button><button class="go" data-g="20" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 2</button>`:hasSave('ep1')?`<button class="go" data-g="20">${glyphA()}Continue: Episode 2 · Splinters & Spotlights</button><button class="go" data-g="10" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 1</button>`:hasSave()?`<button class="go" data-g="10">${glyphA()}Continue: Episode 1 · Cut List</button><button class="go" data-g="1" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Start over: Episode Zero</button>`:`<button class="go" data-g="1">${glyphA()}Begin: Episode Zero</button><button class="go" data-g="10" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Skip to Episode 1 (default choices)</button>`}<button class="go" data-g="60" style="background:#f2ead6;animation:none;margin-top:12px">${IN.last==='pad'?'<b style="background:#e0b400;color:#111;border-radius:50%;padding:0 8px;margin-right:8px">Y</b>':IN.last==='kb'?'<b style="margin-right:8px">[3]</b>':''}🐴 H-O-R-S-E</button><button class="go" data-g="-2" style="background:#f2ead6;animation:none;margin-top:12px">${IN.last==='pad'?'<b style="background:#c92a2a;color:#fff;border-radius:50%;padding:0 8px;margin-right:8px">B</b>':IN.last==='kb'?'<b style="margin-right:8px">[4]</b>':''}📺 Episodes</button>`;
+  const card=$('#card');card.innerHTML=`<h1>FRESHMAN</h1><h2>EPISODE ZERO · OPEN GYM</h2><p>One rainy afternoon before tryouts. Every choice, every shot, and every silence will be remembered.</p><p style="opacity:.7">Controller, keyboard or touch. Sound on.</p>${hasSave('ep16')?`<button class="go" data-g="-2">${glyphA()}Season Two complete · Pick an episode</button><button class="go" data-g="170" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay the Season 2 Finale</button>`:hasSave('ep15')?`<button class="go" data-g="170">${glyphA()}Continue: SOPHOMORE · Episode 8 · The Long Hallway (Finale)</button><button class="go" data-g="160" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Sophomore Episode 7</button>`:hasSave('ep14')?`<button class="go" data-g="160">${glyphA()}Continue: SOPHOMORE · Episode 7 · Sectionals</button><button class="go" data-g="150" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Sophomore Episode 6</button>`:hasSave('ep13')?`<button class="go" data-g="150">${glyphA()}Continue: SOPHOMORE · Episode 6 · Rematch</button><button class="go" data-g="140" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Sophomore Episode 5</button>`:hasSave('ep12')?`<button class="go" data-g="140">${glyphA()}Continue: SOPHOMORE · Episode 5</button><button class="go" data-g="130" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Sophomore Episode 4</button>`:hasSave('ep11')?`<button class="go" data-g="130">${glyphA()}Continue: SOPHOMORE · Episode 4 · The Fork</button><button class="go" data-g="120" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Sophomore Episode 3</button>`:hasSave('ep10')?`<button class="go" data-g="120">${glyphA()}Continue: SOPHOMORE · Episode 3 · Standings</button><button class="go" data-g="110" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Sophomore Episode 2</button>`:hasSave('ep9')?`<button class="go" data-g="110">${glyphA()}Continue: SOPHOMORE · Episode 2 · Road Greys</button><button class="go" data-g="100" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Sophomore Episode 1</button>`:hasSave('ep8')?`<button class="go" data-g="100">${glyphA()}Continue: SOPHOMORE · Episode 1 · Summer Reruns</button><button class="go" data-g="90" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay the Season 1 Finale</button>`:hasSave('ep7')?`<button class="go" data-g="90">${glyphA()}Continue: Episode 8 · The Last Practice (Finale)</button><button class="go" data-g="80" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 7</button>`:hasSave('ep6')?`<button class="go" data-g="80">${glyphA()}Continue: Episode 7 · The Hearing</button><button class="go" data-g="70" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 6</button>`:hasSave('ep5')?`<button class="go" data-g="70">${glyphA()}Continue: Episode 6 · The Inquiry</button><button class="go" data-g="50" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 5</button>`:hasSave('ep4')?`<button class="go" data-g="50">${glyphA()}Continue: Episode 5 · Improper Benefits</button><button class="go" data-g="40" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 4</button>`:hasSave('ep3')?`<button class="go" data-g="40">${glyphA()}Continue: Episode 4 · Ineligible</button><button class="go" data-g="30" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 3</button>`:hasSave('ep2')?`<button class="go" data-g="30">${glyphA()}Continue: Episode 3 · The Holiday Classic</button><button class="go" data-g="20" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 2</button>`:hasSave('ep1')?`<button class="go" data-g="20">${glyphA()}Continue: Episode 2 · Splinters & Spotlights</button><button class="go" data-g="10" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 1</button>`:hasSave()?`<button class="go" data-g="10">${glyphA()}Continue: Episode 1 · Cut List</button><button class="go" data-g="1" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Start over: Episode Zero</button>`:`<button class="go" data-g="1">${glyphA()}Begin: Episode Zero</button><button class="go" data-g="10" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Skip to Episode 1 (default choices)</button>`}<button class="go" data-g="60" style="background:#f2ead6;animation:none;margin-top:12px">${IN.last==='pad'?'<b style="background:#e0b400;color:#111;border-radius:50%;padding:0 8px;margin-right:8px">Y</b>':IN.last==='kb'?'<b style="margin-right:8px">[3]</b>':''}🐴 H-O-R-S-E</button><button class="go" data-g="-2" style="background:#f2ead6;animation:none;margin-top:12px">${IN.last==='pad'?'<b style="background:#c92a2a;color:#fff;border-radius:50%;padding:0 8px;margin-right:8px">B</b>':IN.last==='kb'?'<b style="margin-right:8px">[4]</b>':''}📺 Episodes</button>`;
   card.classList.add('on');await fade(false,900);
   bg(async()=>{while(card.classList.contains('on')){await shootBall(ball2,kai,'make');await fly(ball2,handPos(kai),.7,.8);hold(ball2,kai);await wait(700);}});
   bg(async()=>{let a=0;while(card.classList.contains('on')){a+=.0035;shot(V(-2+Math.cos(a)*9,2.4,Math.sin(a)*6),V(-8,1.8,-1),{fov:42,cut:false,sp:.8});await wait(30);}});
@@ -2092,7 +2094,7 @@ async function eTitle(){
 }
 
 async function e1(){ // the truck
-  setLoc('lot');hideAll();cine(true);setAmb({rain:1.1,hum:0});
+  setLoc('lot');lotMode('home');hideAll();cine(true);setAmb({rain:1.1,hum:0});
   const T=CARS.dad;T.g.visible=true;T.g.position.set(1.4,0,2.2);T.g.rotation.y=PI;T.light.intensity=.9;
   seat(dad,T,T.seatD);seat(theo,T,T.seatP);
   sweep.intensity=1.8;let sx=12;const sw=d=>{sx-=d*9;if(sx<-12)sx=12;sweep.position.set(sx,3.2,2.2);};tickers.add(sw);
@@ -2628,7 +2630,7 @@ async function f4(){ // the post
 }
 
 async function f5(){ // car ride, snow
-  for(const c of chars)unsuit(c);setLoc('lot');hideAll();cine(true);setSky('snow');setAmb({rain:0,hum:0});
+  for(const c of chars)unsuit(c);setLoc('lot');lotMode('home');hideAll();cine(true);setSky('snow');setAmb({rain:0,hum:0});
   const C=CARS.dad;C.g.visible=true;C.g.position.set(1.4,0,2.2);C.g.rotation.y=PI;C.light.intensity=.9;seat(dad,C,C.seatD);seat(theo,C,C.seatP);
   const il=new THREE.PointLight(0xffd2a0,1.1,3.5);il.position.set(.35,1.75,2.2);LOC.lot.g.add(il);
   sweep.intensity=1.6;let sx=12;const sw=d=>{sx-=d*8;if(sx<-12)sx=12;sweep.position.set(sx,3.2,2.2);};tickers.add(sw);
@@ -3193,7 +3195,7 @@ async function h6(){ // the final
   await fade(true,800);
 }
 async function h7(){ // grades post; the kitchen
-  for(const c of chars)unsuit(c);setLoc('lot');hideAll();cine(true);setSky('snow');setAmb({rain:0,hum:0});
+  for(const c of chars)unsuit(c);setLoc('lot');lotMode('home');hideAll();cine(true);setSky('snow');setAmb({rain:0,hum:0});
   const T=CARS.dad;T.g.visible=true;T.g.position.set(1.4,0,2.2);T.g.rotation.y=PI;const V2=CARS.kai;V2.g.visible=true;V2.g.position.set(-2.4,0,2.4);V2.g.rotation.y=PI;
   put(theo,-.6,-1.6,PI*.9,'phone');shot(V(-2.6,1.6,-3.8),V(0,1.2,1),{fov:40});await fade(false,700);
   await cap('Friday, January 16. 6:02 PM. Home.',1900);
@@ -3429,7 +3431,7 @@ async function i5(){ // at Westbury
   S.log.box5=inel?null:boxLine();await wait(900);gameMode(false);setScore(0,0,false);await fade(true,800);
 }
 async function i6(){ // Westbury lot: Stroud, Vance
-  for(const c of chars)unsuit(c);setLoc('lot');hideAll();cine(true);setSky('snow');
+  for(const c of chars)unsuit(c);setLoc('lot');lotMode('away');hideAll();cine(true);setSky('snow');
   const V2=CARS.kai;V2.g.visible=true;V2.g.position.set(-2.4,0,2.4);V2.g.rotation.y=PI;
   put(EX.stroud,-1.2,1.1,PI,'idle');put(theo,-.9,-.6,0);face(EX.stroud,theo.g.position,true);face(theo,EX.stroud.g.position,true);
   shot(V(1.8,1.6,-2.2),V(-1.1,1.3,.4),{fov:40});await fade(false,700);
@@ -3463,7 +3465,7 @@ async function i6(){ // Westbury lot: Stroud, Vance
   await fade(true,700);
 }
 async function i7(){ // Dad's truck
-  setLoc('lot');hideAll();cine(true);setSky('snow');
+  setLoc('lot');lotMode('away');hideAll();cine(true);setSky('snow');
   const T=CARS.dad;T.g.visible=true;T.g.position.set(1.4,0,2.2);T.g.rotation.y=PI;
   put(theo,.5,1.3,PI/2,'phone');put(dad,3.6,-.4,-PI/2,'idle');put(coach,2.8,-.6,PI/2,'cross');
   shot(V(-1.2,1.5,-.4),V(1,1.1,1.8),{fov:40});await fade(false,700);
@@ -4664,7 +4666,8 @@ async function clutch(o){ensureBox();skInit();await teach('clutch');
       const moves=plays.slice(3).sort(()=>Math.random()-.5),base=plays.slice(0,3).sort(()=>Math.random()-.5);const offer=moves.slice(0,2).concat(base).slice(0,4);
       hideAll();put(hollis,-6.2,-7.4,0,'cross');face(hollis,V(-9,0,0),true);
       shot(V(-4.6,1.5,-5.2),headPos(hollis),{fov:36});
-      await say(hollis,S.f.captain==='yes'||S.f.captain==='silent'?'<i>(holding up a whiteboard)</i> Your call, captain.':'<i>(pointing at the whiteboard)</i> Pick one. Quickly.',1400);
+      const HL=S.f.captain==='yes'||S.f.captain==='silent'?['<i>(holding up the whiteboard)</i> Your call, captain.','Captain\'s choice. Choose well. Or quickly. Ideally both.','<i>(tapping the board)</i> You know what they\'re giving us. Take it.','I have a preference. I am not going to tell you what it is.']:['<i>(pointing at the whiteboard)</i> Pick one. Quickly.','<i>(tapping the board twice)</i> One of these. Now.','The numbers like two of these. Pick one of the two.','<i>(sighing)</i> Choose. I\'ll pretend I agree.'];
+      await say(hollis,HL[(Math.random()*HL.length)|0],1400);
       let c=await choose(offer,4.5);if(c<0){c=0;await cap('Hollis calls it for you.',1000);}
       const k=offer[c].k,lay=[[T.wing,'lw'],[O[3],'lw','g'],[T.post,'rb'],[O[4],'rb','g',.6]];
       if(k==='pnr')await pickRoll({myDef:O[0],big:lou_,bigDef:O[2],corner:sh_,cornerDef:O[1],lay});
@@ -4920,7 +4923,7 @@ async function t0(){
   card.classList.add('on');sfx('thud');await waitSkip(3800);card.classList.remove('on');
 }
 async function t1(){ // Dad's first day
-  for(const c of chars)unsuit(c);setLoc('lot');hideAll();cine(true);setSky('snow');
+  for(const c of chars)unsuit(c);setLoc('lot');lotMode('home');hideAll();cine(true);setSky('snow');
   const car=CARS.kai;car.g.visible=true;car.g.position.set(2.8,0,1.2);car.g.rotation.y=PI*.5;
   put(dad,.6,.4,PI*.9);put(theo,-.4,-1.4,0);face(dad,theo.g.position,true);face(theo,dad.g.position,true);
   shot(V(-2.2,1.5,-3),V(1.2,1.1,.6),{fov:44});await fade(false,800);
@@ -5017,7 +5020,7 @@ async function t5(){ // first consequence, by path
   if(S.f.path==='program'){
     setLoc('dome');hideAll();cine(true);setScore(0,0,false);const V0=EX.vance;
     put(V0,-5.8,-3.2,PI*.25);put(theo,-6.6,-1.6,PI*1.1);face(V0,theo.g.position,true);face(theo,V0.g.position,true);
-    if(S.f.malik_deep)put(MAL(),-9.4,-2.6,PI*.5,'dribble');
+    if(S.f.malik_deep){put(MAL(),-9.4,-2.6,PI*.5,'dribble');suit(MAL(),23,false,'Select');}
     kDolly(V(4,2.6,6.5),V(1,1.8,4.2),V(-8,3,-4),V(-7,1.4,-2),7,52,40);await fade(false,900);
     await cap('Saturday. The Dome, Carmel. Midwest Select. Four courts. A smoothie bar. Somebody\'s dad filming everything.',3000);
     if(S.f.malik_deep){cu(MAL(),{d:1.2,fov:26});await say(MAL(),'<i>(waving, way too happy)</i> CAPTAIN! Told you! Told you he\'d come!',2000);}
@@ -5063,7 +5066,7 @@ async function t6(){ // North Vigo — Clutch Time
 async function t7(){ // the cliffhangers
   for(const c of chars)unsuit(c);
   if(S.f.path==='program'){
-    setLoc('lot');hideAll();cine(true);setSky('snow');
+    setLoc('lot');lotMode('home');hideAll();cine(true);setSky('snow');
     const car=CARS.kai;car.g.visible=true;car.g.position.set(2.4,0,1.4);car.g.rotation.y=PI*.5;
     put(theo,.7,.4,PI*.35);face(theo,car.g.position,true);
     shot(V(-2,1.5,-2.2),V(1.4,1,.9),{fov:42});await fade(false,800);
@@ -5116,7 +5119,7 @@ async function w1(){ // the mentor
   for(const c of chars)unsuit(c);setScore(0,0,false);
   if(PROG()){const D=EX.dre;setLoc('dome');hideAll();cine(true);
     put(D,-8.6,-1.2,PI/2,'cross');put(theo,-6.8,-.6,-PI/2,'idle');hold(ball,theo,'tuck');face(D,theo.g.position,true);face(theo,D.g.position,true);
-    if(S.f.malik_deep)put(MAL(),-10.6,2.6,PI*.4,'dribble');
+    if(S.f.malik_deep){put(MAL(),-10.6,2.6,PI*.4,'dribble');suit(MAL(),23,false,'Select');}
     kDolly(V(2,3.2,6),V(-2,1.8,3.2),V(-8,2.6,-2),V(-7.8,1.4,-.9),7,50,38);await fade(false,900);
     await cap('Saturday, January 23. The Dome. 7 AM. Court 3. Nobody else is here yet except the man in the folding chair.',3000);
     cu(D,{d:1.3,fov:28});
