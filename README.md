@@ -2,7 +2,7 @@
 
 A story-driven high school basketball season, in the spirit of Telltale's *The Wolf Among Us*. You play Theo Reyes, a freshman at Halston Heights. The basketball is quick-time events (shots, passes, defensive reads, free throws). The story is everything else: family, money, a recruiter named Vance, a state inquiry, and who you sit next to at the banquet. Choices carry forward across all nine episodes.
 
-**Play:** https://papaserf.github.io/freshman/
+**Play:** https://papaserf.github.io/Freshman/
 
 Works in Chrome, Edge or Firefox on PC (keyboard or controller) and on Android tablets (touch). Sound on.
 
