@@ -264,7 +264,7 @@ function audioInit(){
     applyAmb();}catch(e){AC=null;}
 }
 function setAmb(a){amb=a;applyAmb();}
-let SKY='rain';const skyFor=i=>i<20?'rain':i<30?'clear':i<40?'snow':i<50?'clear':i<70?'snow':i<80?'clear':i<100?'clear':i<110?'clear':i<120?'snow':i<130?'snow':i<140?'snow':i<150?'snow':'clear';
+let SKY='rain';const skyFor=i=>i<20?'rain':i<30?'clear':i<40?'snow':i<50?'clear':i<70?'snow':i<80?'clear':i<100?'clear':i<110?'clear':i<120?'snow':i<130?'snow':i<140?'snow':i<150?'snow':i<160?'snow':'clear';
 function setSky(w){SKY=w;for(const k in LOC)LOC[k].sky&&LOC[k].sky(w);applyAmb();}
 function applyAmb(){if(!AC)return;const t=AC.currentTime;rainG.gain.setTargetAtTime(amb.rain*.2*(SKY==='rain'?1:0),t,.5);humG.gain.setTargetAtTime(amb.hum*.022,t,.5);}
 function tone(f,dur,type='sine',vol=.2,slide=0,delay=0){if(!AC)return;const t=AC.currentTime+delay;const o=AC.createOscillator();o.type=type;o.frequency.setValueAtTime(f,t);if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(20,f*slide),t+dur);const g=AC.createGain();g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g).connect(MG);o.start(t);o.stop(t+dur+.05);}
@@ -1635,7 +1635,7 @@ async function driveKick(o){ensureBox();hideAll();setScore(S.score[0],S.score[1]
 /* ================= SCENES ================= */
 const glyphA=()=>IN.last==='pad'?'<b style="background:#2f9e44;color:#fff;border-radius:50%;padding:0 8px;margin-right:8px">A</b>':IN.last==='kb'?'<b style="margin-right:8px">[Space]</b>':'';
 const glyphX=()=>IN.last==='pad'?'<b style="background:#2463c9;color:#fff;border-radius:50%;padding:0 8px;margin-right:8px">X</b>':IN.last==='kb'?'<b style="margin-right:8px">[2]</b>':'';
-const EPISODES=[[1,'ZERO','Open Gym',null],[10,'1','Cut List','ep0'],[20,'2','Splinters & Spotlights','ep1'],[30,'3','The Holiday Classic','ep2'],[40,'4','Ineligible','ep3'],[50,'5','Improper Benefits','ep4'],[70,'6','The Inquiry','ep5'],[80,'7','The Hearing','ep6'],[90,'8','The Last Practice','ep7'],[100,'SOPH · EP 1','Summer Reruns','ep8'],[110,'SOPH · EP 2','Road Greys','ep9'],[120,'SOPH · EP 3','Standings','ep10'],[130,'SOPH · EP 4','The Fork','ep11'],[140,'SOPH · EP 5','Program / Outside','ep12']];
+const EPISODES=[[1,'ZERO','Open Gym',null],[10,'1','Cut List','ep0'],[20,'2','Splinters & Spotlights','ep1'],[30,'3','The Holiday Classic','ep2'],[40,'4','Ineligible','ep3'],[50,'5','Improper Benefits','ep4'],[70,'6','The Inquiry','ep5'],[80,'7','The Hearing','ep6'],[90,'8','The Last Practice','ep7'],[100,'SOPH · EP 1','Summer Reruns','ep8'],[110,'SOPH · EP 2','Road Greys','ep9'],[120,'SOPH · EP 3','Standings','ep10'],[130,'SOPH · EP 4','The Fork','ep11'],[140,'SOPH · EP 5','Program / Outside','ep12'],[150,'SOPH · EP 6','Rematch','ep13']];
 function episodePick(){const card=$('#card');
   card.innerHTML=`<h1 style="font-size:clamp(46px,9vw,96px)">EPISODES</h1><h2>SEASON ONE · SOPHOMORE</h2><div class="hgrid">${EPISODES.map(([g,n,t,req],i)=>{const ok=!req||hasSave(req);return `<button class="hb ep${ok?'':' lk'}" data-i="${i}" ${ok?'':'disabled'}><b>${n.includes('·')?n:'EPISODE '+n}</b><em>${ok?t:'Locked'}</em>${hasSave(i===0?'ep0':'ep'+i)?'<i>✓ Played</i>':''}</button>`;}).join('')}</div><p style="opacity:.7">${IN.last==='touch'?'Tap an episode':'Arrows to move · '+glyphA()+'to play · B / [4] to go back'}</p>`;
   card.classList.add('on');card.scrollTop=0;
@@ -1653,7 +1653,7 @@ async function prevRecap(){const L=Object.values(S.log||{}).filter(x=>typeof x==
 async function sTitle(){
   hideAll();setLoc('gym');put(kai,-8,-1.5,-PI/2);hold(ball2,kai);
   shot(V(4,2.2,5),V(-6,2,-2),{fov:42});setAmb({rain:.3,hum:.6});
-  const card=$('#card');card.innerHTML=`<h1>FRESHMAN</h1><h2>EPISODE ZERO · OPEN GYM</h2><p>One rainy afternoon before tryouts. Every choice, every shot, and every silence will be remembered.</p><p style="opacity:.7">Controller, keyboard or touch. Sound on.</p>${hasSave('ep12')?`<button class="go" data-g="140">${glyphA()}Continue: SOPHOMORE · Episode 5</button><button class="go" data-g="130" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Sophomore Episode 4</button>`:hasSave('ep11')?`<button class="go" data-g="130">${glyphA()}Continue: SOPHOMORE · Episode 4 · The Fork</button><button class="go" data-g="120" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Sophomore Episode 3</button>`:hasSave('ep10')?`<button class="go" data-g="120">${glyphA()}Continue: SOPHOMORE · Episode 3 · Standings</button><button class="go" data-g="110" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Sophomore Episode 2</button>`:hasSave('ep9')?`<button class="go" data-g="110">${glyphA()}Continue: SOPHOMORE · Episode 2 · Road Greys</button><button class="go" data-g="100" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Sophomore Episode 1</button>`:hasSave('ep8')?`<button class="go" data-g="100">${glyphA()}Continue: SOPHOMORE · Episode 1 · Summer Reruns</button><button class="go" data-g="90" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay the Season 1 Finale</button>`:hasSave('ep7')?`<button class="go" data-g="90">${glyphA()}Continue: Episode 8 · The Last Practice (Finale)</button><button class="go" data-g="80" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 7</button>`:hasSave('ep6')?`<button class="go" data-g="80">${glyphA()}Continue: Episode 7 · The Hearing</button><button class="go" data-g="70" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 6</button>`:hasSave('ep5')?`<button class="go" data-g="70">${glyphA()}Continue: Episode 6 · The Inquiry</button><button class="go" data-g="50" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 5</button>`:hasSave('ep4')?`<button class="go" data-g="50">${glyphA()}Continue: Episode 5 · Improper Benefits</button><button class="go" data-g="40" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 4</button>`:hasSave('ep3')?`<button class="go" data-g="40">${glyphA()}Continue: Episode 4 · Ineligible</button><button class="go" data-g="30" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 3</button>`:hasSave('ep2')?`<button class="go" data-g="30">${glyphA()}Continue: Episode 3 · The Holiday Classic</button><button class="go" data-g="20" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 2</button>`:hasSave('ep1')?`<button class="go" data-g="20">${glyphA()}Continue: Episode 2 · Splinters & Spotlights</button><button class="go" data-g="10" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 1</button>`:hasSave()?`<button class="go" data-g="10">${glyphA()}Continue: Episode 1 · Cut List</button><button class="go" data-g="1" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Start over: Episode Zero</button>`:`<button class="go" data-g="1">${glyphA()}Begin: Episode Zero</button><button class="go" data-g="10" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Skip to Episode 1 (default choices)</button>`}<button class="go" data-g="60" style="background:#f2ead6;animation:none;margin-top:12px">${IN.last==='pad'?'<b style="background:#e0b400;color:#111;border-radius:50%;padding:0 8px;margin-right:8px">Y</b>':IN.last==='kb'?'<b style="margin-right:8px">[3]</b>':''}🐴 H-O-R-S-E</button><button class="go" data-g="-2" style="background:#f2ead6;animation:none;margin-top:12px">${IN.last==='pad'?'<b style="background:#c92a2a;color:#fff;border-radius:50%;padding:0 8px;margin-right:8px">B</b>':IN.last==='kb'?'<b style="margin-right:8px">[4]</b>':''}📺 Episodes</button>`;
+  const card=$('#card');card.innerHTML=`<h1>FRESHMAN</h1><h2>EPISODE ZERO · OPEN GYM</h2><p>One rainy afternoon before tryouts. Every choice, every shot, and every silence will be remembered.</p><p style="opacity:.7">Controller, keyboard or touch. Sound on.</p>${hasSave('ep13')?`<button class="go" data-g="150">${glyphA()}Continue: SOPHOMORE · Episode 6 · Rematch</button><button class="go" data-g="140" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Sophomore Episode 5</button>`:hasSave('ep12')?`<button class="go" data-g="140">${glyphA()}Continue: SOPHOMORE · Episode 5</button><button class="go" data-g="130" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Sophomore Episode 4</button>`:hasSave('ep11')?`<button class="go" data-g="130">${glyphA()}Continue: SOPHOMORE · Episode 4 · The Fork</button><button class="go" data-g="120" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Sophomore Episode 3</button>`:hasSave('ep10')?`<button class="go" data-g="120">${glyphA()}Continue: SOPHOMORE · Episode 3 · Standings</button><button class="go" data-g="110" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Sophomore Episode 2</button>`:hasSave('ep9')?`<button class="go" data-g="110">${glyphA()}Continue: SOPHOMORE · Episode 2 · Road Greys</button><button class="go" data-g="100" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Sophomore Episode 1</button>`:hasSave('ep8')?`<button class="go" data-g="100">${glyphA()}Continue: SOPHOMORE · Episode 1 · Summer Reruns</button><button class="go" data-g="90" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay the Season 1 Finale</button>`:hasSave('ep7')?`<button class="go" data-g="90">${glyphA()}Continue: Episode 8 · The Last Practice (Finale)</button><button class="go" data-g="80" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 7</button>`:hasSave('ep6')?`<button class="go" data-g="80">${glyphA()}Continue: Episode 7 · The Hearing</button><button class="go" data-g="70" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 6</button>`:hasSave('ep5')?`<button class="go" data-g="70">${glyphA()}Continue: Episode 6 · The Inquiry</button><button class="go" data-g="50" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 5</button>`:hasSave('ep4')?`<button class="go" data-g="50">${glyphA()}Continue: Episode 5 · Improper Benefits</button><button class="go" data-g="40" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 4</button>`:hasSave('ep3')?`<button class="go" data-g="40">${glyphA()}Continue: Episode 4 · Ineligible</button><button class="go" data-g="30" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 3</button>`:hasSave('ep2')?`<button class="go" data-g="30">${glyphA()}Continue: Episode 3 · The Holiday Classic</button><button class="go" data-g="20" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 2</button>`:hasSave('ep1')?`<button class="go" data-g="20">${glyphA()}Continue: Episode 2 · Splinters & Spotlights</button><button class="go" data-g="10" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Replay Episode 1</button>`:hasSave()?`<button class="go" data-g="10">${glyphA()}Continue: Episode 1 · Cut List</button><button class="go" data-g="1" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Start over: Episode Zero</button>`:`<button class="go" data-g="1">${glyphA()}Begin: Episode Zero</button><button class="go" data-g="10" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Skip to Episode 1 (default choices)</button>`}<button class="go" data-g="60" style="background:#f2ead6;animation:none;margin-top:12px">${IN.last==='pad'?'<b style="background:#e0b400;color:#111;border-radius:50%;padding:0 8px;margin-right:8px">Y</b>':IN.last==='kb'?'<b style="margin-right:8px">[3]</b>':''}🐴 H-O-R-S-E</button><button class="go" data-g="-2" style="background:#f2ead6;animation:none;margin-top:12px">${IN.last==='pad'?'<b style="background:#c92a2a;color:#fff;border-radius:50%;padding:0 8px;margin-right:8px">B</b>':IN.last==='kb'?'<b style="margin-right:8px">[4]</b>':''}📺 Episodes</button>`;
   card.classList.add('on');await fade(false,900);
   bg(async()=>{while(card.classList.contains('on')){await shootBall(ball2,kai,'make');await fly(ball2,handPos(kai),.7,.8);hold(ball2,kai);await wait(700);}});
   bg(async()=>{let a=0;while(card.classList.contains('on')){a+=.0035;shot(V(-2+Math.cos(a)*9,2.4,Math.sin(a)*6),V(-8,1.8,-1),{fov:42,cut:false,sp:.8});await wait(30);}});
@@ -1661,7 +1661,7 @@ async function sTitle(){
   const g=await waitable(done=>{const go=n=>{audioInit();done(n);};bs.forEach(b=>b.addEventListener('pointerdown',e=>{e.stopPropagation();if(e.pointerType==='touch')setLast('touch');go(+b.dataset.g);}));const off=onIn((x,t)=>{if(t!=='down')return;if(x==='A')go(+bs[0].dataset.g);else if(x==='X'&&bs.length>2)go(+bs[1].dataset.g);else if(x==='Y')go(60);else if(x==='B')go(-2);});return()=>off();});
   if(g===-2){const keep=card.innerHTML;const pick=await episodePick();if(pick<0){card.classList.remove('on');return{goto:0};}g=pick;}
   await fade(true,600);card.classList.remove('on');hideAll();
-  if(g===140){S=loadSave('ep12')||loadSave('ep11')||loadSave()||S0();}else if(g===130){S=loadSave('ep11')||loadSave('ep10')||loadSave()||S0();}else if(g===120){S=loadSave('ep10')||loadSave('ep9')||loadSave()||S0();}else if(g===110){S=loadSave('ep9')||loadSave('ep8')||loadSave()||S0();}else if(g===100){S=loadSave('ep8')||loadSave('ep7')||loadSave()||S0();}else if(g===90){S=loadSave('ep7')||loadSave('ep6')||loadSave('ep5')||loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0();}else if(g===80){S=loadSave('ep6')||loadSave('ep5')||loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0();}else if(g===70){S=loadSave('ep5')||loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0();}else if(g===60){S=loadSave('ep5')||loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0();}else if(g===50){S=loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0();}else if(g===40){S=loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0();}else if(g===30){S=loadSave('ep2')||loadSave('ep1')||loadSave()||S0();}else if(g===20){S=loadSave('ep1')||loadSave()||S0();}else if(g===10){S=loadSave()||S0();}else S=S0();dbg();return{goto:g};
+  if(g===150){S=loadSave('ep13')||loadSave('ep12')||loadSave()||S0();}else if(g===140){S=loadSave('ep12')||loadSave('ep11')||loadSave()||S0();}else if(g===130){S=loadSave('ep11')||loadSave('ep10')||loadSave()||S0();}else if(g===120){S=loadSave('ep10')||loadSave('ep9')||loadSave()||S0();}else if(g===110){S=loadSave('ep9')||loadSave('ep8')||loadSave()||S0();}else if(g===100){S=loadSave('ep8')||loadSave('ep7')||loadSave()||S0();}else if(g===90){S=loadSave('ep7')||loadSave('ep6')||loadSave('ep5')||loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0();}else if(g===80){S=loadSave('ep6')||loadSave('ep5')||loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0();}else if(g===70){S=loadSave('ep5')||loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0();}else if(g===60){S=loadSave('ep5')||loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0();}else if(g===50){S=loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0();}else if(g===40){S=loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0();}else if(g===30){S=loadSave('ep2')||loadSave('ep1')||loadSave()||S0();}else if(g===20){S=loadSave('ep1')||loadSave()||S0();}else if(g===10){S=loadSave()||S0();}else S=S0();dbg();return{goto:g};
 }
 
 async function s1(){
@@ -5286,11 +5286,163 @@ async function wEnd(){
   card.classList.remove('on');return{goto:0};
 }
 
+/* ================= SEASON TWO · EPISODE 6: REMATCH ================= */
+async function y0(){
+  hideAll();clearUI();fadeEl.style.opacity=1;setAmb({rain:0,hum:0});await prevRecap();S.log={};S.ep=14;S.season=2;season();skInit();
+  const card=$('#card');card.innerHTML=`<h1 style="font-size:clamp(54px,11vw,120px)">SOPHOMORE</h1><h2>SEASON TWO · EPISODE 6 · REMATCH</h2><p>February. Westbury comes to Halston. Everybody picks a side.</p>`;
+  card.classList.add('on');sfx('thud');await waitSkip(3800);card.classList.remove('on');
+  await seasonCard('FEBRUARY');
+}
+async function y1(){ // the plan
+  for(const c of chars)unsuit(c);
+  if(PROG()){const D=EX.dre;setLoc('diner');hideAll();cine(true);
+    sitOn(theo,1.85,-1.72,PI,.5);sitOn(priya,1.85,-3.08,0,.5);sitOn(D,2.65,-3.08,0,.5);
+    kDolly(V(-1.6,1.2,-2.4),V(-.3,1.12,-2.4),V(2.2,1,-2.4),V(2.2,1,-2.4),10,38,32);await fade(false,900);
+    await cap("Sal's. Monday, February 1. 10 PM. Sal locked the front door and left them the key. He didn't ask.",2800);
+    cu(D,{d:1.3,fov:28});await say(D,S.f.s2e5_end==='start'?'You said you\'d start it. This is what starting looks like. A booth, a reporter, and a man who\'s scared of his landlord.':'I said I\'d finish it if somebody started. Miss Shah says somebody started.');
+    await say(D,'My notebook, your father\'s notebook, and her four families. That\'s enough to end him. It\'s also enough to end a lot of people standing near him.');
+    cu(priya,{d:1.2,fov:28});await say(priya,"There are four ways to do this and every one of them hurts somebody. I need you to pick, Theo. It's your dad on page nine.");
+    cu(theo,{d:1,fov:26});
+    let i=await choose([{t:'Priya publishes. The Diaries, everything.'},{t:'Take it to Whitfield and the state. Officially.'},{t:'Go to Purdue first. Protect my shot.'},{t:'Wait until after the season.'}],12);i=i<0?3:i;
+    S.f.plan=['press','state','purdue','wait'][i];S.log.plan=['chose to let Priya publish everything','chose to take it to Whitfield and the state','chose to go to Purdue first','chose to wait until after the season'][i];
+    cu(priya,{d:1.2,fov:28});
+    await say(priya,['<i>(she breathes out)</i> Okay. Okay. Friday night. After the game. So nobody says we did it to win.','The slow way. It\'s the right way. It\'s also the way where Vance gets six weeks to make calls.','<i>(carefully)</i> That\'s… a fair thing to want. I hate that it\'s fair.','<i>(she closes her notebook)</i> Malik has six more weeks with him then. You know that, right?'][i],3000);
+    cu(D,{d:1.3,fov:28});await say(D,['Then I\'m a source. Unnamed. For now.','Then I\'ll sign my name. I\'m tired of the folding chair.','Morris is a good man. Good men still work for programs.','Then I wait too. I\'m good at it. That\'s the problem.'][i]);
+  }else{setLoc('office');hideAll();cine(true);sitOn(hollis,0,-1.55,0,.5);put(theo,.1,1.2,PI);
+    shot(V(1.9,1.6,1.6),V(0,1.2,-.6),{fov:40});await fade(false,700);
+    const e=S.f.s2e5_end;
+    await cap(e==='none'?'Thursday. Hollis\'s office. Purdue called him anyway, since Theo never answered.':'Thursday. Hollis\'s office. A desk phone on speaker. Purdue on the other end.',2600);
+    const M='D. MORRIS (PURDUE)';
+    await say(M,e==='all'?'You said you\'d tell me everything. I\'ve got a notepad and forty minutes.':e==='ball'?'Basketball, you said. Let\'s start there and see where it goes.':'Mr. Hollis tells me you\'re the hardest-working kid he\'s ever coached and the least likely to complain about it. That\'s not what I was told.');
+    cu(hollis,{d:1.5,fov:28});await say(hollis,'<i>(leaning toward the phone)</i> I also have a spreadsheet. It has tabs.');
+    await say(M,'Rick Vance moves a lot of kids. He\'s moved a few to us. I need to know if I\'m about to have a problem.');
+    cu(theo,{d:1,fov:26});
+    let i=await choose([{t:'Tell him everything. Dad’s log, the complaint, all of it.'},{t:'“Watch me play Friday. Decide then.”'},{t:'“Ask Rick why he’s scared of a sophomore.”'}],10);i=i<0?1:i;
+    S.f.plan=['purdue_all','ball','dare'][i];S.log.plan=['told Purdue everything about Vance','told Purdue to watch you play Friday','told Purdue to ask Vance why he’s scared of a sophomore'][i];
+    await say(M,['<i>(a long silence on the line)</i> …Okay. Okay. I\'m going to need to make some calls. Some of them are going to be to lawyers. Keep playing, Theo.','<i>(a short laugh)</i> Fair. I\'ll be there. Front row, behind the bench.','<i>(a pause)</i> …That\'s a good question. I think I\'ll ask it.'][i],3000);
+    if(i===0){S.purdue=clamp(S.purdue+.5,0,5);}fx({coach:1});
+  }
+  await fade(true,700);
+}
+async function y2(){ // Dad
+  for(const c of chars)unsuit(c);setLoc('home');hideAll();cine(true);LOC.home.quiz.visible=false;
+  sitOn(dad,-1,0,PI/2,.47);sitOn(theo,0,.75,PI,.47);sitOn(mom,0,-.75,0,.47);
+  shot(V(2.1,1.6,1.8),V(-.3,.95,0),{fov:42});await fade(false,700);
+  if(PROG()){
+    await cap('Wednesday. Dinner. Dad came home in a sweatshirt. The polo is in the trash. Nobody mentions the polo.',2800);
+    cu(dad,{d:1.2,fov:28});
+    await say(dad,S.f.dad_side==='help'||S.f.malik_told_dad?'I drove to Malik\'s house today. I told his mother what the envelope was. All of it. She hugged me, and then she slapped me. I deserved both.':'I sat in the car outside the Dome for an hour today. I couldn\'t make myself go in. That\'s never happened. Not even after my knee.');
+    await say(dad,`${S.f.plan==='wait'?'Theo. If you want to wait, I\'ll wait. But I want you to know I\'m ready not to.':'Whatever you do Friday, I\'m going to be standing next to you when you do it. Wherever that is. Page nine is mine.'}`);
+    cu(theo,{d:1,fov:26});
+    let i=await choose([{t:'“Then testify with me.”'},{t:'“Let me carry this one.”'},{t:'“I’m proud of you.”'}],8);i=i<0?2:i;
+    S.f.dad_testify=i===0;S.log.dad6=['asked Dad to testify with you','asked Dad to let you carry it','told Dad you’re proud of him'][i];
+    cu(dad,{d:1.2,fov:28});await say(dad,['<i>(nods slowly)</i> Second time in two years. I\'m getting good at it. That\'s a terrible thing to be good at.','No. You carried enough. This one\'s got my name on it.','<i>(he has to put his fork down)</i> …Don\'t. Don\'t say that yet. Say it in March.'][i],2800);
+    fx({family:3});
+  }else{
+    const fired=S.f.dad_whit==='all';
+    await cap(fired?'Wednesday. Dad came home at 11 AM with a cardboard box. Day 40 of 90. It didn\'t make it to 41.':'Wednesday. Day 40 of 90. Dad came home on time. That\'s new.',2800);
+    cu(dad,{d:1.2,fov:28});
+    await say(dad,fired?'Brent walked me out. He said "per Rick." He said it like a prayer.':'I gave Whitfield the log this morning. All of it. Rick doesn\'t know yet. He will.');
+    await say(dad,fired?'Kessler says he\'ll take me back in April. Roofs. My back says no. My back can get in line.':'If he fires me, he fires me. I already know what I\'ll do. I\'ve done it before. On a roof.');
+    cu(mom,{d:1.15,fov:28});await say(mom,'<i>(her hand on his)</i> We\'ve been broke before, Ray. We\'ve never been scared of somebody before. I like broke better.');
+    cu(theo,{d:1,fov:26});
+    let i=await choose([{t:'“I’ll get a job. Weekends.”'},{t:'“This is my fault.”'},{t:'“We’re going to win Friday. For you.”'}],8);i=i<0?2:i;
+    S.f.dad_fired=fired;S.log.dad6=['offered to get a weekend job','told your parents it’s your fault','promised to win Friday for Dad'][i];
+    cu(dad,{d:1.2,fov:28});await say(dad,['Over my dead body. You play. That\'s your job. That was always the deal.','<i>(sharp)</i> No. Hey. A man made a choice. Two men. One of them was me. None of them was you.','<i>(he laughs, finally)</i> Don\'t win it for me. Win it because Westbury is annoying.'][i],2800);
+    fx({family:i===1?1:3});
+  }
+  await fade(true,700);
+}
+async function y3(){ // Westbury week: a practice that counts
+  for(const c of chars)unsuit(c);setLoc('gym');gymAway(null);hideAll();cine(true);setScore(0,0,false);
+  put(hollis,-6.2,-7.4,0,'cross');face(hollis,V(-9,0,0),true);
+  shot(V(-2,1.7,5.5),V(-8,1.2,-1),{fov:44});await fade(false,700);
+  await cap('Thursday practice. Westbury week. Hollis has written "#4 GOES LEFT" on the whiteboard in letters a foot tall.',2800);
+  cu(hollis,{d:1.3,fov:28});await say(hollis,'Five shots from five spots. Then you guard Kai until one of you cries. Statistically it will be Kai.');
+  let made=0;const spots=['lc','lw','top','rw','rc'];
+  for(let k=0;k<5;k++){hideAll();at(theo,spots[k],'ready');hold(ball,theo);camRim();const r=await qShot({mod:k>2?1:0,shooter:theo,label:`SPOT ${k+1} OF 5`});camSide();await shootBall(ball,theo,r==='green'?'make':r==='early'?'front':'back');if(r==='green')made++;await wait(150);}
+  const sb=Math.floor(made/2);if(sb)bumpSk({shoot:sb});
+  cu(hollis,{d:1.3,fov:28});await say(hollis,made>=4?`${made} of 5. I\'m adding a tab.`:made>=2?`${made} of 5. Respectable. Unremarkable. Again tomorrow.`:`${made} of 5. We will not discuss this.`);
+  const ok=await isoStop(kai,{noScore:true,noBoard:true,label:'GUARD KAI',beats:[{dir:'left',t:.62},{dir:'right',t:.58},{dir:'none',t:.75},{dir:'left',t:.55}],line:'Come on, captain. I\'m Westbury\'s #4 today. I go left. Allegedly.',
+    good:[kai,'<i>(laughing, out of breath)</i> Okay. Okay, I\'m crying.'],bad:[kai,'Allegedly!']});
+  if(ok)bumpSk({def:3});S.f.scout_westbury=true;
+  S.log.drill=`hit ${made} of 5 in the shooting drill${ok?' and locked up Kai':''}`;
+  await fade(true,600);
+  await seasonCard('THEO\'S GAME');
+}
+async function y4(){ // pregame: who's in the stands
+  for(const c of chars)unsuit(c);setLoc('hall');hideAll();cine(true);setAmb({rain:0,hum:.9});const r=S.f.route||'none',T=EX.tess;
+  put(theo,.2,-24,0);
+  const who=r==='priya'?priya:r==='tess'?T:lou;put(who,.3,-22.6,PI);face(who,theo.g.position,true);face(theo,who.g.position,true);
+  shot(V(1.6,1.6,-25.6),V(.4,1.4,-23),{fov:40});await fade(false,600);
+  await cap('Friday, February 5. 6:40 PM. The hallway outside the gym. You can hear it through the doors already.',2600);
+  cu(who,{d:1.15,fov:28});
+  if(r==='priya')await say(priya,S.f.plan==='press'?'It\'s ready. It goes live at 10:01 PM. One minute after the buzzer. I wanted to see your face before I pushed the button.':'Press row, seat three. I\'m covering a basketball game tonight. Just a basketball game. I\'m going to enjoy it so much.');
+  else if(r==='tess')await say(T,'Hale doesn\'t play tonight, so I\'m in maroon. Lou made me a sign. It says "THEO RULE IN EFFECT." I don\'t know what it means. I\'m holding it anyway.');
+  else await say(lou,S.f.lou_cold?'<i>(he doesn\'t look at Theo for a while)</i> …I\'m still mad. But it\'s Westbury. I\'m madder at Westbury. Let\'s go.':'Captain. Westbury. Home. Sold out. Nico is filming. Your dad is in row two. Tonight is a movie, man.');
+  cu(theo,{d:1,fov:26});
+  let i=await choose([{t:'“See you after.”'},{t:r==='none'?'“Let’s go get it.”':'[Kiss on the cheek]'},{t:'[Just nod]'}],6);i=i<0?2:i;
+  if(i===1&&r!=='none'){fx({chem:{[r]:2}});cu(who,{d:1.15,fov:28});await say(who,'<i>(very, very quiet)</i> …Okay. Go. Go play.',1800);}
+  else if(i===1){fx({chem:{lou:2}});cu(lou,{d:1.2,fov:26});await say(lou,'<i>(bumping chests, too hard)</i> LET\'S GO GET IT.',1600);if(S.f.lou_cold&&(S.chem.lou||0)>=0){S.f.lou_cold=false;}}
+  else await say(who,'<i>(nods back)</i>',1200);
+  S.log.pre6=r==='none'?'went into the Westbury rematch with Lou':`saw ${r==='priya'?'Priya':'Tess'} before the Westbury rematch`;
+  await fade(true,700);
+}
+async function y5(){ // the rematch
+  setLoc('gym');hideAll();cine(true);gameMode(true,'Westbury');gymAway(null);suitUp();teamNames(true);if(!S.f.stroud_gone)suit(EX.stroud,7);newBox();
+  const O=[EX.o1,EX.o2,EX.o3,EX.o4,EX.o5];const first=S.f.west;
+  setScore(55,58);setClock('Q4  2:00');shot(V(-2,5.5,9),V(-9,0,0),{fov:46});await fade(false,600);
+  await cap(`Halston gym. Sold out. ${first==='W'?'Westbury wants revenge.':'Westbury won the opener. They\'ve been reminding people.'} ${PROG()?'Rick Vance is sitting with the Westbury parents.':'Rick Vance is not here. His podcast employee is.'}`,3200);
+  if(!S.f.stroud_gone){cu(EX.stroud,{d:1.2,fov:26});await say(EX.stroud,'<i>(to Theo, during the timeout)</i> They\'re chanting my name again. It still doesn\'t rhyme. Let\'s go.',2400);}
+  else await say(kai,'<i>(during the timeout)</i> Stroud texted. Said "beat them twice." We owe him one.',2200);
+  const T={big:lou,shooter:S.f.stroud_gone?kai:EX.stroud,wing:S.f.stroud_gone?MAL():kai,post:MAL(),lobber:S.f.stroud_gone?null:EX.stroud};
+  const won=await clutch({team:T,opp:O,us:55,them:58,secs:120,oppKey:'westbury',tell:'left',trash:'Your dad still selling for Vance? Oh wait.'});
+  result(won);S.f.rematch=won?'W':'L';S.log.game6=won?'beat Westbury in the rematch':'lost the Westbury rematch';
+  camWide();await cap(won?'WIN · vs. WESTBURY':'LOSS · vs. WESTBURY',2000);
+  if(won){cheer(2);shot(V(-2,4.5,8),V(-6,1,0),{fov:48});await say(null,'<i>The student section empties onto the floor. Somebody is holding a sign that says THEO RULE IN EFFECT.</i>',2800);}
+  gameMode(false);setScore(0,0,false);await fade(true,700);
+}
+async function y6(){ // after the buzzer
+  for(const c of chars)unsuit(c);setLoc('lot');hideAll();cine(true);setSky('snow');const V0=EX.vance;
+  put(theo,-.4,-1.7,0);put(dad,.5,-1.5,-PI/2);face(theo,V(0,1,0),true);
+  shot(V(1.8,1.6,-2.8),V(-.5,1.1,-.8),{fov:40});await fade(false,700);
+  await cap('10:01 PM. The lot. Snow. Every phone in the parking lot buzzes at once.',2600);
+  const p=S.f.plan;
+  const posts={press:{init:'HD',who:'The Halston Diaries',text:'INVESTIGATION: Inside Midwest Select. Envelopes, a shoe company, and the families who were "taken care of." By Priya Shah. Sources include two Midwest Select employees.'},
+    state:{init:'AW',who:'Ms. Whitfield (AD)',text:'Theo, the IHSAA has opened a formal inquiry into Midwest Select\'s contact with member-school athletes. They will want to speak with you and your father. You did this the right way.'},
+    purdue:{init:'DM',who:'D. Morris · Purdue',text:'Theo, Purdue has suspended all recruiting contact through Midwest Select pending review. Your recruitment is unaffected. Coach asked me to tell you that personally.'},
+    wait:{init:'??',who:'Unknown number',text:'Saw you at Sal\'s Monday. Late. With the reporter and my coach. We should talk, Theo. — R.V.'},
+    purdue_all:{init:'DM',who:'D. Morris · Purdue',text:'Theo, I took what you told me to our compliance office and to the NCAA. Purdue has cut ties with Midwest Select. Your dad\'s log is the reason. Tell him thank you from us.'},
+    ball:{init:'DM',who:'D. Morris · Purdue',text:S.f.rematch==='W'?'Front row. Behind the bench. Saw everything. We\'re offering, Theo. Official visit in March. Tell your dad.':'Front row. Behind the bench. You lost, and you played the last two minutes like a senior. We\'ll talk soon.'},
+    dare:{init:'DM',who:'D. Morris · Purdue',text:'I asked Rick why he\'s scared of a sophomore. He hung up. That told me plenty. We\'ll talk Monday.'}}[p]||{init:'??',who:'Unknown',text:'…'};
+  sfx('phone');await phonePost(Object.assign({time:'10:01 PM',rx:'Notification',comments:[]},posts));
+  cu(dad,{d:1.2,fov:28});await say(dad,'<i>(reading his own phone, then looking across the lot)</i> …Theo.',1600);
+  put(V0,-.8,4.2,PI);face(V0,theo.g.position,true);walkNow(V0,-.7,1.4,{speed:1.2});
+  kDolly(V(-.4,1.4,-3.4),V(-.4,1.45,-2.6),V(-.7,1.5,2.5),V(-.7,1.6,1.6),5,40,30);await wait(2600);
+  cu(V0,{d:1.2,fov:28});
+  await say(V0,p==='wait'?'<i>(snow on his coat, smiling like a man who already won)</i> I\'ve been doing this nineteen years, Theo. You think a sophomore and a girl with a blog are the first?':p==='press'?'<i>(phone in his hand, the Diaries headline glowing on it)</i> That\'s a high school newspaper, son. I have lawyers who\'ve never lost to a high school newspaper.':'<i>(very calm)</i> You understand what happens to the kids I can\'t help anymore? Malik. The four families. You did that to them tonight. Not me. You.',3600);
+  heart=true;kStare(theo);await wait(1500);heart=false;
+  let i=await choose([{t:'“Get away from my dad.”'},{t:'“Say that to Malik’s mom.”'},{t:'[Walk to the car with Dad]'},{t:'[Stay Silent]',silent:true}],9);i=i<0?3:i;
+  S.f.s2e6_end=['dad','malik','walk','silent'][i];S.log.end6=['told Vance to get away from your dad','told Vance to say it to Malik’s mom','walked to the car with Dad and left Vance standing in the snow','stood in the snow and said nothing to Vance'][i];
+  cu(V0,{d:1.2,fov:28});
+  await say(V0,['<i>(he raises both hands, still smiling)</i> Ray. Your boy\'s got a mouth. Use it at the hearing. There\'s going to be a hearing.','<i>(the smile slips for exactly one second)</i>','<i>(calling after them)</i> Sectionals start in two weeks, Theo! I hope you\'re eligible!','<i>(he waits. Then he walks away first. He has never walked away first.)</i>'][i],3200);
+  await fade(true,1400);cine(false);
+}
+async function yEnd(){
+  hideAll();setAmb({rain:0,hum:0});for(const c of chars)unsuit(c);save('ep14');const card=$('#card');
+  card.innerHTML=`<h1 style="font-size:clamp(54px,11vw,120px)">SOPHOMORE</h1><h2>SEASON TWO · EPISODE 6 · REMATCH</h2>`;card.classList.add('on');sfx('thud');await waitSkip(3000);
+  const L=S.log;const rows=[['THE PLAN',L.plan],['DAD',L.dad6],['PRACTICE',L.drill],['BEFORE THE GAME',L.pre6],['WESTBURY',L.game6],['10:01 PM',L.end6]].filter(r=>r[1]);
+  card.innerHTML=`<h2 style="margin-top:0">YOUR CHOICES</h2><div class="rows">${rows.map(r=>`<div class="row"><b>${r[0]}</b><span>You ${r[1]}.</span></div>`).join('')}</div><h2>WHERE YOU STAND</h2>${seasonHTML()}
+    <h2>NEXT: EPISODE 7 · SECTIONALS</h2><p>In development. Your season is saved on this device.</p><button class="go">Back to title</button>`;card.scrollTop=0;
+  await waitable(done=>{const b=card.querySelector('.go');b.addEventListener('pointerdown',e=>{e.stopPropagation();done();});let armed=false;setTimeout(()=>armed=true,1500);const off=onIn((x,t)=>{if(x==='A'&&t==='down'&&armed)done();});return()=>off();});
+  card.classList.remove('on');return{goto:0};
+}
+
 /* ================= runner, menu, loop ================= */
-const SCENES=[sTitle,s1,s2,s3,s4,s5,s6,s7,s8,sEnd,eTitle,e1,e2,e3,e4,e5,e6,e7,e8,eEnd,e2Title,f1,f2,f3,f4,f5,f6,f7End,null,null,g0,g1,g2,g3,g4,g5,g6,g7End,null,null,h0,h1,h2,h3,h4,h5,h6,h7,h8End,null,i0,i1,i2,i3,i4,i5,i6,i7,i8End,null,horseMode,null,null,null,null,null,null,null,null,null,j0,j1,j2,j3,j4,j5,j6,j7,j8End,null,k0,k1,k2,k3,k4,k5,k6,k7,k8End,null,m0,m1,m2,m3,m4,m5,m6,m7End,null,null,n0,n1,n2,n3,n4,n5,n6,nEnd,null,null,p0,p1,p2,p3,p4,p5,p6,pEnd,null,null,r0,r1,r2,r3,r4,r5,r6,r7,rEnd,null,t0,t1,t2,t3,t4,t5,t6,t7,tEnd,null,w0,w1,w2,w3,w4,w5,w6,wEnd];
+const SCENES=[sTitle,s1,s2,s3,s4,s5,s6,s7,s8,sEnd,eTitle,e1,e2,e3,e4,e5,e6,e7,e8,eEnd,e2Title,f1,f2,f3,f4,f5,f6,f7End,null,null,g0,g1,g2,g3,g4,g5,g6,g7End,null,null,h0,h1,h2,h3,h4,h5,h6,h7,h8End,null,i0,i1,i2,i3,i4,i5,i6,i7,i8End,null,horseMode,null,null,null,null,null,null,null,null,null,j0,j1,j2,j3,j4,j5,j6,j7,j8End,null,k0,k1,k2,k3,k4,k5,k6,k7,k8End,null,m0,m1,m2,m3,m4,m5,m6,m7End,null,null,n0,n1,n2,n3,n4,n5,n6,nEnd,null,null,p0,p1,p2,p3,p4,p5,p6,pEnd,null,null,r0,r1,r2,r3,r4,r5,r6,r7,rEnd,null,t0,t1,t2,t3,t4,t5,t6,t7,tEnd,null,w0,w1,w2,w3,w4,w5,w6,wEnd,null,null,y0,y1,y2,y3,y4,y5,y6,yEnd];
 let runToken=0;
 async function run(from){const my=++runToken;try{for(let i=from;i<SCENES.length;i++){if(my!==runToken)return;if(!SCENES[i])continue;setSky(skyFor(i));const r=await SCENES[i]();if(r&&r.goto!=null)i=r.goto-1;}if(my===runToken)run(0);}catch(e){if(e!==ABORT){console.error(e);}}}
-function jump(n){abortAll();clearUI();S=n>=140?(loadSave('ep12')||loadSave('ep11')||loadSave('ep10')||loadSave()||S0()):n>=130?(loadSave('ep11')||loadSave('ep10')||loadSave('ep9')||loadSave()||S0()):n>=120?(loadSave('ep10')||loadSave('ep9')||loadSave('ep8')||loadSave()||S0()):n>=110?(loadSave('ep9')||loadSave('ep8')||loadSave()||S0()):n>=100?(loadSave('ep8')||loadSave('ep7')||loadSave()||S0()):n>=90?(loadSave('ep7')||loadSave('ep6')||loadSave('ep5')||loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0()):n>=80?(loadSave('ep6')||loadSave('ep5')||loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0()):n>=70?(loadSave('ep5')||loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0()):n>=50?(loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0()):n>=40?(loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0()):n>=30?(loadSave('ep2')||loadSave('ep1')||loadSave()||S0()):n>=20?(loadSave('ep1')||loadSave()||S0()):n>=10?(loadSave()||S0()):S0();if(n>=10&&n<20){S.ep=1;}if(n>=20&&n<30)S.ep=2;if(n>=30&&n<40)S.ep=3;if(n>=40&&n<50)S.ep=4;if(n>=50&&n<70)S.ep=5;if(n>=70&&n<80)S.ep=6;if(n>=80&&n<90)S.ep=7;if(n>=90&&n<100)S.ep=8;if(n>=100&&n<110)S.ep=9;if(n>=110&&n<120)S.ep=10;if(n>=120&&n<130)S.ep=11;if(n>=130&&n<140)S.ep=12;if(n>=140)S.ep=13;if(n>=6&&n<10){S.tie=19;setScore(19,19,false);}LOC.gym.setWin('half');for(const c of chars)c.o.mouth=CFG[c.key].mouth;fadeEl.style.opacity=1;closeMenu();dbg();run(n);}
+function jump(n){abortAll();clearUI();S=n>=150?(loadSave('ep13')||loadSave('ep12')||loadSave('ep11')||loadSave()||S0()):n>=140?(loadSave('ep12')||loadSave('ep11')||loadSave('ep10')||loadSave()||S0()):n>=130?(loadSave('ep11')||loadSave('ep10')||loadSave('ep9')||loadSave()||S0()):n>=120?(loadSave('ep10')||loadSave('ep9')||loadSave('ep8')||loadSave()||S0()):n>=110?(loadSave('ep9')||loadSave('ep8')||loadSave()||S0()):n>=100?(loadSave('ep8')||loadSave('ep7')||loadSave()||S0()):n>=90?(loadSave('ep7')||loadSave('ep6')||loadSave('ep5')||loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0()):n>=80?(loadSave('ep6')||loadSave('ep5')||loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0()):n>=70?(loadSave('ep5')||loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0()):n>=50?(loadSave('ep4')||loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0()):n>=40?(loadSave('ep3')||loadSave('ep2')||loadSave('ep1')||loadSave()||S0()):n>=30?(loadSave('ep2')||loadSave('ep1')||loadSave()||S0()):n>=20?(loadSave('ep1')||loadSave()||S0()):n>=10?(loadSave()||S0()):S0();if(n>=10&&n<20){S.ep=1;}if(n>=20&&n<30)S.ep=2;if(n>=30&&n<40)S.ep=3;if(n>=40&&n<50)S.ep=4;if(n>=50&&n<70)S.ep=5;if(n>=70&&n<80)S.ep=6;if(n>=80&&n<90)S.ep=7;if(n>=90&&n<100)S.ep=8;if(n>=100&&n<110)S.ep=9;if(n>=110&&n<120)S.ep=10;if(n>=120&&n<130)S.ep=11;if(n>=130&&n<140)S.ep=12;if(n>=140&&n<150)S.ep=13;if(n>=150)S.ep=14;if(n>=6&&n<10){S.tie=19;setScore(19,19,false);}LOC.gym.setWin('half');for(const c of chars)c.o.mouth=CFG[c.key].mouth;fadeEl.style.opacity=1;closeMenu();dbg();run(n);}
 let menuOpen=false;
 function togglePause(){menuOpen?closeMenu():openMenu();}
 function openMenu(){menuOpen=true;paused=true;$('#menu').classList.add('on');$('#mResume').focus();}
@@ -5299,7 +5451,7 @@ function menuNav(b){const items=[...document.querySelectorAll('#menu button')];l
 $('#pause').addEventListener('pointerdown',e=>{e.stopPropagation();});$('#pause').addEventListener('click',togglePause);
 $('#mResume').onclick=closeMenu;$('#mRestart').onclick=()=>jump(1);
 $('#mStats').onclick=()=>{showDbg=!showDbg;$('#mStats').textContent='Show hidden stats: '+(showDbg?'on':'off');dbg();};
-$('#mScenes').innerHTML=[1,2,3,4,5,6,7,8].map(n=>`<button data-n="${n}">0·${n}</button>`).join('')+[1,2,3,4,5,6,7,8].map(n=>`<button data-n="${n+10}">1·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+20}">2·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+30}">3·${n}</button>`).join('')+[1,2,3,4,5,6,7].map(n=>`<button data-n="${n+40}">4·${n}</button>`).join('')+[1,2,3,4,5,6,7].map(n=>`<button data-n="${n+50}">5·${n}</button>`).join('')+[1,2,3,4,5,6,7].map(n=>`<button data-n="${n+70}">6·${n}</button>`).join('')+[1,2,3,4,5,6,7].map(n=>`<button data-n="${n+80}">7·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+90}">8·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+100}">S2E1·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+110}">S2E2·${n}</button>`).join('')+[1,2,3,4,5,6,7].map(n=>`<button data-n="${n+120}">S2E3·${n}</button>`).join('')+[1,2,3,4,5,6,7].map(n=>`<button data-n="${n+130}">S2E4·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+140}">S2E5·${n}</button>`).join('');
+$('#mScenes').innerHTML=[1,2,3,4,5,6,7,8].map(n=>`<button data-n="${n}">0·${n}</button>`).join('')+[1,2,3,4,5,6,7,8].map(n=>`<button data-n="${n+10}">1·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+20}">2·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+30}">3·${n}</button>`).join('')+[1,2,3,4,5,6,7].map(n=>`<button data-n="${n+40}">4·${n}</button>`).join('')+[1,2,3,4,5,6,7].map(n=>`<button data-n="${n+50}">5·${n}</button>`).join('')+[1,2,3,4,5,6,7].map(n=>`<button data-n="${n+70}">6·${n}</button>`).join('')+[1,2,3,4,5,6,7].map(n=>`<button data-n="${n+80}">7·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+90}">8·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+100}">S2E1·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+110}">S2E2·${n}</button>`).join('')+[1,2,3,4,5,6,7].map(n=>`<button data-n="${n+120}">S2E3·${n}</button>`).join('')+[1,2,3,4,5,6,7].map(n=>`<button data-n="${n+130}">S2E4·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+140}">S2E5·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+150}">S2E6·${n}</button>`).join('');
 document.querySelectorAll('#mScenes button').forEach(b=>b.onclick=()=>jump(+b.dataset.n));
 let last=performance.now(),T=0,RT=0;
 function loop(now){requestAnimationFrame(loop);const dt=Math.min(.05,(now-last)/1000);last=now;RT+=dt;pollPad();
