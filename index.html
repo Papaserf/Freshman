@@ -111,6 +111,7 @@ body[data-inp=touch] #ch button .k{display:none}body[data-inp=touch] #ch button{
 #card .row span{font:600 19px/1.2 'Barlow Condensed'}
 #note{position:fixed;left:50%;top:40%;transform:translate(-50%,-50%) rotate(2deg);z-index:7;background:#fbf8ef;color:#111;border:2px solid #222;box-shadow:8px 8px 0 rgba(0,0,0,.6);padding:20px 26px;font:600 20px/1.35 'Barlow Condensed';width:min(420px,86vw);display:none;pointer-events:none}
 #note.on{display:block}#note u{text-decoration-thickness:2px;text-decoration-color:#c11;text-underline-offset:3px;text-decoration-style:double}
+#clutchTag{position:fixed;top:15vh;left:50%;transform:translateX(-50%);z-index:12;font:400 clamp(16px,2.4vw,26px)/1 Anton,sans-serif;letter-spacing:.3em;color:#ffd765;text-shadow:0 0 12px rgba(255,120,40,.8),0 2px 0 #000;opacity:0;transition:opacity .5s;pointer-events:none}#clutchTag.on{opacity:1;animation:cpulse 1.6s ease-in-out infinite}@keyframes cpulse{50%{text-shadow:0 0 22px rgba(255,80,20,1),0 2px 0 #000}}
 #teach{position:fixed;inset:0;z-index:25;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.55);padding:16px}
 #teach.on{display:flex}
 #teach .box{background:var(--paper);color:var(--ink);border:5px solid var(--ink);box-shadow:10px 10px 0 var(--gold);padding:20px 24px;width:min(520px,94vw);max-height:90vh;overflow:auto;transform:rotate(-.6deg)}
@@ -171,7 +172,7 @@ body[data-inp=touch] #ch button .k{display:none}body[data-inp=touch] #ch button{
 <div id="tp"><button data-b="left" aria-label="Slide left">◀</button><button data-b="up" aria-label="Contest">▲</button><button data-b="right" aria-label="Slide right">▶</button></div>
 <div id="mont"></div>
 <div id="note"></div>
-<div id="toast"></div><div id="phone"></div><div id="teach"></div><div id="dbg"></div>
+<div id="toast"></div><div id="phone"></div><div id="teach"></div><div id="clutchTag">CLUTCH TIME</div><div id="dbg"></div>
 <div id="card"></div>
 <button id="pause" aria-label="Pause">II</button>
 <div id="menu"><div class="box">
@@ -1408,7 +1409,7 @@ function qShot0(o={}){return waitable(done=>{
   tickers.add(tk);return()=>{off();tickers.delete(tk);};
 });}
 function qPass0(o={}){return waitable(done=>{
-  const w=.24*[1,.8,.62][step()],c=.4+Math.random()*.25;
+  const w=.24*[1,.8,.62][step()]*(.8+sk('pass')/250),c=.4+Math.random()*.25;
   Q.innerHTML=`<div class="ql">${o.label||'PASS'}</div><div class="mh"><div class="zone" style="left:${(c-w/2)*100}%;width:${w*100}%"></div><div class="mk" style="left:0"></div></div><div class="hint">${tapHint()} in the gold</div>`;
   Q.className='on';const mk=Q.querySelector('.mk');let t=0,fin=false,armed=0;
   function end(ok){if(fin)return;fin=true;Q.querySelector('.ql').textContent=ok?'ON THE MONEY':'OFF TARGET';sfx(ok?'good':'bad');qEnd(ok?'ok':'no');done(ok);}
@@ -1420,7 +1421,7 @@ function qStop0(beats,o={}){return waitable(done=>{
   const hide=o.hide!=null?o.hide:hidden();let i=-1,tl=0,lead=.7,fin=false;const G={left:'◀',right:'▶',up:'▲',none:'▲'};
   if(IN.last==='touch')$('#tp').classList.add('on');
   Q.className='on';Q.innerHTML=`<div class="ql">${o.label||'DEFEND'}</div><div class="hint">${hide?'Read him.':IN.last==='pad'?'D-pad or stick to slide':IN.last==='touch'?'Use the arrows':'Arrow keys to slide'}</div>`;
-  function next(){i++;if(i>=beats.length){end(true);return;}const b=beats[i];tl=b.t||.8;
+  function next(){i++;if(i>=beats.length){end(true);return;}const b=beats[i];tl=(b.t||.8)*(.88+sk('def')/420);
     Q.className='on'+(b.dir==='none'&&!hide?' bait':'');
     Q.innerHTML=`<div class="glyph">${hide?'?':G[b.dir]}</div><div class="ring"></div><div class="hint">${hide?'Read him.':b.dir==='none'?'JUMP?':b.dir==='up'?'Contest!':'Slide!'}</div>`;
     o.onBeat&&o.onBeat(i,b);}
@@ -1431,7 +1432,7 @@ function qStop0(beats,o={}){return waitable(done=>{
   tickers.add(tk);return()=>{off();tickers.delete(tk);$('#tp').classList.remove('on');};
 });}
 function qScrap0(o={}){return waitable(done=>{
-  const need=(o.need||10)*[1,1.2,1.4][step()],time=o.time||2.4;let f=0,t=0,fin=false,armed=0;
+  const need=Math.max(3,Math.round((o.need||10)*[1,1.2,1.4][step()]*(1.25-sk('handle')/200))),time=o.time||2.4;let f=0,t=0,fin=false,armed=0;
   Q.innerHTML=`<div class="ql">${o.label||'SCRAP'}</div><div class="mh"><div class="fill" style="width:0"></div></div><div class="hint">${IN.last==='pad'?'Mash A':IN.last==='touch'?'Tap fast':'Mash SPACE'}</div>`;Q.className='on';
   const fl=Q.querySelector('.fill');
   function end(ok){if(fin)return;fin=true;Q.querySelector('.ql').textContent=ok?'GOT IT':'LOST IT';sfx(ok?'good':'bad');qEnd(ok?'ok':'no');done(ok);}
@@ -1458,6 +1459,7 @@ const TEACH={
     <li>A marker sweeps back and forth across the bar.</li>
     <li>Tap ${IN.last==='touch'?'<kbd>the screen</kbd>':IN.last==='pad'?'<kbd>A</kbd>':'<kbd>SPACE</kbd>'} when it crosses the <b>gold</b>. An on-target pass gives your teammate rhythm. A bad one gets him in trouble.</li></ol>`,
   line:()=>`<h3>FREE THROWS</h3><ol><li>A white ring pulses with Theo's heartbeat.</li><li>${IN.last==='touch'?'Tap the screen':IN.last==='pad'?'Press <kbd>A</kbd>':'Press <kbd>SPACE</kbd>'} when the ring lines up with the <b>gold circle</b>.</li><li>Nerves speed up his heartbeat and tighten the timing. If he's rattled, the ring fades out, so go by the beat.</li></ol>`,
+  clutch:()=>`<h3>CLUTCH TIME</h3><ol><li>The last minutes are played trip by trip. Real score, real clock.</li><li>On offense, pick the play. Moves your mentors taught you show up here as new options.</li><li>On defense, guard their best player. A scouting report tells you which way he goes.</li><li>Run out the clock ahead and you win. Tie, and it goes to overtime.</li></ol>`,
   scrap:()=>`<h3>SCRAP</h3><ol>
     <li>Box out, loose balls, contact: it's all effort.</li>
     <li>${IN.last==='touch'?'Tap the screen as fast as you can':IN.last==='pad'?'Mash <kbd>A</kbd>':'Mash <kbd>SPACE</kbd>'} to fill the bar before time runs out. It drains if you let up.</li></ol>`
@@ -4309,6 +4311,7 @@ async function n4(){ // FLASHBACK: July, the summer
     cu(theo,{d:1,fov:26});let i=await choose([{t:'“I knew.”'},{t:'“Do you still?”'},{t:'“You made me better.”'}],6);i=i<0?1:i;
     cu(kai,{d:1.2,fov:26});await say(kai,['<i>(laughs)</i> Everybody knew. I\'m not subtle.','<i>(long pause)</i> No. That\'s the annoying part.','<i>(he bumps Theo\'s shoulder)</i> Shut up. You too.'][i]);fx({chem:{kai:2}});
     S.log.summer2=['told Kai you knew he hated you','asked Kai if he still hates you','told Kai he made you better'][i];
+    await say(kai,'Now stop catching and shooting like it\'s 1950. Two dribbles, rise, release. Pull-up. Again. Again.');
   }else if(sm==='roofs'||sm==='both'){setLoc('home');LOC.home.quiz.visible=!!S.f.prep_study;flashback(true,'JULY · 4:52 AM');
     sitOn(dad,-1,0,PI/2,.47);sitOn(theo,0,.75,PI,.47);shot(V(2.1,1.6,1.8),V(-.3,.95,0),{fov:42});await fade(false,700);
     await cap(sm==='both'?'July. Roofs at six. Ball at seven, at night, at the park. Every day.':'July. Kessler Roofing. Six AM. Ninety-four degrees by ten.',2800);
@@ -4317,6 +4320,7 @@ async function n4(){ // FLASHBACK: July, the summer
     cu(theo,{d:1,fov:26});let i=await choose([{t:'“That’s basketball too.”'},{t:'“Do you miss it?”'},{t:'“Thanks for asking me to come.”'}],6);i=i<0?1:i;
     cu(dad,{d:1.2,fov:28});await say(dad,['<i>(he points at Theo with the coffee)</i> Don\'t tell Hollis. He\'ll make a spreadsheet.','<i>(long pause)</i> Every day. Less, on the roof.','<i>(he has to look out the window for a second)</i> Drink your coffee.'][i]);fx({family:2});
     S.log.summer2=['told Dad roofing is basketball too','asked Dad if he misses it','thanked Dad for bringing you'][i];
+    await say(dad,'<i>(standing, wincing at his back)</i> Come outside. Driveway. I\'ll show you the one that got me sixty-one. Step in, step back, let it go before he knows you left.');
   }else{setLoc('gym');gymAway(null);flashback(true,'JULY · HALSTON HEIGHTS');
     put(coach,-6,0,PI/2,'idle');put(theo,-4.8,.2,-PI/2);put(lou,-8.4,-3,0,'ready');face(theo,coach.g.position,true);face(coach,theo.g.position,true);
     shot(V(-3.4,1.6,2.6),V(-5.4,1.3,0),{fov:40});await fade(false,700);
@@ -4326,8 +4330,10 @@ async function n4(){ // FLASHBACK: July, the summer
     cu(theo,{d:1,fov:26});let i=await choose([{t:'“What do I do?”'},{t:'“He’d be happy.”'},{t:'“Maybe I won’t be.”'}],6);i=i<0?0:i;
     cu(coach,{d:1.3,fov:26});await say(coach,['Let him watch. Let him see you do it the right way. That\'s the only gift that\'ll fit.','He will be. Both things. People are both things.','<i>(snorts)</i> You will. Go guard Kowalski, he\'s bored.'][i]);fx({coach:1,family:1});
     S.log.summer2=['asked Okafor what to do about Dad','told Okafor Dad would be happy','told Okafor maybe you won’t be better'][i];
+    await say(coach,'And one more thing before I\'m nobody\'s coach. When they fly at you, let them fly. Show it, hold it, go by. A pump fake is a question. Make them answer it.');
   }
   flashback(false);gymAway(null);await fade(true,700);
+  S.f.summer_move=true;await learn({okafor:'pumpfake',kai:'pullup',roofs:'stepback',both:'stepback'}[sm]);
 }
 async function n5(){ // the heart
   const h=heartOf(),T=EX.tess;for(const c of chars)unsuit(c);
@@ -4425,6 +4431,7 @@ async function p1(){ // practice: Theo and Stroud learn each other
   else if(i===1){await say(EX.stroud,'<i>(cold)</i> No. That\'s exactly what they want.');fx({chem:{stroud:-1}});}
   else if(i===2){await say(EX.stroud,'<i>(he looks away for a long time)</i> …Nobody\'s said that to me. Not even my dad.');fx({chem:{stroud:3}});}
   else await say(EX.stroud,'<i>(nods, like that was the answer he expected)</i>',1600);
+  if((S.chem.stroud||0)>=2){cu(EX.stroud,{d:1.2,fov:26});await say(EX.stroud,'Also. When I cut backdoor, throw it high. Higher than you think. I\'ll go get it.');await fade(true,600);await learn('lob');}
   await fade(true,700);
 }
 async function p2(){ // the shoes
@@ -4510,26 +4517,12 @@ async function p5(){ // at Westbury
     kickGood:[j===2?M:St,j===2?'<i>(sprinting back, arms out like an airplane)</i> FRESHMAN!':'<i>(no celebration at all, just jogging back)</i>'],kickMiss:[j===2?M:St,'My fault.'],dumpGood:[lou,'Lou Kowalski! Road game! Who saw that!'],dumpMiss:[lou,'The rim is MEAN. Tess was right.'],
     finishGood:[kai,'And-one energy!'],finishBad:[O[0],'Not in our gym.'],tov:[O[0],'Thank you.']});
   await isoStop(O[0],{label:'THEIR BEST',beats:[{dir:'right',t:.62},{dir:'left',t:.55},{dir:'none',t:.8},{dir:'right',t:.5}],line:'Bet you miss him, huh? Oh wait, he\'s on YOUR team now.',lay:[[St,'lw'],[O[1],'lw','g'],[lou,'rb'],[O[2],'rb','g',.6]],good:[St,'<i>(hand up, finally loud)</i> GET OUT OF HERE.'],bad:[O[0],'Easy.']});
-  // the last possession
-  setScore(Math.min(S.score[0],S.score[1]+2),S.score[1]);if(S.score[0]>=S.score[1])setScore(S.score[1]-1,S.score[1]);if(S.score[1]-S.score[0]>2)setScore(S.score[1]-2,S.score[1]);
-  const dn=S.score[1]-S.score[0];setClock('Q4  0:07');
-  hideAll();at(theo,'top','dribble');hold(ball,theo,'dribble');guardAt(O[0],'top',1);at(St,'lc','ready');guardAt(O[1],'lc',1.2);at(lou,'rb');guardAt(O[2],'rb',.6);at(kai,'rw','ready');guardAt(O[3],'rw',1.1);
-  camWide();await fade(false,200);
-  await say(null,`<i>Down ${dn}. Seven seconds. The whole gym knows who Westbury wants to take the last shot. It isn't #7.</i>`,2800);
-  heart=true;kStare(theo);await wait(1100);
-  panel(true);shot(V(-5.4,4.6,3.6),V(-10.4,0,0),{fov:46,sp:3});
-  let k=await choose([{t:'Pull up yourself'},{t:'Find <b>Stroud</b> in the corner'},{t:'Drive and draw contact'}],3,{read:true});k=k<0?0:k;panel(false);heart=false;
-  let won=false;
-  if(k===0){camRim();const r=await qShot({mod:dn>=2?2:1,shooter:theo,label:dn>=2?'PULL-UP THREE':'PULL-UP'});camSide();await shootBall(ball,theo,r==='green'?'make':r==='early'?'front':'back');if(r==='green'){us(dn>=2?3:2,dn>=2?3:2);won=true;}}
-  else if(k===1){camSide();const ok=await qPass({label:'SKIP PASS'});
-    if(ok){await passTo(ball,theo,St,.55,.2);const mk=roll(clamp(.45+trust*.05,.4,.8));await shootBall(ball,St,mk?'make':'front');if(mk){us(3,0,1);won=true;}}
-    else{await passTo(ball,theo,St,.45,.1);await fly(ball,V(HOOP.x+3,.12,-7.5),.6,.4);}}
-  else{camSide();const ok=await qScrap({label:'ATTACK',need:9,time:1.8});
-    if(ok){sfx('thud');await layup(ball,theo,true);us(2,2);won=dn<2;if(dn>=2){await say(null,'<i>And one. One free throw to win it.</i>',1800);const r=await qFT(1,1);await shootBall(ball,theo,r?'make':'back');if(r){us(1,1);won=true;}}}
-    else await shootBall(ball,theo,'block',{noPose:true});}
-  if(!won&&S.score[0]===S.score[1]){won=true;}
-  sfx('horn');setClock('FINAL');S.f.west=won?'W':'L';S.log.box10=boxLine();
-  S.log.last3=[won?'hit the pull-up at Westbury':'missed the pull-up at Westbury',won?'found Stroud for the winner at Westbury':'trusted Stroud with the last shot at Westbury',won?'drove and won it at Westbury':'drove and came up short at Westbury'][k];
+  // CLUTCH TIME: the last 1:40
+  {const a0=S.score[0],b0=S.score[1];const lead=b0-a0;if(lead<1||lead>5)setScore(b0-3,b0);}
+  const T={big:lou,shooter:j===2?M:St,wing:kai,post:j===2?St:M,lobber:St};
+  const won=await clutch({team:T,opp:O,us:S.score[0],them:S.score[1],secs:100,oppKey:'westbury',first:'us',tell:'left',trash:'Traitor\'s team. Traitor\'s defense.'});
+  const k=0;S.f.west=won?'W':'L';S.log.box10=boxLine();
+  S.log.last3=won?'won the Westbury opener in Clutch Time':'lost the Westbury opener in Clutch Time';
   await wait(600);camWide();
   if(won){cu(St,{d:1.2,fov:26});await say(St,k===1?'<i>(he doesn\'t turn around to the student section. He just finds Theo.)</i> You passed it.':'<i>(to Theo, quiet, under the noise)</i> Good. Good.',2400);fx({chem:{stroud:k===1?3:1}});}
   else{cu(St,{d:1.2,fov:26});await say(St,'<i>(the chant starts again, louder)</i> …Same gym. Same ending.',2200);}
@@ -4561,6 +4554,118 @@ async function pEnd(){
   card.classList.remove('on');return{goto:0};
 }
 
+/* ================= THEO'S GAME: ratings + moves taught by mentors ================= */
+const MOVES={
+  stepback:{name:'Step-Back',by:'Ray Reyes',note:'New iso option in Clutch Time: create space, then shoot an open three.',bump:{shoot:4}},
+  pumpfake:{name:'Pump Fake',by:'Coach Okafor',note:'When a closeout is coming, sell the shot and drive past it.',bump:{iq:5,handle:3}},
+  pullup:{name:'Pull-Up',by:'Kai Monroe',note:'Off-the-dribble jumpers get a wider window. New play: Pull-up at the elbow.',bump:{shoot:3,handle:4}},
+  lob:{name:'Two-Man Lob',by:'Jalen Stroud',note:'New play with Stroud on the floor: throw it up, he goes and gets it.',bump:{pass:8}},
+  read:{name:'Film Study',by:'Coach Hollis',note:'Clutch Time shows the defense’s coverage before you choose, and scouting reports slow their best scorer’s moves.',bump:{iq:10,def:5}},
+  hesi:{name:'Hesitation',by:'Malik Grant',note:'New iso option: freeze your man with a hesi and get to the rim.',bump:{handle:10}}};
+function skInit(){if(!S.sk)S.sk={shoot:S.shoot||58,handle:50,def:50,pass:50,iq:50};if(!S.moves)S.moves={};
+  if(S.season===2&&S.f.summer&&!S.f.summer_move){S.f.summer_move=true;const m={okafor:'pumpfake',kai:'pullup',roofs:'stepback',both:'stepback'}[S.f.summer];if(m&&!S.moves[m]){S.moves[m]=1;for(const k in MOVES[m].bump)S.sk[k]+=MOVES[m].bump[k];}}
+  S.shoot=S.sk.shoot;return S.sk;}
+const sk=k=>{const s=S.sk;return s&&s[k]!=null?s[k]:(k==='shoot'?S.shoot||58:50);};
+const has=m=>!!(S.moves&&S.moves[m]);
+function bumpSk(o){skInit();for(const k in o)S.sk[k]=clamp(S.sk[k]+o[k],20,99);S.shoot=S.sk.shoot;}
+// the "patch notes" card when a mentor unlocks something
+async function learn(m){skInit();if(S.moves[m])return;S.moves[m]=1;const M=MOVES[m];bumpSk(M.bump);
+  const ver=Object.keys(S.moves).length,card=$('#card');
+  const bars=['shoot','handle','pass','def','iq'].map(k=>`<div style="display:flex;gap:10px;align-items:center;font:600 15px 'Barlow Condensed'"><span style="width:70px;text-align:right;letter-spacing:.08em">${{shoot:'SHOOTING',handle:'HANDLE',pass:'PASSING',def:'DEFENSE',iq:'IQ'}[k]}</span><span style="flex:1;height:9px;background:#2a2a2e;border-radius:5px;overflow:hidden"><i style="display:block;height:100%;width:${S.sk[k]}%;background:${M.bump[k]?'#e8c35a':'#8a8f96'}"></i></span><span style="width:52px">${S.sk[k]}${M.bump[k]?' <b style="color:#e8c35a">+'+M.bump[k]+'</b>':''}</span></div>`).join('');
+  card.innerHTML=`<div style="text-align:left;max-width:560px;margin:auto;font-family:ui-monospace,Menlo,Consolas,monospace">
+    <div style="font:400 15px ui-monospace,monospace;opacity:.7">THEO_REYES.exe · patch v2.${ver}</div>
+    <h1 style="font-size:clamp(40px,7vw,72px);margin:.15em 0">${M.name.toUpperCase()}</h1>
+    <div style="font:600 18px 'Barlow Condensed';letter-spacing:.12em;color:#e8c35a">TAUGHT BY ${M.by.toUpperCase()}</div>
+    <p style="font:500 18px/1.4 Georgia,serif;margin:14px 0 18px">+ ${M.note}</p>${bars}
+    <p style="opacity:.7;margin-top:18px;font-family:inherit">${glyphA()}continue</p></div>`;
+  card.classList.add('on');card.scrollTop=0;sfx('pop');sfx('thud');
+  await waitable(done=>{let armed=false;setTimeout(()=>armed=true,900);const pd=e=>{if(armed)done();};card.addEventListener('pointerdown',pd);const off=onIn((x,t)=>{if(x==='A'&&t==='down'&&armed)done();});return()=>{off();card.removeEventListener('pointerdown',pd);};});
+  card.classList.remove('on');}
+function gameHTML(){skInit();const mv=Object.keys(S.moves).map(k=>MOVES[k].name);return `<div class="row"><b>THEO'S GAME</b><span>SHT ${sk('shoot')} · HND ${sk('handle')} · PAS ${sk('pass')} · DEF ${sk('def')} · IQ ${sk('iq')}<br>${mv.length?'Moves: '+mv.join(', '):'No signature moves yet'}</span></div>`;}
+
+/* ================= CLUTCH TIME ================= */
+// new possessions
+async function pickRoll(o){ensureBox();hideAll();setScore(S.score[0],S.score[1]);lay(o.lay||[]);
+  at(theo,'top','dribble');hold(ball,theo,'dribble');guardAt(o.myDef,'top',1);at(o.big,'le','idle');guardAt(o.bigDef,'le',.8);at(o.corner,'rc','ready');guardAt(o.cornerDef,'rc',1.2);
+  camWide();await fade(false,200);await wait(300);
+  walkNow(o.big,SPOT.top.x-.9,-.7,{speed:3.2,after:'idle'});walkNow(o.bigDef,SPOT.top.x-1.8,-1.2,{speed:3,after:'stance'});await wait(650);
+  walkNow(theo,SPOT.top.x-2.4,1.6,{speed:3.4,dribble:true,after:'dribble'});walkNow(o.myDef,SPOT.top.x-2.2,1.2,{speed:3,after:'stance'});
+  const cov=['drop','hedge','tag'][(Math.random()*3)|0];
+  if(cov==='hedge')walkNow(o.bigDef,SPOT.top.x-2.6,1.9,{speed:4,after:'stance'});else if(cov==='drop')walkNow(o.bigDef,HOOP.x+3.4,.4,{speed:3,after:'stance'});else walkNow(o.cornerDef,HOOP.x+2.4,2.2,{speed:4,after:'stance'});
+  walkNow(o.big,HOOP.x+2.2,.6,{speed:3.4,after:'idle'});await wait(500);
+  const knows=has('read')||roll(sk('iq')/140);
+  panel(true);shot(V(-4.2,4.8,3.4),V(-10,0,0),{fov:48,sp:3});
+  if(knows)await cap({drop:'READ: their big DROPS. The pull-up is open.',hedge:'READ: their big HEDGES. The roller is open.',tag:'READ: the corner man TAGS the roll. Corner is open.'}[cov],1400);
+  const k=await choose([{t:'Pull up'},{t:`Hit <b>${o.big.name}</b> rolling`},{t:`Kick to <b>${o.corner.name}</b> in the corner`}],has('read')?3.6:2.8,{read:true});panel(false);theo.move=null;camSide();
+  const right=k===({drop:0,hedge:1,tag:2}[cov]);let pts=0;
+  if(k===0){camRim();const r=await qShot({mod:Math.max(0,(right?0:2)-(has('pullup')?1:0)),shooter:theo,label:right?'PULL-UP':'CONTESTED'});camSide();await shootBall(ball,theo,r==='green'?'make':r==='early'?'front':'back');if(r==='green'){pts=2;us(2,2);}}
+  else if(k===1){const ok=await qPass({label:'POCKET PASS'});if(ok){await bouncePass(ball,theo,o.big,.45);await wait(200);const mk=roll(right?.86:.42);await layup(ball,o.big,mk);if(mk){pts=2;us(2,0,1);}}else{await passTo(ball,theo,o.bigDef,.45,.1);}}
+  else if(k===2){const ok=await qPass({label:'SKIP PASS'});if(ok){await passTo(ball,theo,o.corner,.6,.2);const mk=roll(right?.58:.3);await shootBall(ball,o.corner,mk?'make':'front');if(mk){pts=3;us(3,0,1);}}else await passTo(ball,theo,o.cornerDef,.5,.1);}
+  else{await cap('Theo waits too long. Shot clock violation.',1600);}
+  if(right&&pts)fx({respect:1});return pts;}
+async function isoMove(o){ensureBox();hideAll();setScore(S.score[0],S.score[1]);lay(o.lay||[]);
+  at(theo,'top','dribble');hold(ball,theo,'dribble');guardAt(o.myDef,'top',.9);camWide();await fade(false,200);await wait(300);
+  shot(V(-3.8,1.3,2.2),headPos(o.myDef),{fov:34});await wait(500);let pts=0;
+  if(o.move==='stepback'){walkNow(theo,SPOT.top.x-1.3,0,{speed:3.6,dribble:true,after:'dribble'});walkNow(o.myDef,SPOT.top.x-2,0,{speed:3.4,back:true,after:'stance'});await wait(450);
+    const ok=await qPass({label:'STEP BACK'});walkNow(theo,SPOT.top.x+.4,0,{speed:5,after:'ready'});await wait(350);theo.move=null;camRim();
+    const r=await qShot({mod:ok?0:2,shooter:theo,label:ok?'SPACE. SHOOT.':'HE STAYED WITH YOU'});camSide();await shootBall(ball,theo,r==='green'?'make':r==='early'?'front':'back');if(r==='green'){pts=3;us(3,3);}}
+  else if(o.move==='hesi'){const ok=await qScrap({label:'HESI',need:6,time:1.6});walkNow(theo,HOOP.x+1.3,.4,{speed:ok?5.6:3.8,dribble:true});if(!ok)walkNow(o.myDef,HOOP.x+1.6,.2,{speed:5,after:'contest'});camSide();await until(()=>!theo.move);
+    const mk=roll(ok?.84:.32);await layup(ball,theo,mk);if(mk){pts=2;us(2,2);}}
+  else if(o.move==='pullup'){walkNow(theo,SPOT.le.x+.4,SPOT.le.z,{speed:4,dribble:true,after:'ready'});walkNow(o.myDef,SPOT.le.x-.9,SPOT.le.z,{speed:3.6,after:'contest'});await until(()=>!theo.move);camRim();
+    const r=await qShot({mod:has('pullup')?0:1,shooter:theo,label:'PULL-UP'});camSide();await shootBall(ball,theo,r==='green'?'make':r==='early'?'front':'back');if(r==='green'){pts=2;us(2,2);}}
+  else if(o.move==='lob'){walkNow(o.lobber,HOOP.x+2.6,-1.6,{speed:5.4,after:'ready'});await wait(600);const ok=await qPass({label:'THROW IT UP'});
+    if(ok){await passTo(ball,theo,o.lobber,.7,.6);const mk=roll(.9);await layup(ball,o.lobber,mk);if(mk){pts=2;us(2,0,1);cheer(1.4);}}else{await passTo(ball,theo,o.myDef,.6,.4);}}
+  else if(o.move==='pumpfake'){walkNow(o.myDef,SPOT.top.x-1,0,{speed:5,after:'contest'});await wait(300);const ok=await qPass({label:'PUMP FAKE'});
+    if(ok){walkNow(theo,HOOP.x+1.4,.5,{speed:5.4,dribble:true});await until(()=>!theo.move);const mk=roll(.8);await layup(ball,theo,mk);if(mk){pts=2;us(2,2);}}else{camRim();const r=await qShot({mod:2,shooter:theo,label:'CONTESTED'});await shootBall(ball,theo,r==='green'?'make':'front');if(r==='green'){pts=3;us(3,3);}}}
+  return pts;}
+// the whole stretch: alternate trips until the clock runs out
+async function clutch(o){ensureBox();skInit();await teach('clutch');
+  const T=o.team,O=o.opp,star=O[0];let secs=o.secs||120,ours=o.first!=='them',q=o.q||'Q4';let pos=0;
+  setScore(o.us,o.them);const fmt=t=>`${q}  ${Math.floor(t/60)}:${String(Math.max(0,Math.floor(t%60))).padStart(2,'0')}`;setClock(fmt(secs));
+  const scouted=has('read')||S.f['scout_'+o.oppKey];
+  $('#clutchTag').classList.add('on');
+  await say(null,`<i>${fmt(secs).trim()}. ${S.score[0]===S.score[1]?'Tied':S.score[0]>S.score[1]?'Up '+(S.score[0]-S.score[1]):'Down '+(S.score[1]-S.score[0])}. This is the game.</i>`,2000);
+  while(secs>0){pos++;const before=S.score.slice();
+    if(ours){
+      const lou_=T.big,sh_=T.shooter,lobber=T.lobber;
+      const plays=[{t:`Pick-and-roll with <b>${lou_.name}</b>`,k:'pnr'},{t:`Drive and kick`,k:'dk'},{t:`Run <b>${sh_.name}</b> off a screen`,k:'cs'}];
+      if(has('stepback'))plays.push({t:'Iso: <b>Step-back</b>',k:'stepback'});
+      if(has('hesi'))plays.push({t:'Iso: <b>Hesitation</b>',k:'hesi'});
+      if(has('pullup'))plays.push({t:'Pull-up at the elbow',k:'pullup'});
+      if(has('lob')&&lobber)plays.push({t:`Two-man lob to <b>${lobber.name}</b>`,k:'lob'});
+      if(has('pumpfake'))plays.push({t:'Catch, <b>pump fake</b>, go',k:'pumpfake'});
+      // pick up to four: the three base plays rotate, moves always offered first
+      const moves=plays.slice(3),base=plays.slice(0,3);const offer=moves.slice(0,2).concat(base).slice(0,4);
+      hideAll();put(hollis,-6.2,-7.4,0,'cross');face(hollis,V(-9,0,0),true);
+      shot(V(-4.6,1.5,-5.2),headPos(hollis),{fov:36});
+      await say(hollis,S.f.captain==='yes'||S.f.captain==='silent'?'<i>(holding up a whiteboard)</i> Your call, captain.':'<i>(pointing at the whiteboard)</i> Pick one. Quickly.',1400);
+      let c=await choose(offer,4.5);if(c<0){c=0;await cap('Hollis calls it for you.',1000);}
+      const k=offer[c].k,lay=[[T.wing,'lw'],[O[3],'lw','g'],[T.post,'rb'],[O[4],'rb','g',.6]];
+      if(k==='pnr')await pickRoll({myDef:O[0],big:lou_,bigDef:O[2],corner:sh_,cornerDef:O[1],lay});
+      else if(k==='dk')await driveKick({myDef:O[0],kick:sh_,kickSpot:'lc',kickDef:O[1],dump:lou_,dumpSpot:'rb',dumpDef:O[2],kickPct:.4+sk('pass')/400,lay:[[T.wing,'rw'],[O[3],'rw','g']],
+        kickGood:[sh_,'<i>(backpedaling, three fingers up)</i>'],kickMiss:[sh_,'My bad.'],dumpGood:[lou_,'Big man touch!'],dumpMiss:[lou_,'Rimmed out.'],finishGood:[T.wing,'And one energy!'],finishBad:[O[2],'Not here.'],tov:[O[0],'Thank you.']});
+      else if(k==='cs')await catchShoot({spot:'rw',passer:sh_,from:'top',def:O[1],lay,mod:1});
+      else await isoMove({move:k,myDef:O[0],lobber,lay:k==='lob'?[[T.wing,'rw'],[O[3],'rw','g']]:lay});
+      if(S.score[0]===before[0]&&roll(.3+sk('iq')/400)){await boardBattle({shooter:theo,spot:'top',big:O[2],lay:[[T.wing,'lw'],[O[3],'lw','g']],need:Math.round(10-sk('handle')/25),
+        good:[lou_,'SECOND CHANCE!'],bad:[O[2],'<i>(grabbing it)</i> Mine.']});}
+    }else{
+      const beats=[];const nb=3+(Math.random()*2|0);const pref=o.tell||(['left','right'][(Math.random()*2)|0]);
+      for(let i=0;i<nb;i++){const r=Math.random();beats.push({dir:r<.18?'none':r<.62?pref:(pref==='left'?'right':'left'),t:(.52+Math.random()*.2)*(.85+sk('def')/330)*(scouted?1.15:1)});}
+      if(scouted){await cap(`SCOUTING: ${star.name} goes ${pref.toUpperCase()}. Every time.`,1400);}
+      if(pos%3===2)await helpD({driver:star,from:'lw',man:O[1],manSpot:'lc',lay:[[T.wing,'rw'],[O[3],'rw','g'],[T.big,'rb'],[O[2],'rb','g',.6]],blocker:T.big,manPct:.42,
+        helpGood:[T.big,'ROTATION!'],helpBurn:[O[1],'Thanks.'],stayGood:[T.wing,'GET THAT OUT!'],stayBurn:[star,'Too easy.'],stealGood:[T.wing,'HANDS!'],stealBurn:[star,'Guessed wrong.']});
+      else{const ok=await isoStop(star,{beats,label:'THEIR BEST',line:pos<3?o.trash||'You again?':null,lay:[[T.wing,'lw'],[O[1],'lw','g'],[T.big,'rb'],[O[2],'rb','g',.6]],noScore:true});
+        if(!ok){const three=roll(.25);them(three?3:2);}}
+    }
+    secs-=14+Math.random()*10|0;if(secs<0)secs=0;setClock(fmt(secs));
+    const d=S.score[0]-S.score[1];camWide();
+    if(secs>0)await cap(`${fmt(secs).trim()} · ${d===0?'TIED':d>0?'UP '+d:'DOWN '+(-d)}`,1200);
+    if(secs<=0&&d===0&&q!=='OT'&&!o.noOT){q='OT';secs=o.ot||48;setClock(fmt(secs));await cap('OVERTIME.',1600);}
+    ours=!ours;}
+  $('#clutchTag').classList.remove('on');setClock('FINAL');sfx('horn');
+  const won=S.score[0]>S.score[1]||(S.score[0]===S.score[1]&&roll(.5));if(S.score[0]===S.score[1])setScore(S.score[0]+(won?1:0),S.score[1]+(won?0:1));
+  return won;}
+
 /* ================= SEASON SYSTEMS: record, standings, role, Purdue, relationships ================= */
 function season(){
   if(!S.rec)S.rec={w:S.f.west==='W'?1:0,l:S.f.west==='L'?1:0};
@@ -4585,6 +4690,7 @@ function seasonHTML(){const r=season(),t=confTable(),pu=Math.round(S.purdue);
     <div class="row"><b>RECORD</b><span>${r.w}–${r.l} · ${S.f.starter?'Starter':'<i>Sixth man</i>'}</span></div>
     <div class="row"><b>PURDUE</b><span style="letter-spacing:.2em">${'●'.repeat(pu)}${'○'.repeat(5-pu)}</span></div>
     <div class="row"><b>CONFERENCE</b><span style="font-size:.92em;line-height:1.35">${t.map((x,i)=>`${i+1}. ${x[3]?'<strong style="color:#7a1f2b">'+x[0]+'</strong>':x[0]} ${x[1]}–${x[2]}`).join('<br>')}</span></div>
+    ${gameHTML()}
     <div class="row"><b>PEOPLE</b><span>${who.map(([n,k])=>`${n}: ${k==='family'?((S.family||0)>=4?'Good':(S.family||0)>=0?'Okay':'<i>Strained</i>'):relWord(k)}`).join(' · ')}</span></div></div>`;}
 async function seasonCard(head){const card=$('#card');card.innerHTML=`<h2 style="margin-top:0">${head||'THE SEASON SO FAR'}</h2>${seasonHTML()}<p style="opacity:.7">${glyphA()}continue</p>`;card.classList.add('on');card.scrollTop=0;sfx('thud');
   await waitable(done=>{let armed=false;setTimeout(()=>armed=true,900);const pd=e=>{if(armed)done();};card.addEventListener('pointerdown',pd);const off=onIn((x,t)=>{if(x==='A'&&t==='down'&&armed)done();});return()=>{off();card.removeEventListener('pointerdown',pd);};});
@@ -4668,6 +4774,7 @@ async function r3(){ // Hollis: your role
     if(i===0){await say(hollis,'<i>(he writes something down and underlines it)</i> That. That\'s the answer that gets you back.');fx({coach:3});}
     else if(i===1){await say(hollis,'It\'s fair. It\'s also temporary. Both things. I\'m told people can be both things.');fx({coach:-1,nerves:6});}
     else{await say(hollis,'<i>(a pause)</i> Purdue watches film, not lineups. But yes. They\'ll know.');S.purdue=clamp(S.purdue-.5,0,5);fx({nerves:4});}}
+  if(!(S.f.starter===false&&S.log.role==='told Hollis the demotion wasn’t fair')){await phonePost({init:'MH',who:'Mr. Hollis',time:'11:58 PM',text:'Attached: scouting packets for every conference opponent. 41 pages. Read page 6 first. Their best player always tells you where he is going. You just have to be watching.',rx:'Email · 1 attachment',comments:[]});await learn('read');}
   if(S.f.dec===0||S.f.dec===3){sfx('phone');await phonePost({init:'PU',who:'Purdue Basketball (Asst.)',time:'now',text:S.f.dec===3?'Saw the Hale tape. Coach Painter asked who #12 was. Keep going. — D. Morris':'Rough December. Happens. We\'re watching how you come out of it, not how you went into it. — D. Morris',rx:'Email',comments:[]});}
   await fade(true,700);
 }
@@ -4847,7 +4954,8 @@ async function t3(){ // Malik
     put(MAL(),-7.6,-3,PI*.7);face(MAL(),theo.g.position,true);cu(MAL(),{d:1.2,fov:28});
     await say(MAL(),S.f.vance_pitch?'Mr. Vance called my mom again. She hung up on him. She\'s got a whole voice for it now.':'Hollis says I\'m not in trouble. He said it nine times. I think I\'m in trouble.');
     await say(MAL(),"Whatever you decide tomorrow. With your dad. I'm on your side. I don't really know what that means. But I am.");
-    fx({chem:{malik:2}});S.log.malik5='heard Malik say he’s on your side';}
+    await say(MAL(),'<i>(grinning)</i> Also your hesi is bad. Like, really bad. Watch. Sell it with the shoulders, not the ball.');
+    fx({chem:{malik:2}});S.log.malik5='heard Malik say he’s on your side';await learn('hesi');}
   await fade(true,700);
 }
 async function t4(){ // THE FORK — Sal's
@@ -4913,19 +5021,16 @@ async function t5(){ // first consequence, by path
   }
   await fade(true,700);
 }
-async function t6(){ // North Vigo — the season keeps going
+async function t6(){ // North Vigo — Clutch Time
   setLoc('gym');hideAll();cine(true);gameMode(true,'Cedar');gymAway(null);suitUp();teamNames(true);if(!S.f.stroud_gone)suit(EX.stroud,7);newBox();
-  const O=[EX.o1,EX.o2,EX.o3,EX.o4,EX.o5],St=S.f.stroud_gone?kai:EX.stroud;oppNames('NORTH VIGO');
-  setScore(51,52);setClock('Q4  0:31');shot(V(-2,5.5,9),V(-9,0,0),{fov:46});await fade(false,600);
+  const O=[EX.o1,EX.o2,EX.o3,EX.o4,EX.o5];oppNames('NORTH VIGO');
+  setScore(48,50);setClock('Q4  2:00');shot(V(-2,5.5,9),V(-9,0,0),{fov:46});await fade(false,600);
   await cap(`Friday, January 15. Home vs. North Vigo. ${S.f.path==='program'?'Dad is in the stands in his Midwest Select polo. Three parents have noticed.':'Dad is in the stands in a sweatshirt. Vance is not.'}`,3000);
-  if(!S.f.starter)await say(null,'<i>Theo checks in at the scorer\'s table with thirty-one seconds left.</i>',2000);
-  const made=await catchShoot({spot:'rw',passer:S.f.lou_cold?MAL():lou,from:'top',def:O[1],lay:[[St,'lw'],[O[2],'lw','g'],[S.f.lou_cold?lou:MAL(),'lb'],[O[3],'lb','g',.6]],
-    line:S.f.lou_cold?'<i>(Lou has the ball. Lou looks at Theo. Lou passes to Malik.)</i> Malik!':'<i>(Lou, not looking at him, yelling)</i> THEO!',lineBy:S.f.lou_cold?lou:lou,
-    good:[MAL(),'GAME! THAT\'S GAME!'],bad:[hollis,'<i>(typing)</i> Right look. Wrong night.']});
-  let p=.35+(made?.45:0)+((S.chem.team||0)>0?.06:0)-(S.f.lou_cold?.08:0);const won=roll(clamp(p,.1,.92));result(won);
-  {const a=S.score[0],b=S.score[1];if(won&&a<=b)setScore(b+1,b);else if(!won&&a>=b)setScore(a,a+2);}
-  setClock('FINAL');sfx('horn');camWide();S.log.vigo=won?'beat North Vigo':'lost to North Vigo';
-  await cap(won?'WIN · vs. NORTH VIGO':'LOSS · vs. NORTH VIGO',2000);
+  if(!S.f.starter)await say(null,'<i>Hollis waves Theo in from the bench. Two minutes left.</i>',2000);
+  const T={big:lou,shooter:S.f.stroud_gone?kai:EX.stroud,wing:S.f.stroud_gone?MAL():kai,post:S.f.stroud_gone?reggie:MAL(),lobber:S.f.stroud_gone?null:EX.stroud};
+  const won=await clutch({team:T,opp:O,us:48,them:50,secs:120,oppKey:'vigo',trash:S.f.path==='program'?'Midwest Select, huh? Show me.':'Heard your dad got demoted.'});
+  result(won);S.log.vigo=won?'beat North Vigo in Clutch Time':'lost to North Vigo in Clutch Time';
+  camWide();await cap(won?'WIN · vs. NORTH VIGO':'LOSS · vs. NORTH VIGO',2000);
   gameMode(false);setScore(0,0,false);await fade(true,600);
   await seasonCard('MID-JANUARY');
 }
