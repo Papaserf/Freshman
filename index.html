@@ -874,6 +874,68 @@ function buildLobby(){
   const tree=new THREE.Group();g.add(tree);tree.position.set(5.6,0,2.6);mesh(new THREE.ConeGeometry(.7,2.2,10),toon(0x2f5a3a),tree,V(0,1.3,0),.02);for(let i=0;i<14;i++){const a=i*2.4,r=.25+i*.03;mesh(new THREE.SphereGeometry(.05,8,6),basic([0xff3b3b,0xffd765,0x6fd3ff][i%3]),tree,V(Math.cos(a)*r,.5+i*.11,Math.sin(a)*r),0);}
   return{g,bg:0x1c2218,fog:[0x1c2218,8,22],hemi:[0xe8f0c8,0x3a3020,.62],key:[0xf0ffd8,.5,V(0,8,3)],rim:[0xffc98a,.45,V(-5,3,-4)],amb:{rain:0,hum:.9}};
 }
+function buildDome(){ // Midwest Select "The Dome", Carmel — big, bright, corporate
+  const g=new THREE.Group();scene.add(g);g.visible=false;
+  const NAVY='#0b2a5b',SKYB='#3fa9f5';
+  // main court: same footprint as the home gym so every possession template works here
+  const fl=ctex(2048,1152,(x,w,h)=>{const sx=w/32,sy=h/18,X=v=>(v+16)*sx,Y=v=>(v+9)*sy;
+    x.fillStyle='#d2a467';x.fillRect(0,0,w,h);for(let i=0;i<w;i+=18){x.fillStyle=`rgba(150,100,50,${.05+Math.random()*.05})`;x.fillRect(i,0,2,h);}
+    x.fillStyle='#14284a';x.fillRect(0,0,w,Y(-7.5));x.fillRect(0,Y(7.5),w,h-Y(7.5));x.fillRect(0,0,X(-14),h);x.fillRect(X(14),0,w-X(14),h);
+    x.strokeStyle='#fff';x.lineWidth=7;x.strokeRect(X(-14),Y(-7.5),28*sx,15*sy);x.beginPath();x.moveTo(X(0),Y(-7.5));x.lineTo(X(0),Y(7.5));x.stroke();
+    x.beginPath();x.ellipse(X(0),Y(0),1.8*sx,1.8*sy,0,0,7);x.fillStyle=NAVY;x.fill();x.stroke();txt(x,'MWS',100,[X(0),Y(0)],'Anton','#fff','center',SKYB);
+    for(const s of[-1,1]){const bx=s*14,dir=-s;x.fillStyle='rgba(11,42,91,.95)';x.fillRect(Math.min(X(bx),X(bx+dir*5.8)),Y(-2.45),5.8*sx,4.9*sy);x.strokeRect(Math.min(X(bx),X(bx+dir*5.8)),Y(-2.45),5.8*sx,4.9*sy);
+      x.beginPath();x.ellipse(X(bx+dir*5.8),Y(0),1.8*sx,1.8*sy,0,0,7);x.stroke();const rx=bx+dir*1.4;
+      x.beginPath();x.moveTo(X(bx),Y(-6.6));x.lineTo(X(rx),Y(-6.6));x.stroke();x.beginPath();x.moveTo(X(bx),Y(6.6));x.lineTo(X(rx),Y(6.6));x.stroke();
+      x.beginPath();if(s<0)x.ellipse(X(rx),Y(0),6.6*sx,6.6*sy,0,-PI/2,PI/2,false);else x.ellipse(X(rx),Y(0),6.6*sx,6.6*sy,0,PI/2,PI*1.5,false);x.stroke();}
+    txt(x,'MIDWEST SELECT',64,[X(0),Y(-8.3)],'Anton','#fff');txt(x,'THE DOME · CARMEL, IN',44,[X(0),Y(8.3)],'Anton',SKYB);});
+  const floor=new THREE.Mesh(new THREE.PlaneGeometry(32,18),toon(0xffffff,fl));floor.rotation.x=-PI/2;g.add(floor);
+  // neighbouring courts, seen through the divider nets
+  const fl2=ctex(1024,576,(x,w,h)=>{x.fillStyle='#e2c898';x.fillRect(0,0,w,h);x.strokeStyle='#fff';x.lineWidth=5;x.strokeRect(w*.06,h*.08,w*.88,h*.84);x.beginPath();x.moveTo(w/2,h*.08);x.lineTo(w/2,h*.92);x.stroke();x.beginPath();x.arc(w/2,h/2,50,0,7);x.stroke();txt(x,'COURT 2',40,[w/2,h*.04+10],'Anton',NAVY);});
+  for(const z of[-19,19]){const f2=new THREE.Mesh(new THREE.PlaneGeometry(32,18),toon(0xffffff,fl2));f2.rotation.x=-PI/2;f2.position.set(0,0,z);g.add(f2);}
+  const under=new THREE.Mesh(new THREE.PlaneGeometry(90,90),toon(0x14284a));under.rotation.x=-PI/2;under.position.y=-.01;g.add(under);
+  // divider netting (translucent) between courts
+  const nt=ctex(128,128,(x,w,h)=>{x.clearRect(0,0,w,h);x.fillStyle='rgba(20,30,50,.28)';x.fillRect(0,0,w,h);x.strokeStyle='rgba(10,15,25,.7)';x.lineWidth=2;for(let i=0;i<w;i+=16){x.beginPath();x.moveTo(i,0);x.lineTo(i,h);x.moveTo(0,i);x.lineTo(w,i);x.stroke();}},[40,8]);
+  for(const z of[-10.2,10.2]){const n=new THREE.Mesh(new THREE.PlaneGeometry(36,13),basic(0xffffff,nt,{transparent:true,depthWrite:false,side:THREE.DoubleSide}));n.position.set(0,6.5,z);g.add(n);}
+  // far walls: navy panels, glass mezzanine
+  const wallT=ctex(1024,256,(x,w,h)=>{x.fillStyle='#16233d';x.fillRect(0,0,w,h);for(let i=0;i<w;i+=128){x.fillStyle='#1c2d4e';x.fillRect(i+4,4,120,h-8);}x.fillStyle=SKYB;x.fillRect(0,h-18,w,6);},[3,1]);
+  const wm=toon(0xffffff,wallT);box(.4,16,60,wm,g,V(-17.5,8,0),false);box(.4,16,60,wm,g,V(17.5,8,0),false);box(36,16,.4,wm,g,V(0,8,-29),false);box(36,16,.4,wm,g,V(0,8,29),false);
+  const glass=basic(0x9fd4ff,null,{transparent:true,opacity:.28});box(.12,2.6,22,glass,g,V(17.1,6.4,0),false);box(1.6,.2,22,toon(0xdfe6ee),g,V(16.6,5.05,0));box(.08,1.1,22,toon(0xbfc8d2),g,V(15.85,5.7,0),false);
+  const smo=ctex(512,128,(x,w,h)=>{x.fillStyle='#ffffff';x.fillRect(0,0,w,h);txt(x,'FUEL BAR · SMOOTHIES',54,[w/2,h/2+2],'Anton',NAVY);});
+  const sm=new THREE.Mesh(new THREE.PlaneGeometry(5,1.25),basic(0xffffff,smo));sm.position.set(17.25,8.4,-4);sm.rotation.y=-PI/2;g.add(sm);
+  // ceiling: white trusses + long LED strips
+  const ceil=new THREE.Mesh(new THREE.PlaneGeometry(36,60),toon(0xdfe3ea));ceil.rotation.x=PI/2;ceil.position.y=15.8;g.add(ceil);
+  const tr=toon(0xf2f4f7);for(let x=-15;x<=15;x+=5){box(.3,.5,58,tr,g,V(x,14.6,0));for(let z=-27;z<=27;z+=3)box(.08,.9,.08,tr,g,V(x,14.1,z),false);box(.3,.3,58,tr,g,V(x,13.6,0));}
+  const led=basic(0xffffff);for(let x=-12.5;x<=12.5;x+=5)box(.5,.12,40,led,g,V(x,13.3,0),false);
+  // LED ribbon board + banners
+  const rib=ctex(2048,128,(x,w,h)=>{x.fillStyle='#000';x.fillRect(0,0,w,h);txt(x,'MIDWEST SELECT  ·  EST. 2009  ·  37 D-I COMMITS  ·  PEACH JAM 2024  ·  WE GET YOU SEEN',64,[w/2,h/2+3],'Anton',SKYB);});
+  const rb=new THREE.Mesh(new THREE.PlaneGeometry(30,1.6),basic(0xffffff,rib));rb.position.set(0,9.6,-10.05);g.add(rb);
+  const banT=(t1,t2)=>ctex(256,512,(x,w,h)=>{x.fillStyle=NAVY;x.fillRect(0,0,w,h);x.fillStyle=SKYB;x.fillRect(0,h-40,w,40);txt(x,t1,52,[w/2,120],'Anton','#fff');txt(x,t2,34,[w/2,190],'Anton',SKYB);});
+  const bans=[['PURDUE','2 COMMITS'],['INDIANA','4 COMMITS'],['BUTLER','3 COMMITS'],['XAVIER','2 COMMITS'],['MICHIGAN ST','1 COMMIT']];
+  bans.forEach(([a,b],i)=>{const m=new THREE.Mesh(new THREE.PlaneGeometry(1.7,3.4),toon(0xffffff,banT(a,b)));m.position.set(-11+i*5.5,6.2,-9.98);g.add(m);});
+  // the big wordmark on the end wall
+  const wmk=ctex(1024,256,(x,w,h)=>{x.clearRect(0,0,w,h);txt(x,'SELECT',190,[w/2,h/2+10],'Anton','#fff','center',SKYB);});
+  const wk=new THREE.Mesh(new THREE.PlaneGeometry(14,3.5),basic(0xffffff,wmk,{transparent:true}));wk.position.set(-17.25,9,0);wk.rotation.y=PI/2;g.add(wk);
+  // hoops: glass backboards, stanchions (same positions as the home gym, so HOOP lines up)
+  function hoop(bx,dir){const hg=new THREE.Group();g.add(hg);
+    box(.05,1.05,1.8,basic(0xd8efff,null,{transparent:true,opacity:.35}),hg,V(bx,3.45,0));
+    box(.3,3.9,.3,toon(0x0b2a5b),hg,V(bx-dir*1.6,1.95,0));box(1.6,.18,.18,toon(0x0b2a5b),hg,V(bx-dir*.8,3.9,0));
+    box(1.6,1.1,1.4,toon(0x0b2a5b),hg,V(bx-dir*1.9,.55,0));
+    const rimM=new THREE.Mesh(new THREE.TorusGeometry(.23,.018,8,28),toon(0xe2531d));rimM.rotation.x=PI/2;rimM.position.set(bx+dir*.4,3.05,0);rimM.add(new THREE.Mesh(rimM.geometry,inkMat(.008)));hg.add(rimM);
+    const nt2=ctex(64,64,(x,w,h)=>{x.clearRect(0,0,w,h);x.strokeStyle='#fff';x.lineWidth=3;for(let i=-64;i<128;i+=16){x.beginPath();x.moveTo(i,0);x.lineTo(i+64,64);x.moveTo(i+64,0);x.lineTo(i,64);x.stroke();}});nt2.wrapS=THREE.RepeatWrapping;nt2.repeat.set(4,1);
+    const net=new THREE.Mesh(new THREE.CylinderGeometry(.22,.14,.45,16,1,true),basic(0xffffff,nt2,{transparent:true,side:THREE.DoubleSide,depthWrite:false}));net.position.set(bx+dir*.4,2.82,0);hg.add(net);}
+  hoop(-13,1);hoop(13,-1);
+  for(const z of[-19,19])for(const s of[-1,1]){const hg=new THREE.Group();g.add(hg);box(.05,1.05,1.8,basic(0xd8efff,null,{transparent:true,opacity:.35}),hg,V(s*13,3.45,z));box(.3,3.9,.3,toon(0x0b2a5b),hg,V(s*14.6,1.95,z));}
+  // pull-out bleachers where the crowd sits, navy chairbacks
+  for(let i=0;i<7;i++)box(24,.42,.32,toon(shade(0x1c3a6b,1-i*.06)),g,V(0,.21+i*.42,8.1+i*.13));
+  // scorer's table + sponsor wrap
+  const tbl=ctex(512,96,(x,w,h)=>{x.fillStyle=NAVY;x.fillRect(0,0,w,h);txt(x,'MIDWEST SELECT  ·  POWERED BY RIDGELINE AUTO',30,[w/2,h/2+2],'Anton','#fff');});
+  const tb=box(5,.8,.7,toon(0x0b2a5b),g,V(0,.4,-8.2));tb.material=[toon(0x0b2a5b),toon(0x0b2a5b),toon(0x0b2a5b),toon(0x0b2a5b),toon(0x0b2a5b),basic(0xffffff,tbl)];
+  // rolling ball racks, water cooler, a dad on a tripod
+  for(const x of[-9,9]){box(1.4,.06,.5,toon(0x9aa2ad),g,V(x,.9,-7.6));for(let k=0;k<5;k++)mesh(new THREE.SphereGeometry(.12,10,8),toon(0xd86a24),g,V(x-.5+k*.25,1.05,-7.6),.006);}
+  mesh(new THREE.CylinderGeometry(.22,.22,.6,12),toon(0xe85a1a),g,V(-14.6,.3,-7.2));
+  box(.04,1.5,.04,toon(0x222222),g,V(11.8,.75,7));box(.25,.18,.12,toon(0x111111),g,V(11.8,1.55,7));
+  return{g,bg:0x0e1a30,fog:[0x0e1a30,30,80],hemi:[0xf4f8ff,0x5a6a80,.7],key:[0xffffff,.85,V(0,16,4)],rim:[0x8fd0ff,.55,V(-8,6,-9)],amb:{rain:0,hum:1.2}};
+}
 function buildRoom(){
   const g=new THREE.Group();scene.add(g);
   const fl=new THREE.Mesh(new THREE.PlaneGeometry(6,5),toon(0x5a4a3e));fl.rotation.x=-PI/2;g.add(fl);
@@ -1155,7 +1217,7 @@ const bouncePass=async(b,from,to,dur=.7)=>{from.pose='pass';b.follow=null;b.m.po
 /* ================= world build ================= */
 const EX={};let theo,nico,kai,dante,reggie,lou,coach,dad,priya,mom,hollis,whit,CARS={},mop,phone,mug,clip,sweep;
 async function build(){
-  LOC.gym=buildGym();LOC.hall=buildHall();LOC.locker=buildLocker();LOC.lot=buildLot();LOC.track=buildTrack();LOC.diner=buildDiner();LOC.office=buildOffice();LOC.bus=buildBus();LOC.lobby=buildLobby();LOC.room=buildRoom();LOC.home=buildHome();LOC.class=buildClass();
+  LOC.gym=buildGym();LOC.hall=buildHall();LOC.locker=buildLocker();LOC.lot=buildLot();LOC.track=buildTrack();LOC.diner=buildDiner();LOC.office=buildOffice();LOC.dome=buildDome();LOC.bus=buildBus();LOC.lobby=buildLobby();LOC.room=buildRoom();LOC.home=buildHome();LOC.class=buildClass();
   theo=await makeChar('theo');priya=await makeChar('priya');nico=await makeChar('nico');kai=await makeChar('kai');dante=await makeChar('dante');reggie=await makeChar('reggie');lou=await makeChar('lou');coach=await makeChar('coach');dad=await makeChar('dad');mom=await makeChar('mom');hollis=await makeChar('hollis');whit=await makeChar('whit');
   phone=mesh(new THREE.BoxGeometry(.075,.15,.012),toon(0x111111),null,V(0,-.04,.04),.004);prop(reggie,'phone',phone);
   const pg=new THREE.Mesh(new THREE.PlaneGeometry(.06,.12),basic(0x9fd0ff));pg.position.z=.007;phone.add(pg);
@@ -4516,10 +4578,10 @@ async function t4(){ // THE FORK — Sal's
 async function t5(){ // first consequence, by path
   for(const c of chars)unsuit(c);
   if(S.f.path==='program'){
-    setLoc('gym');gymAway('Select');hideAll();cine(true);setScore(0,0,false);const V0=EX.vance;
+    setLoc('dome');hideAll();cine(true);setScore(0,0,false);const V0=EX.vance;
     put(V0,-5.8,-3.2,PI*.25);put(theo,-6.6,-1.6,PI*1.1);face(V0,theo.g.position,true);face(theo,V0.g.position,true);
     if(S.f.malik_deep)put(MAL(),-9.4,-2.6,PI*.5,'dribble');
-    shot(V(-1.2,1.6,3),V(-8,1.3,-1),{fov:44});await fade(false,700);
+    kDolly(V(4,2.6,6.5),V(1,1.8,4.2),V(-8,3,-4),V(-7,1.4,-2),7,52,40);await fade(false,900);
     await cap('Saturday. The Dome, Carmel. Midwest Select. Four courts. A smoothie bar. Somebody\'s dad filming everything.',3000);
     if(S.f.malik_deep){cu(MAL(),{d:1.2,fov:26});await say(MAL(),'<i>(waving, way too happy)</i> CAPTAIN! Told you! Told you he\'d come!',2000);}
     cu(V0,{d:1.2,fov:28});await say(V0,'Gear\'s in the bag. Shoes, warmups. And this. For gas. Your father\'s driving you an hour each way. That isn\'t free.');
@@ -4533,7 +4595,6 @@ async function t5(){ // first consequence, by path
     if(i===1){heart=true;kStare(theo);await say(null,'<i>"With the others."</i>',1800);heart=false;S.f.others=true;}
     if(i===0||i===3)fx({flag:'took_money'});S.purdue=clamp(S.purdue+.5,0,5);
     if(i===3){sfx('phone');await phonePost({init:'PS',who:'Priya Shah',time:'11:48 AM',text:'Got it. Serial numbers visible. Theo, this is real now. Be careful. I mean it.',rx:'Text',comments:[]});}
-    gymAway(null);
   }else{
     setLoc('home');hideAll();cine(true);LOC.home.quiz.visible=false;
     sitOn(dad,-1,0,PI/2,.47);put(theo,.8,1.4,PI*1.1);face(theo,dad.g.position,true);
