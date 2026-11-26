@@ -133,20 +133,22 @@ def torso_weights(z):
 def make_geometry():
     b=Builder(); rings=[]
     # Bottom to top. Continuous shorts/torso shell with material border at waist.
-    sections=[(.915,.125,.075),(.925,.162,.101),(.94,.175,.115),(.99,.171,.112),
-              (1.035,.151,.102),(1.075,.145,.098),(1.12,.147,.101),
-              (1.17,.156,.108),(1.22,.170,.117),(1.27,.184,.122),
-              (1.32,.193,.124),(1.37,.199,.117),(1.415,.208,.104),
-              (1.455,.222,.087),(1.485,.158,.071),(1.51,.060,.057)]
+    # Pass 4: athletic V-taper. Shallower chest/back (less barrel), no hip
+    # ledge at the waistband, narrower shoulder cap so the deltoids carry width.
+    sections=[(.915,.118,.072),(.925,.148,.090),(.94,.158,.098),(.99,.156,.096),
+              (1.035,.146,.090),(1.075,.139,.086),(1.12,.141,.087),
+              (1.17,.149,.091),(1.22,.161,.097),(1.27,.174,.103),
+              (1.32,.184,.105),(1.37,.191,.101),(1.415,.196,.092),
+              (1.455,.200,.077),(1.485,.142,.064),(1.51,.058,.055)]
     for z,x,y in sections:
-        ring=b.ring((0,0,z),x,y,torso_weights(z),'torso',20,.78,phase=math.pi/2)
+        ring=b.ring((0,0,z),x,y,torso_weights(z),'torso',20,.68,phase=math.pi/2)
         # Pass 3: straighten only the anterior hem; retain the back and
         # lateral silhouette. The heavy morph adds its own belly below.
         if 1.035 <= z <= 1.12:
             for i in ring:
                 px,py,pz=b.v[i]
                 if py<0:
-                    b.v[i]=(px,py*((.087 if z<1.075 else .090)/y),pz)
+                    b.v[i]=(px,py*((.080 if z<1.075 else .082)/y),pz)
         # Eight-centimeter lateral blend band across the upper chest. Keep
         # central chest/trapezius stable; move the outer shoulder with the arm.
         for i in ring:
@@ -201,7 +203,7 @@ def make_geometry():
                  (.31,.048,.046,0),(.33,.048,.045,0),(.35,.050,.047,0),
                  (.385,.056,.050,0),(.435,.052,.046,0),(.49,.044,.039,0),
                  (.535,.037,.033,0),(.555,.033,.030,0),(.58,.032,.029,0),(.60,.030,.029,0)]
-        lengths=[(t,rx*(.74 if t<.10 else .86 if t<=.31 else .95),ry*(.78 if t<.10 else .88 if t<=.31 else .95),inset*.8) for t,rx,ry,inset in lengths]
+        lengths=[(t,rx*(.70 if t<.10 else .79 if t<=.31 else .86),ry*(.74 if t<.10 else .82 if t<=.31 else .88),inset*.8) for t,rx,ry,inset in lengths]
         rings=[]
         for t,rx,ry,inset in lengths:
             l=t*UPPER_ARM/.31 if t<=.31 else UPPER_ARM+(t-.31)*FOREARM/.27
@@ -209,7 +211,7 @@ def make_geometry():
             if l<.10: w=joint_weights('chest',upper,(l+.065)/.165)
             elif l<UPPER_ARM+.06: w=joint_weights(upper,lower,(l-UPPER_ARM+.06)/.12)
             else: w=joint_weights(lower,hand,(l-UPPER_ARM-FOREARM+.045)/.075)
-            ring=b.ring(center,rx,ry,w,'arm.'+side,16,.85,(U,V))
+            ring=b.ring(center,rx,ry,w,'arm.'+side,16,.78,(U,V))
             if l<.10:
                 for i in ring:
                     # Outer deltoid follows the humerus early; medial root
@@ -263,14 +265,15 @@ def make_geometry():
     for side,s in [('L',1),('R',-1)]:
         thigh='thigh_'+side; knee='knee_'+side; foot='foot_'+side
         p=BONES[thigh][1]; k=BONES[knee][1]; f=BONES[foot][1]; rings=[]
-        specs=[(-.09,.100,.107),(-.055,.105,.113),(0,.104,.111),(.06,.099,.107),(.13,.094,.101),(.21,.086,.093),(.29,.077,.081),(.36,.066,.071),(.40,.061,.066),(.43,.061,.065),(.45,.060,.065),(.47,.060,.065),(.49,.057,.061),(.52,.055,.059),(.57,.053,.056),(.63,.049,.052),(.69,.045,.048),(.75,.040,.043),(.81,.037,.039),(.85,.039,.042)]
+        # Pass 4: leaner thighs, a real knee, a calf that sits behind the shin, thin ankles.
+        specs=[(-.09,.088,.094),(-.055,.092,.098),(0,.090,.096),(.06,.086,.092),(.13,.081,.087),(.21,.074,.080),(.29,.066,.071),(.36,.058,.063),(.40,.054,.059),(.43,.052,.056),(.45,.051,.055),(.47,.050,.055),(.49,.050,.057),(.52,.052,.061),(.57,.054,.063),(.63,.050,.057),(.69,.043,.047),(.75,.036,.039),(.81,.032,.034),(.85,.035,.038)]
         for t,rx,ry in specs:
             l=t*THIGH/.45 if t<=.45 else THIGH+(t-.45)*SHIN/.40
             center=p.lerp(k,l/THIGH) if l<=THIGH else k.lerp(f,(l-THIGH)/SHIN)
             if l<.12: w=joint_weights('hips',thigh,(l+.055)/.175)
             elif l<THIGH+.07: w=joint_weights(thigh,knee,(l-THIGH+.07)/.14)
             else: w=joint_weights(knee,foot,(l-THIGH-SHIN+.06)/.09)
-            rings.append(b.ring(center,rx,ry,w,'leg.'+side,16,.80))
+            rings.append(b.ring(center,rx,ry,w,'leg.'+side,16,.74))
         b.cap(rings[0],4)
         for i,(r,q) in enumerate(zip(rings,rings[1:])): b.join(r,q,4 if specs[i][0]<.40 else 5,True)
         b.cap(rings[-1],5,True); b.crease(rings[-1])
@@ -380,7 +383,7 @@ def morph_position(p,tag,name):
 def add_morphs(obj,b):
     obj.shape_key_add(name='Basis',from_mix=False)
     for name in MORPHS:
-        key=obj.shape_key_add(name=name,from_mix=False); key.slider_min=0; key.slider_max=1
+        key=obj.shape_key_add(name=name,from_mix=False); key.slider_min=0; key.slider_max=1; key.value=0  # exported glTF default weights must be 0
         for i,(p,tag) in enumerate(zip(b.v,b.tags)): key.data[i].co=morph_position(p,tag,name)
 
 
