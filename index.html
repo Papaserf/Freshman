@@ -1661,7 +1661,8 @@ async function boardBattle(o){ensureBox();hideAll();setScore(S.score[0],S.score[
   await shootBall(ball,o.shooter,'rattle');
   walkNow(theo,HOOP.x+1.6,-.7,{speed:3,after:'up'});walkNow(o.big,HOOP.x+1.2,-.2,{speed:3,after:'up'});
   const ok=await qScrap({label:'BOX OUT',need:(o.need||9),time:2.2});
-  if(ok){await fly(ball,handPos(theo),.35,.3);hold(ball,theo);theo.pose='catch';S.box.reb++;fx({respect:1});await react(o.good);}
+  if(ok){await fly(ball,handPos(theo),.35,.3);hold(ball,theo);theo.pose='catch';S.box.reb++;fx({respect:1});await react(o.good);
+    if(o.putback){theo.pose='idle';const mk=roll(.6+sk('handle')/500);await layup(ball,theo,mk);if(mk){us(2,2);}else await cap('PUTBACK ROLLS OFF · THEIR BALL',1000);}}
   else{await fly(ball,handPos(o.big),.35,.3);hold(ball,o.big);await layup(ball,o.big,true);them(2);await react(o.bad);}
   theo.pose='idle';return ok;
 }
@@ -4731,8 +4732,8 @@ async function clutch(o){ensureBox();skInit();await teach('clutch');
         kickGood:[sh_,'<i>(backpedaling, three fingers up)</i>'],kickMiss:[sh_,'My bad.'],dumpGood:[lou_,'Big man touch!'],dumpMiss:[lou_,'Rimmed out.'],finishGood:[T.wing,'And one energy!'],finishBad:[O[2],'Not here.'],tov:[O[0],'Thank you.']});
       else if(k==='cs')await catchShoot({spot:'rw',passer:sh_,from:'top',def:O[1],lay,mod:1});
       else await isoMove({move:k,myDef:O[0],lobber,lay:k==='lob'?[[T.wing,'rw'],[O[3],'rw','g']]:lay});
-      if(S.score[0]===before[0]&&roll(.3+sk('iq')/400)){await boardBattle({shooter:theo,spot:'top',big:O[2],lay:[[T.wing,'lw'],[O[3],'lw','g']],need:Math.round(10-sk('handle')/25),
-        good:[lou_,'SECOND CHANCE!'],bad:[O[2],'<i>(grabbing it)</i> Mine.']});}
+      if(S.score[0]===before[0]&&roll(.3+sk('iq')/400)){const rb=await boardBattle({putback:true,shooter:theo,spot:'top',big:O[2],lay:[[T.wing,'lw'],[O[3],'lw','g']],need:Math.round(10-sk('handle')/25),
+        good:[lou_,'SECOND CHANCE!'],bad:[O[2],'<i>(grabbing it)</i> Mine.']});if(!rb)o._keep=true;}
     }else{
       const beats=[];const nb=3+(Math.random()*2|0);const pref=o.tell||(['left','right'][(Math.random()*2)|0]);
       for(let i=0;i<nb;i++){const r=Math.random();beats.push({dir:r<.18?'none':r<.62?pref:(pref==='left'?'right':'left'),t:(.52+Math.random()*.2)*(.85+sk('def')/330)*(scouted?1.15:1)});}
@@ -4747,7 +4748,7 @@ async function clutch(o){ensureBox();skInit();await teach('clutch');
     const d=S.score[0]-S.score[1];camWide();
     if(secs>0)await cap(`${fmt(secs).trim()} · ${d===0?'TIED':d>0?'UP '+d:'DOWN '+(-d)}`,1200);
     if(secs<=0&&d===0&&q!=='OT'&&!o.noOT){q='OT';secs=o.ot||48;setClock(fmt(secs));await cap('OVERTIME.',1600);}
-    ours=!ours;}
+    if(o._keep){o._keep=false;}else ours=!ours;}
   ICE=false;$('#clutchTag').classList.remove('on');setClock('FINAL');sfx('horn');
   const won=S.score[0]>S.score[1]||(S.score[0]===S.score[1]&&roll(.5));if(S.score[0]===S.score[1])setScore(S.score[0]+(won?1:0),S.score[1]+(won?0:1));
   return won;}
