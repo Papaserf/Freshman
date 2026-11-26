@@ -6494,8 +6494,8 @@ async function G0(){
 async function G1(){ // Malik decides
   for(const c of chars)unsuit(c);setLoc('hall');hideAll();cine(true);setAmb({rain:0,hum:.8});const M=MAL();
   const e=S.f.s3e5_end||'stay',mc=S.chem.malik||0;const leave=e==='go'||(e==='silent'&&mc<5);S.f.malik_apex=leave;
-  put(theo,-1.1,-9.4,-PI/2);put(M,-1.6,-8.2,PI*.9);face(M,theo.g.position,true);face(theo,M.g.position,true);
-  shot(V(.9,1.6,-10.6),V(-1.3,1.4,-8.8),{fov:38});await fade(false,700);
+  put(theo,-.3,-9.3,-PI/2);put(M,-1.15,-8.3,PI*.9);face(M,theo.g.position,true);face(theo,M.g.position,true);
+  shot(V(1.5,1.55,-8.2),V(-.75,1.3,-8.85),{fov:42});await fade(false,700);
   await cap(leave?'Monday, January 4. First day back. Malik\'s locker is open. It is empty except for a roll of tape and one sock.':'Monday, January 4. First day back. Malik is at his locker. He is still wearing the maroon hoodie.',3000);
   cu(M,{d:1.2,fov:26});
   if(leave){
@@ -6652,8 +6652,8 @@ async function H0(){
 }
 async function H1(){ // the pitch, then Hollis
   for(const c of chars)unsuit(c);setLoc('hall');hideAll();cine(true);setAmb({rain:0,hum:.8});
-  put(theo,-1.1,-9.4,-PI/2);put(priya,-1.6,-8.2,PI*.9);face(priya,theo.g.position,true);face(theo,priya.g.position,true);priya.pose='phone';
-  shot(V(.9,1.6,-10.6),V(-1.3,1.4,-8.8),{fov:38});await fade(false,700);
+  put(theo,-.3,-9.3,-PI/2);put(priya,-1.15,-8.3,PI*.9);face(priya,theo.g.position,true);face(theo,priya.g.position,true);priya.pose='phone';
+  shot(V(1.5,1.55,-8.2),V(-.75,1.3,-8.85),{fov:42});await fade(false,700);
   await cap('Monday, January 18. 3:12 PM. Priya has borrowed the yearbook club\'s good camera. She has not told the yearbook club.',3000);
   cu(priya,{d:1.15,fov:26});
   await say(priya,'Four days until the vote. Everybody\'s going to have an opinion. I want the opinions ON TAPE. Diaries video. Raw. No music. Okay, a little music.',3000);
@@ -6902,7 +6902,7 @@ async function I6(){ // after
     await say(M,'…I\'m coming home for senior year. I already decided. I want to be on the side that says "ours."',2600);S.f.malik_home=true;S.log.malik8='heard Malik is coming home';fx({chem:{malik:3}});}
   await fade(true,700);
   // the last margin note
-  for(const c of chars)unsuit(c);setLoc('bedroom');hideAll();cine(true);sitOn(theo,-1.45,-.3,PI/2,.5);
+  for(const c of chars)unsuit(c);setLoc('bedroom');hideAll();cine(true);sitOn(theo,-.84,-.3,PI/2,.56);
   shot(V(.6,1.5,1.4),V(-1.3,.9,-.4),{fov:44});await fade(false,800);
   await cap('Monday. Theo\'s room. The "What was it for?" essay comes back. No grade. A margin note in red, longer than usual.',2800);
   await paperCard(['<i>Theo —</i>','You wrote a page about a hotel, a camera, a vote, a gym at night, and your father\'s name on a wall.','You did not write about yourself once. That is either very wise or very scared. Next year I want to know which.','One year left. Write the one you\'re afraid of.','<span style="float:right">— M. A.</span>'],'ROOM 207 · AP LANG · MARGIN NOTE',7200);
