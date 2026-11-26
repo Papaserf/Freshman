@@ -63,3 +63,7 @@ Then re-embed `out/base_body.glb` in `index.html` (`<script id="glb-base_body">`
 ## Credits
 
 Built with Claude, ChatGPT and Gemini, in collaboration with Papaserf.
+
+## License
+
+Seasons One–Three are free to play and share, unmodified and with credit, under [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/). No selling, no modified versions. See [LICENSE](LICENSE). Season Four (Senior) isn't in this repository; all rights reserved. Three.js is MIT-licensed by its authors.

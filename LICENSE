@@ -1,0 +1,33 @@
+FRESHMAN
+Copyright (c) 2026 Papaserf (McDood)
+
+Seasons One through Three of FRESHMAN, including the game code, story,
+dialogue, characters, artwork, face drawings, decals and 3D models in this
+repository, are licensed under the Creative Commons
+Attribution-NonCommercial-NoDerivatives 4.0 International License
+(CC BY-NC-ND 4.0).
+
+In plain terms, you may:
+  - play the game, and
+  - share unmodified copies of it for free, as long as you credit
+    Papaserf and link back to this repository.
+
+You may not:
+  - sell it, bundle it into anything you sell, or charge for access to it;
+  - publish modified versions, ports, re-skins or derivative games; or
+  - reuse its characters, story or art in other works.
+
+The plain-terms summary above is for convenience only. The license itself
+governs:
+  https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
+  (summary: https://creativecommons.org/licenses/by-nc-nd/4.0/)
+
+Season Four (Senior) is not part of this repository and is not covered by
+this license. All rights to it are reserved.
+
+Third-party software
+--------------------
+The game loads Three.js (r147) and its GLTFLoader at runtime. Three.js is
+Copyright (c) 2010-2022 three.js authors and is distributed under the MIT
+License: https://github.com/mrdoob/three.js/blob/r147/LICENSE
+It is not covered by the license above.
