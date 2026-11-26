@@ -6429,8 +6429,8 @@ async function F4(){ // hotel night
   for(const c of chars)unsuit(c);const r=S.f.route||'none';
   setLoc('room');hideAll();cine(true);
   const rm={lou,isaia:EX.isaia,malik:MAL(),nico}[S.f.roomie||'lou'];
-  sitOn(theo,-.6,.2,PI/2,.5);sitOn(rm,.9,.2,-PI/2,.5);
-  shot(V(.2,1.6,2.2),V(.2,.9,0),{fov:44});await fade(false,700);
+  sitOn(theo,-.72,-.85,PI/2,.56);sitOn(rm,.72,-.85,-PI/2,.56);
+  shot(V(0,1.55,1.9),V(0,.95,-.9),{fov:46});await fade(false,700);
   await cap('11:40 PM. Room 214. The heater sounds like a jet engine. Nobody can sleep.',2400);
   const msg=r==='priya'?{init:'PS',who:'Priya Shah',text:'I\'m in the lobby. The Diaries sent me to cover the tournament. I sent myself to cover the tournament. Come down. Bring a hoodie. The vending machine only has Funyuns.'}:r==='tess'?{init:'TK',who:'Tess Kowalski',text:'Hale is on the third floor. Lou doesn\'t know. Ice machine. Five minutes. Don\'t be weird. (Be a little weird.)'}:{init:'NV',who:'Nico Vela',text:S.f.roomie==='nico'?'(I\'m literally next to you. I\'m texting you because it\'s more dramatic.) Film says the other semifinal winner is NOT who we thought.':'Film says the other semifinal winner is NOT who we thought. Come to 216. Bring Funyuns.'};
   await phonePost(Object.assign({time:'11:40 PM',rx:'Text',comments:[]},msg));
