@@ -36,6 +36,7 @@ body.panel #frame{opacity:1;transform:scale(1) rotate(-.7deg)}
 @keyframes advb{0%,100%{transform:translateY(0);opacity:.9}50%{transform:translateY(3px);opacity:.35}}
 #cap{position:fixed;top:calc(9vh + 10px + env(safe-area-inset-top));left:max(4vw,18px);z-index:6;background:var(--gold);color:var(--ink);font:700 clamp(15px,1.8vw,19px)/1.2 'Barlow Condensed';padding:8px 14px;border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);transform:rotate(-1.2deg) translateY(-12px);opacity:0;transition:.25s;max-width:min(440px,80vw);pointer-events:none}
 #cap.on{opacity:1;transform:rotate(-1.2deg)}
+:root{--ts:1}#sub .t{font-size:calc(clamp(19px,2.7vw,28px)*var(--ts))}#cap{font-size:calc(clamp(15px,1.8vw,19px)*var(--ts));max-width:min(calc(440px*var(--ts)),86vw)}#ch button{font-size:calc(clamp(16px,2.05vw,21px)*var(--ts))}#menu .set{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:6px 0 4px}#menu .set button{margin:0;font-size:15px}
 #exam{position:fixed;left:50%;top:calc(15vh + env(safe-area-inset-top));transform:translateX(-50%) rotate(-.6deg);z-index:7;background:repeating-linear-gradient(#f6f1e4 0 27px,#b9c8d8 27px 28px);color:#111;border:3px solid #111;box-shadow:6px 6px 0 #111;padding:12px 26px 16px;min-width:min(440px,86vw);max-width:92vw;text-align:center;opacity:0;transition:opacity .2s;pointer-events:none}
 #exam.on{opacity:1}
 #horse{position:fixed;top:calc(9vh + env(safe-area-inset-top));left:50%;transform:translateX(-50%) rotate(-1deg);z-index:6;display:none;gap:14px;background:var(--paper);border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink);padding:8px 16px}
@@ -180,6 +181,7 @@ body[data-inp=touch] #ch button .k{display:none}body[data-inp=touch] #ch button{
 <div id="menu"><div class="box">
   <h3>PAUSED</h3>
   <button id="mResume">Resume</button>
+  <div class="set"><button id="sText"></button><button id="sAuto"></button><button id="sVol"></button><button id="sMus"></button></div>
   <button id="mStats">Show hidden stats: off</button>
   <button id="mRestart">Restart episode</button>
   <div style="font:700 14px 'Barlow Condensed';margin:14px 0 4px;letter-spacing:.05em">JUMP TO SCENE (episode · scene; resets this episode's choices)</div>
@@ -270,11 +272,15 @@ function pollPad(){
   }
 }
 
+/* ================= settings ================= */
+const SET=(()=>{const d={vol:1,mus:1,ts:1,auto:false};try{return Object.assign(d,JSON.parse(localStorage.getItem('freshman_settings')||'{}'));}catch(e){return d;}})();
+function saveSet(){try{localStorage.setItem('freshman_settings',JSON.stringify(SET));}catch(e){}}
+function applySet(){document.documentElement.style.setProperty('--ts',SET.ts);try{if(MG&&AC)MG.gain.setTargetAtTime(.8*SET.vol,AC.currentTime,.05);if(MUS.g&&AC)MUS.g.gain.setTargetAtTime(MUS.vol*SET.mus,AC.currentTime,.2);}catch(e){}}
 /* ================= audio ================= */
 let AC=null,MG,rainG,humG,noiseBuf,amb={rain:0,hum:0};
 function audioInit(){
   if(AC){if(AC.state==='suspended')AC.resume();return;}
-  try{AC=new(window.AudioContext||window.webkitAudioContext)();MG=AC.createGain();MG.gain.value=.8;MG.connect(AC.destination);
+  try{AC=new(window.AudioContext||window.webkitAudioContext)();MG=AC.createGain();MG.gain.value=.8*SET.vol;MG.connect(AC.destination);
     noiseBuf=AC.createBuffer(1,AC.sampleRate*2,AC.sampleRate);const d=noiseBuf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
     const n=AC.createBufferSource();n.buffer=noiseBuf;n.loop=true;const lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=1700;rainG=AC.createGain();rainG.gain.value=0;n.connect(lp).connect(rainG).connect(MG);n.start();
     const o=AC.createOscillator();o.frequency.value=120;const o2=AC.createOscillator();o2.frequency.value=240;humG=AC.createGain();humG.gain.value=0;o.connect(humG);const g2=AC.createGain();g2.gain.value=.35;o2.connect(g2).connect(humG);humG.connect(MG);o.start();o2.start();
@@ -1405,13 +1411,14 @@ function updCam(dt,t){const f=1-Math.exp(-camT.sp*dt);camS.p.lerp(camT.p,f);camS
 const sub=$('#sub'),subN=$('#sub .n'),subT=$('#sub .t');
 async function say(c,text,ms){
   subN.textContent=c?(typeof c==='string'?c:c.name):'';subT.innerHTML=text+ADV;sub.classList.add('on');if(c&&c.g)c.talk=true;
-  try{await waitPress(.3);}finally{if(c&&c.g)c.talk=false;sub.classList.remove('on');}
+  try{await waitPress(.3,TLEN(text));}finally{if(c&&c.g)c.talk=false;sub.classList.remove('on');}
   await wait(130);
 }
-async function cap(text,ms=2200){const e=$('#cap');const long=LONG(text);e.innerHTML=text+(long?ADV:'');e.classList.add('on');if(long)await waitPress(.3);else await waitSkip(ms);e.classList.remove('on');await wait(200);}
+async function cap(text,ms=2200){const e=$('#cap');const long=LONG(text);e.innerHTML=text+(long?ADV:'');e.classList.add('on');if(long)await waitPress(.3,TLEN(text));else await waitSkip(ms);e.classList.remove('on');await wait(200);}
 /* Reading is never on a timer: dialogue waits for a fresh press of A / Space / tap. A press that is still held
    from the previous line can't skip the next one, and min keeps a double-tap from eating a line. */
-function waitPress(min=.3){let el=0,ok=false,fresh=!IN.aHeld;const off=onIn((b,t)=>{if(b!=='A')return;if(t==='up'){fresh=true;return;}if(fresh&&el>min)ok=true;});return until(d=>{el+=d;return ok;}).finally(off);}
+function waitPress(min=.3,len=0){let el=0,ok=false,fresh=!IN.aHeld;const off=onIn((b,t)=>{if(b!=='A')return;if(t==='up'){fresh=true;return;}if(fresh&&el>min)ok=true;});return until(d=>{el+=d;if(SET.auto&&len&&el>1.5+len*.055)ok=true;return ok;}).finally(off);}
+const TLEN=t=>String(t).replace(/<[^>]+>/g,'').length;
 const ADV='<span class="adv">▼</span>';const LONG=t=>t.replace(/<[^>]+>/g,'').length>55;
 function waitSkip(ms){let el=0,skip=false;const off=onIn((b,t)=>{if(b==='A'&&t==='down'&&el>.3)skip=true;});return until(d=>{el+=d;return el*1000>=ms||skip;}).finally(off);}
 function choose(opts,secs,o={}){return waitable(done=>{
@@ -1434,7 +1441,7 @@ let SBL=null;function setScore(a,b,show=true){S.score=[a,b];$('#sbv').textConten
 async function montage(panels){
   const m=$('#mont');m.innerHTML='';m.classList.add('on');
   for(let i=0;i<panels.length;i++){const p=panels[i];const d=document.createElement('div');d.className='pn';d.style.setProperty('--r',(i%2?1.8:-1.6)+'deg');d.innerHTML=`<em>${p.fx||''}</em><span>${p.t}</span>`;m.appendChild(d);
-    requestAnimationFrame(()=>requestAnimationFrame(()=>d.classList.add('in')));if(p.do)p.do();sfx(p.s||'whoosh');if(LONG(p.t)){d.querySelector('span').insertAdjacentHTML('beforeend',ADV);await waitPress(.3);}else await waitSkip(p.ms||1800);}
+    requestAnimationFrame(()=>requestAnimationFrame(()=>d.classList.add('in')));if(p.do)p.do();sfx(p.s||'whoosh');if(LONG(p.t)){d.querySelector('span').insertAdjacentHTML('beforeend',ADV);await waitPress(.3,TLEN(p.t));}else await waitSkip(p.ms||1800);}
   await waitSkip(800);m.classList.remove('on');m.innerHTML='';await wait(200);
 }
 function note(html,on){const n=$('#note');n.innerHTML=html;n.classList.toggle('on',on);}
@@ -1516,6 +1523,7 @@ const TEACH={
     <li>Tap ${IN.last==='touch'?'<kbd>the screen</kbd>':IN.last==='pad'?'<kbd>A</kbd>':'<kbd>SPACE</kbd>'} when it crosses the <b>gold</b>. An on-target pass gives your teammate rhythm. A bad one gets him in trouble.</li></ol>`,
   line:()=>`<h3>FREE THROWS</h3><ol><li>A white ring pulses with Theo's heartbeat.</li><li>${IN.last==='touch'?'Tap the screen':IN.last==='pad'?'Press <kbd>A</kbd>':'Press <kbd>SPACE</kbd>'} when the ring lines up with the <b>gold circle</b>.</li><li>Nerves speed up his heartbeat and tighten the timing. If he's rattled, the ring fades out, so go by the beat.</li></ol>`,
   clutch:()=>`<h3>CLUTCH TIME</h3><ol><li>The last minutes are played trip by trip. Real score, real clock.</li><li>On offense, pick the play. Moves your mentors taught you show up here as new options.</li><li>On defense, guard their best player. A scouting report tells you which way he goes.</li><li>Run out the clock ahead and you win. Tie, and it goes to overtime.</li></ol>`,
+  charge:()=>`<h3>TAKE THE CHARGE</h3><ol><li>He's coming downhill, straight at you. Don't reach, don't jump.</li><li>${IN.last==='touch'?'Tap':IN.last==='pad'?'Press <kbd>A</kbd>':'Press <kbd>SPACE</kbd>'} when the ring closes on the <b>gold</b> to plant your feet. Square, set, outside the circle.</li><li>Too early and he goes around you. Too late and it's a block on you.</li></ol>`,
   scrap:()=>`<h3>SCRAP</h3><ol>
     <li>Box out, loose balls, contact: it's all effort.</li>
     <li>${IN.last==='touch'?'Tap the screen as fast as you can':IN.last==='pad'?'Mash <kbd>A</kbd>':'Mash <kbd>SPACE</kbd>'} to fill the bar before time runs out. It drains if you let up.</li></ol>`
@@ -2506,7 +2514,7 @@ async function takeCharge(att,o={}){ensureBox();hideAll();if(!o.practice)setScor
   put(att,-4.8,-1,-PI/2,'ready');put(theo,-9.4,-.6,PI/2,'stance');face(theo,att.g.position,true);face(att,theo.g.position,true);hold(ball,att,'dribble');
   shot(V(-6.9,1.5,4.4),V(-7.1,1.05,-.8),{fov:46});await wait(400);if(o.line)await say(att,o.line);
   walkNow(att,-8.7,-.6,{speed:5.4,dribble:true});await wait(200);
-  const ok=await qPass({label:'PLANT YOUR FEET'});await until(()=>!att.move);sfx('thud');hold(ball,att);
+  await teach('charge');const ok=await qPass0({label:'PLANT YOUR FEET'});await until(()=>!att.move);sfx('thud');hold(ball,att);
   if(ok){theo.pose='fallen';await cap(o.practice?'CHARGE.':'OFFENSIVE FOUL. OUR BALL.',1300);if(!o.practice){cheer(1.2);S.box.stops++;fx({respect:1,nerves:-3});}theo.pose='idle';return true;}
   theo.pose='fallen';await cap('BLOCKING FOUL.',1000);if(!o.practice){await shootBall(ball,att,'make');them(2);if(roll(.7)){them(1);await cap('AND ONE. HE HITS THE FREE THROW.',1300);}fx({nerves:5});}theo.pose='idle';return false;}
 async function isoStop(att,o){ensureBox();hideAll();setScore(S.score[0],S.score[1],!o.noBoard);lay(o.lay||[]);
@@ -6956,11 +6964,11 @@ function musTick(){
   if(MUS.want!==MUS.cur){
     if(MUS.g){const old=MUS.g;old.gain.setTargetAtTime(0,AC.currentTime,.6);setTimeout(()=>{try{old.disconnect();}catch(e){}},3500);MUS.g=null;}
     MUS.cur=MUS.want;
-    if(MUS.cur){MUS.g=AC.createGain();MUS.g.gain.value=0;MUS.g.connect(MG);MUS.g.gain.setTargetAtTime(MUS.vol,AC.currentTime,1.2);MUS.next=AC.currentTime+.1;MUS.step=0;}}
+    if(MUS.cur){MUS.g=AC.createGain();MUS.g.gain.value=0;MUS.g.connect(MG);MUS.g.gain.setTargetAtTime(MUS.vol*SET.mus,AC.currentTime,1.2);MUS.next=AC.currentTime+.1;MUS.step=0;}}
   if(!MUS.cur||!MUS.g)return;
   const T=MTR[MUS.cur],e=60/T.bpm/2;
   while(MUS.next<AC.currentTime+.3){mStep(T,MUS.step,MUS.next);MUS.next+=e;MUS.step++;}}
-function music(name,vol=.5){MUS.want=name||null;MUS.vol=vol;if(MUS.g&&name&&AC)MUS.g.gain.setTargetAtTime(vol,AC.currentTime,.8);if(!MUS.timer)MUS.timer=setInterval(musTick,60);}
+function music(name,vol=.5){MUS.want=name||null;MUS.vol=vol;if(MUS.g&&name&&AC)MUS.g.gain.setTargetAtTime(vol*SET.mus,AC.currentTime,.8);if(!MUS.timer)MUS.timer=setInterval(musTick,60);}
 
 /* ================= runner, menu, loop ================= */
 const SCENES=[sTitle,s1,s2,s3,s4,s5,s6,s7,s8,sEnd,eTitle,e1,e2,e3,e4,e5,e6,e7,e8,eEnd,e2Title,f1,f2,f3,f4,f5,f6,f7End,null,null,g0,g1,g2,g3,g4,g5,g6,g7End,null,null,h0,h1,h2,h3,h4,h5,h6,h7,h8End,null,i0,i1,i2,i3,i4,i5,i6,i7,i8End,null,horseMode,null,null,null,null,null,null,null,null,null,j0,j1,j2,j3,j4,j5,j6,j7,j8End,null,k0,k1,k2,k3,k4,k5,k6,k7,k8End,null,m0,m1,m2,m3,m4,m5,m6,m7End,null,null,n0,n1,n2,n3,n4,n5,n6,nEnd,null,null,p0,p1,p2,p3,p4,p5,p6,pEnd,null,null,r0,r1,r2,r3,r4,r5,r6,r7,rEnd,null,t0,t1,t2,t3,t4,t5,t6,t7,tEnd,null,w0,w1,w2,w3,w4,w5,w6,wEnd,null,null,y0,y1,y2,y3,y4,y5,y6,yEnd,null,null,z0,z1,z2,z3,z4,z5,z6,zEnd,null,null,A0,A1,A2,A3,A4,A5,A6,AEnd,null,null,B0,B1,B2,B3,B4,B5,B6,BEnd,null,null,C0,C1,C2,C3,C4,C5,C6,CEnd,null,null,D0,D1,D2,D3,D4,D5,D6,DEnd,null,null,E0,E1,E2,E3,E4,E5,E6,EEnd,null,null,F0,F1,F2,F3,F4,F5,F6,FEnd,null,null,G0,G1,G2,G3,G4,G5,G6,GEnd,null,null,H0,H1,H2,H3,H4,H5,H6,HEnd,null,null,I0,I1,I2,I3,I4,I5,I6,IEnd];
@@ -6973,7 +6981,16 @@ function openMenu(){menuOpen=true;paused=true;$('#menu').classList.add('on');$('
 function closeMenu(){menuOpen=false;paused=false;$('#menu').classList.remove('on');}
 function menuNav(b){const items=[...document.querySelectorAll('#menu button')];let i=items.indexOf(document.activeElement);if(b==='down'||b==='right')i=Math.min(items.length-1,i+1);else if(b==='up'||b==='left')i=Math.max(0,i-1);else if(b==='A'){document.activeElement&&document.activeElement.click();return;}else if(b==='B'){closeMenu();return;}items[i]&&items[i].focus();}
 $('#pause').addEventListener('pointerdown',e=>{e.stopPropagation();});$('#pause').addEventListener('click',togglePause);
-$('#mResume').onclick=closeMenu;$('#mRestart').onclick=()=>jump(1);
+$('#mResume').onclick=closeMenu;
+const TSZ=[[1,'Normal'],[1.2,'Large'],[1.42,'Huge']],VOLS=[1,.75,.5,.25,0];
+function setLabels(){$('#sText').textContent='Text: '+(TSZ.find(t=>t[0]===SET.ts)||TSZ[0])[1];$('#sAuto').textContent='Dialogue: '+(SET.auto?'auto':'press');
+  $('#sVol').textContent='Volume: '+Math.round(SET.vol*100)+'%';$('#sMus').textContent='Music: '+Math.round(SET.mus*100)+'%';}
+const cyc=(arr,v)=>arr[(arr.indexOf(v)+1)%arr.length];
+$('#sText').onclick=()=>{SET.ts=cyc(TSZ.map(t=>t[0]),SET.ts);saveSet();applySet();setLabels();};
+$('#sAuto').onclick=()=>{SET.auto=!SET.auto;saveSet();setLabels();};
+$('#sVol').onclick=()=>{SET.vol=cyc(VOLS,SET.vol);saveSet();applySet();setLabels();sfx('pop');};
+$('#sMus').onclick=()=>{SET.mus=cyc(VOLS,SET.mus);saveSet();applySet();setLabels();};
+setLabels();applySet();$('#mRestart').onclick=()=>jump(1);
 $('#mStats').onclick=()=>{showDbg=!showDbg;$('#mStats').textContent='Show hidden stats: '+(showDbg?'on':'off');dbg();};
 $('#mScenes').innerHTML=[1,2,3,4,5,6,7,8].map(n=>`<button data-n="${n}">0·${n}</button>`).join('')+[1,2,3,4,5,6,7,8].map(n=>`<button data-n="${n+10}">1·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+20}">2·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+30}">3·${n}</button>`).join('')+[1,2,3,4,5,6,7].map(n=>`<button data-n="${n+40}">4·${n}</button>`).join('')+[1,2,3,4,5,6,7].map(n=>`<button data-n="${n+50}">5·${n}</button>`).join('')+[1,2,3,4,5,6,7].map(n=>`<button data-n="${n+70}">6·${n}</button>`).join('')+[1,2,3,4,5,6,7].map(n=>`<button data-n="${n+80}">7·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+90}">8·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+100}">S2E1·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+110}">S2E2·${n}</button>`).join('')+[1,2,3,4,5,6,7].map(n=>`<button data-n="${n+120}">S2E3·${n}</button>`).join('')+[1,2,3,4,5,6,7].map(n=>`<button data-n="${n+130}">S2E4·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+140}">S2E5·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+150}">S2E6·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+160}">S2E7·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+170}">S2E8·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+180}">S3E1·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+190}">S3E2·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+200}">S3E3·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+210}">S3E4·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+220}">S3E5·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+230}">S3E6·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+240}">S3E7·${n}</button>`).join('')+[1,2,3,4,5,6].map(n=>`<button data-n="${n+250}">S3E8·${n}</button>`).join('');
 document.querySelectorAll('#mScenes button').forEach(b=>b.onclick=()=>jump(+b.dataset.n));
