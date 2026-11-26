@@ -162,7 +162,7 @@ def make_geometry():
                 w['shoulder_'+side]=amount; b.w[i]=w
         rings.append(ring)
     b.cap(rings[0],4,True)
-    for i,(a,c) in enumerate(zip(rings,rings[1:])): b.join(a,c,4 if sections[i][0]<1.075 else 2)
+    for i,(a,c) in enumerate(zip(rings,rings[1:])): b.join(a,c,4 if sections[i][0]<.99 else 2)  # shirt hangs to the hips; shorts start below the belly
     b.cap(rings[-1],2)
     # Neck extends into both torso and head.
     rings=[]
