@@ -796,7 +796,7 @@ function buildLocker(){
   const door=box(.48,2.1,.04,toon(0x56705a),g,V(-3.9,1.08,-3.6));door.rotation.y=1.25;
   const tp=ctex(256,64,(x,w,h)=>{x.fillStyle='#e9e2c6';x.fillRect(0,0,w,h);txt(x,'KOWALSKI',40,[w/2,h/2+2],'Barlow Condensed','#1a1a1a');});
   const tape=new THREE.Mesh(new THREE.PlaneGeometry(.42,.1),toon(0xffffff,tp));tape.position.set(1.95,1.9,-3.89);tape.rotation.z=.04;g.add(tape);
-  box(5,.12,.5,toon(0x8a6a44),g,V(-.5,.48,-1.6));for(const s of[-1,1])box(.1,.44,.4,toon(0x444a50),g,V(-.5+s*2.2,.24,-1.6));
+  box(7.6,.12,.5,toon(0x8a6a44),g,V(-.75,.48,-1.6));for(const x of[-4.2,-.75,2.7])box(.1,.44,.4,toon(0x444a50),g,V(x,.24,-1.6));
   const mir=new THREE.Mesh(new THREE.PlaneGeometry(3,1.3),basic(0xb7c8c4));mir.position.set(-5.38,1.75,-.2);mir.rotation.y=PI/2;g.add(mir);
   const mf=new THREE.Mesh(new THREE.PlaneGeometry(3,1.3),basic(0xffffff,ctex(256,128,(x,w,h)=>{const gr=x.createLinearGradient(0,0,w,h);gr.addColorStop(0,'rgba(255,255,255,.35)');gr.addColorStop(.5,'rgba(255,255,255,0)');gr.addColorStop(1,'rgba(255,255,255,.18)');x.fillStyle=gr;x.fillRect(0,0,w,h);}),{transparent:true}));mf.position.set(-5.37,1.75,-.2);mf.rotation.y=PI/2;g.add(mf);
   box(.5,.2,2.6,toon(0xd6dcd8),g,V(-5.2,.95,-.2));
@@ -6737,7 +6737,7 @@ async function H5(){ // Dempsey, ambush
 async function H6(){ // the vote, then the camera turns around
   for(const c of chars)unsuit(c);setLoc('locker');hideAll();cine(true);
   const tm=[lou,EX.isaia,kai,EX.x1,EX.x2,EX.x3];if(!S.f.malik_apex)tm.push(MAL());if(!S.f.stroud_gone)tm.push(EX.stroud);
-  tm.forEach((c,i)=>sitOn(c,-3.6+i*1.05,-1.6,0,.5));put(hollis,0,1.6,PI);put(theo,1.6,1.2,PI*.9);
+  tm.forEach((c,i)=>sitOn(c,-3.9+i*.9,-1.6,0,.5));put(hollis,0,1.6,PI);put(theo,1.6,1.2,PI*.9);
   shot(V(.2,1.7,3.4),V(0,1,-1.4),{fov:50});await fade(false,700);
   await cap('Thursday. 3:05 PM. The locker room. No camera. Priya is outside the door. Hollis asked her to be. She said "fair."',3000);
   cu(hollis,{d:1.3,fov:28});await say(hollis,'Two options. Vacate the Holiday Classic, take the hit, be done. Or appeal and play the rest of the year under a question mark. Hands up. No speeches. Reyes, you\'re captain. You go first.',3400);
@@ -6861,7 +6861,7 @@ async function I4(){ // film + the locker room
   gameMode(false);setScore(0,0,false);
   for(const c of chars)unsuit(c);setLoc('locker');hideAll();
   const tm=[lou,EX.isaia,kai,EX.x1,EX.x2,EX.x3];if(!gone)tm.push(M);if(!S.f.stroud_gone)tm.push(EX.stroud);
-  tm.forEach((c,i)=>sitOn(c,-3.6+i*1.05,-1.6,0,.5));put(theo,0,1.2,PI);put(hollis,2.2,1.6,-PI*.7);
+  tm.forEach((c,i)=>sitOn(c,-3.9+i*.9,-1.6,0,.5));put(theo,0,1.2,PI);put(hollis,2.2,1.6,-PI*.7);
   shot(V(.2,1.7,3.4),V(0,1,-1.4),{fov:50});await fade(false,600);
   await cap('Saturday, March 6. Sectional final. The Dome. 6:40 PM. Hollis has said "go get it" and then left the room so the captain can talk.',3000);
   cu(theo,{d:1,fov:26});
