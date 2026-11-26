@@ -1451,14 +1451,15 @@ function dbg(){const d=$('#dbg');d.classList.toggle('on',showDbg);if(!showDbg)re
 
 /* ================= QTEs ================= */
 const Q=$('#q');
-function qEnd(cls,ms=520){Q.classList.add(cls);setTimeout(()=>{Q.className='';Q.innerHTML='';},ms);}
+// Only clear the prompt that ended. If a new meter opened in the meantime (pump fake → contested shot), leave it alone.
+function qEnd(cls,ms=520){Q.classList.add(cls);const was=Q.innerHTML;setTimeout(()=>{if(Q.innerHTML!==was)return;Q.className='';Q.innerHTML='';},ms);}
 let ICE=false;
 function shotWidth(mod){const base=.1+S.shoot/100*.12;return base*[1,.7,.48,.36][Math.max(0,Math.min(3,Math.round((ICE?0:step())+(mod||0))))];}
 function qShot0(o={}){return waitable(done=>{
   const w=shotWidth(o.mod||0),c=.72,hide=o.hide!=null?o.hide:(ICE?false:hidden()),sh=o.shooter;
   Q.innerHTML=`<div class="ql">${o.label||'SHOOT'}</div><div class="mv"><div class="zone" style="bottom:${(c-w/2)*100}%;height:${w*100}%;opacity:${hide?0:1}"></div><div class="mk" style="bottom:0"></div></div><div class="hint">${o.tut?holdHint()+', release in the gold':hide?'No read. Trust it.':holdHint()}</div>`;
   Q.className='on';const mk=Q.querySelector('.mk');let v=0,hold=false,fin=false,idle=0,inZ=false,armed=0;
-  function rel(){if(fin)return;fin=true;const r=Math.abs(v-c)<=w/2?'green':v<c?'early':'late';Q.querySelector('.zone').style.opacity=1;Q.querySelector('.ql').textContent=r==='green'?'PURE':r==='early'?'SHORT':'LONG';sfx(r==='green'?'good':'bad');qEnd(r==='green'?'ok':'no');done(r);}
+  function rel(){if(fin)return;fin=true;const r=Math.abs(v-c)<=w/2?'green':v<c?'early':'late';const zq=Q.querySelector('.zone'),lq=Q.querySelector('.ql');if(zq)zq.style.opacity=1;if(lq)lq.textContent=(r==='green'?'PURE':r==='early'?'SHORT':'LONG');sfx(r==='green'?'good':'bad');qEnd(r==='green'?'ok':'no');done(r);}
   const off=onIn((b,t)=>{if(b!=='A')return;if(t==='down'&&!hold&&!fin&&armed>.15){hold=true;if(sh){sh.snap=20;face(sh,HOOP);sh.pose='gather';const bb=balls.find(x=>x.follow===sh);if(bb)holdBall(bb,sh,'chest');}}else if(t==='up'&&hold)rel();});
   const tk=d=>{armed+=d;if(fin)return;if(hold&&sh&&v>.3&&sh.pose==='gather'){sh.pose='set';const bb=balls.find(x=>x.follow===sh);if(bb)holdBall(bb,sh,'set');}if(hold){v+=d*1.05;const z=Math.abs(v-c)<=w/2;if(z&&!inZ&&hide)sfx('tick');inZ=z;if(v>=1){v=1;rel();}}else{idle+=d;if(idle>7){v=.2;rel();}}mk.style.bottom=(v*100)+'%';};
   tickers.add(tk);return()=>{off();tickers.delete(tk);};
