@@ -389,7 +389,7 @@ const CFG={
 dempsey:{name:'CARL DEMPSEY',h:1.84,skin:0xb06a44,hair:0xc8c4bc,hs:'part',eye:0x5a7a9a,shirt:0x1c1c22,shirtTxt:'',sleeve:true,sleeveCol:0x1c1c22,shorts:0x2a2a30,long:true,shoe:0x3a2416,shoeAcc:0x3a2416,brow:3,mouth:'smirk'},
 isaia:{name:'ISAIA',h:2.02,bw:1.18,skin:0xd07038,hair:0x120c0a,hs:'short',eye:0x2a1a10,shirt:0x1d2b4f,shirtTxt:'BAND',txtCol:'#e8c35a',shorts:0x2a2a30,shoe:0xf2f2f2,shoeAcc:0x1d2b4f,brow:4,mouth:'smile'},
 albright:{name:'MS. ALBRIGHT',h:1.66,skin:0xd58e6c,hair:0x0e0b0a,hs:'long',eye:0x2a1a10,shirt:0xc98a2a,shirtTxt:'',sleeve:true,sleeveCol:0xc98a2a,shorts:0x2a2a30,long:true,shoe:0x1a1a1a,shoeAcc:0x7a2a2e,brow:4,mouth:'smirk',lashes:true},
-morris:{name:'COACH MORRIS',h:1.86,skin:0xea9163,hair:0x6a5a4a,hs:'short',shirt:0x111111,shirtTxt:'PURDUE',txtCol:'#cfb991',sleeve:true,sleeveCol:0x111111,shorts:0x2a2a30,long:true,shoe:0x111111,shoeAcc:0xcfb991,brow:3,mouth:'flat'},
+morris:{name:'COACH MORRIS',h:1.86,skin:0xea9163,hair:0x6a5a4a,hs:'short',shirt:0x7fb8e6,shirtTxt:'EAGLES',txtCol:'#ffd400',sleeve:true,sleeveCol:0x7fb8e6,shorts:0x2a2a30,long:true,shoe:0x111111,shoeAcc:0xffd400,brow:3,mouth:'flat'},
 panel:{name:'PANEL CHAIR',h:1.66,skin:0xd7804a,hair:0xb8b4ac,hs:'long',shirt:0x2b3a5c,shirtTxt:'',sleeve:true,sleeveCol:0x2b3a5c,shorts:0x2a2a30,long:true,shoe:0x1a1a1a,shoeAcc:0x1a1a1a,brow:3,mouth:'flat'},
 dre:{name:'COACH DRE',h:1.93,skin:0x894627,hair:0x1a1410,hs:'fade',shirt:0x0b2a5b,shirtTxt:'SELECT',txtCol:'#3fa9f5',sleeve:true,sleeveCol:0x0b2a5b,shorts:0x2a2a30,long:true,shoe:0x111111,shoeAcc:0x3fa9f5,brow:4,mouth:'flat'},
 x4:{name:'DUFF',h:1.8,skin:0xe59b76,hair:0xc8a060,hs:'short',shirt:0x6e1f2a,shirtTxt:'HHHS',txtCol:'#e8c35a',shorts:0x1a1a1a,shoe:0xffffff,shoeAcc:0x111111,brow:3,freckles:true},
@@ -903,7 +903,7 @@ function buildDiner(){
 function gymDawn(){const L=LOC.gym;hemi.color.setHex(0x8ea7d6);hemi.groundColor.setHex(0x2a2430);hemi.intensity=.48;key.color.setHex(0xffb98a);key.intensity=.5;key.position.set(16,4,-6);rim.color.setHex(0x6f8fd4);rim.intensity=.55;scene.background=new THREE.Color(0x0e1220);scene.fog=new THREE.Fog(0x0e1220,14,44);setAmb({rain:0,hum:.5});}
 /* ================= game-night infrastructure ================= */
 const jerseyCache={};
-const TEAMS={Cedar:{base:'#1d2b4f',ink:'#e9e4d6',stroke:'#000',name:'CEDAR',sh:0x1d2b4f,wall:0x1d2b4f},Westbury:{base:'#0f4d3a',ink:'#e8c35a',stroke:'#000',name:'WESTBURY',sh:0x0f4d3a,wall:0x0f4d3a},Lakeport:{base:'#3b2a6b',ink:'#f2f2f2',stroke:'#000',name:'LAKEPORT',sh:0x3b2a6b,wall:0x3b2a6b},Hale:{base:'#1a1a1a',ink:'#f08a24',stroke:'#000',name:'HALE',sh:0x1a1a1a,wall:0x1a1a1a},Purdue:{base:'#111',ink:'#cfb991',stroke:'#000',name:'PURDUE',sh:0x111111,wall:0x8a7650},Select:{base:'#0b2a5b',ink:'#ffffff',stroke:'#000',name:'MW SELECT',sh:0x0b2a5b,wall:0x0b2a5b},Elite:{base:'#2a2a2e',ink:'#e85a1a',stroke:'#000',name:'INDY ELITE',sh:0x2a2a2e,wall:0x2a2a2e},Jeff:{base:'#7a1c1c',ink:'#d8c8a0',stroke:'#000',name:'LAF. JEFF',sh:0x7a1c1c,wall:0x5a1414},Apex:{base:'#111111',ink:'#7dff4a',stroke:'#000',name:'APEX ACAD.',sh:0x111111,wall:0x161616}};
+const TEAMS={Cedar:{base:'#1d2b4f',ink:'#e9e4d6',stroke:'#000',name:'CEDAR',sh:0x1d2b4f,wall:0x1d2b4f},Westbury:{base:'#0f4d3a',ink:'#e8c35a',stroke:'#000',name:'WESTBURY',sh:0x0f4d3a,wall:0x0f4d3a},Lakeport:{base:'#3b2a6b',ink:'#f2f2f2',stroke:'#000',name:'LAKEPORT',sh:0x3b2a6b,wall:0x3b2a6b},Hale:{base:'#1a1a1a',ink:'#f08a24',stroke:'#000',name:'HALE',sh:0x1a1a1a,wall:0x1a1a1a},Northeastern:{base:'#7fb8e6',ink:'#ffd400',stroke:'#000',name:'EAGLES',sh:0x7fb8e6,wall:0x2f6fa8},Select:{base:'#0b2a5b',ink:'#ffffff',stroke:'#000',name:'MW SELECT',sh:0x0b2a5b,wall:0x0b2a5b},Elite:{base:'#2a2a2e',ink:'#e85a1a',stroke:'#000',name:'INDY ELITE',sh:0x2a2a2e,wall:0x2a2a2e},Jeff:{base:'#7a1c1c',ink:'#d8c8a0',stroke:'#000',name:'LAF. JEFF',sh:0x7a1c1c,wall:0x5a1414},Apex:{base:'#111111',ink:'#7dff4a',stroke:'#000',name:'APEX ACAD.',sh:0x111111,wall:0x161616}};
 function jerseyTex(num,home,tm){const TM=TEAMS[tm||S.oppName]||TEAMS.Cedar;const k=num+(home?'h':'a'+TM.name);if(jerseyCache[k])return jerseyCache[k];
   const t=ctex(512,256,(x,w,h)=>{const base=home?'#f2f0ea':TM.base,ink=home?'#6e1f2a':TM.ink;x.fillStyle=base;x.fillRect(0,0,w,h);
     x.fillStyle=home?'#6e1f2a':'#c9ced8';x.fillRect(0,0,w,10);x.fillRect(w/2-70,0,140,14);
@@ -936,6 +936,7 @@ function drawBoard(){if(!boardCtx)return;const x=boardCtx,w=512,h=256;x.fillStyl
   txt(x,'HOME',34,[128,46],'Anton','#e8c35a');txt(x,(S.oppName||'GUEST').toUpperCase(),34,[384,46],'Anton','#e8c35a');
   txt(x,String(S.score[0]),110,[128,140],'Anton','#ff4a3a');txt(x,String(S.score[1]),110,[384,140],'Anton','#ff4a3a');txt(x,clock||'',38,[256,222],'Anton','#ffd765');
   boardTex.needsUpdate=true;}
+TEAMS.Purdue=TEAMS.Northeastern; // old saves
 function gymAway(team){const L=LOC.gym;const tm=team&&TEAMS[team];L.wain.color.setHex(tm?tm.wall:0x6e1f2a);L.away.forEach(m=>m.visible=!tm);}
 function gameMode(on,opp='Cedar'){gameOn=on;S.oppName=opp;if(on&&EX.o1)oppNames((TEAMS[opp]||TEAMS.Cedar).name);if(crowdG)crowdG.visible=on;drawBoard();if(crowdGain&&AC)crowdGain.gain.setTargetAtTime(on?.09:0,AC.currentTime,.6);}
 function setClock(t){clock=t;drawBoard();}
@@ -1028,7 +1029,7 @@ function buildDome(){ // Midwest Select "The Dome", Carmel — big, bright, corp
   const rib=ctex(2048,128,(x,w,h)=>{x.fillStyle='#000';x.fillRect(0,0,w,h);txt(x,'MIDWEST SELECT  ·  EST. 2009  ·  37 D-I COMMITS  ·  PEACH JAM 2024  ·  WE GET YOU SEEN',64,[w/2,h/2+3],'Anton',SKYB);});
   const rb=new THREE.Mesh(new THREE.PlaneGeometry(30,1.6),basic(0xffffff,rib));rb.position.set(0,9.6,-10.05);g.add(rb);
   const banT=(t1,t2)=>ctex(256,512,(x,w,h)=>{x.fillStyle=NAVY;x.fillRect(0,0,w,h);x.fillStyle=SKYB;x.fillRect(0,h-40,w,40);txt(x,t1,52,[w/2,120],'Anton','#fff');txt(x,t2,34,[w/2,190],'Anton',SKYB);});
-  const bans=[['PURDUE','2 COMMITS'],['INDIANA','4 COMMITS'],['BUTLER','3 COMMITS'],['XAVIER','2 COMMITS'],['MICHIGAN ST','1 COMMIT']];
+  const bans=[['NORTHEASTERN','2 COMMITS'],['INDIANA','4 COMMITS'],['BUTLER','3 COMMITS'],['XAVIER','2 COMMITS'],['MICHIGAN ST','1 COMMIT']];
   bans.forEach(([a,b],i)=>{const m=new THREE.Mesh(new THREE.PlaneGeometry(1.7,3.4),toon(0xffffff,banT(a,b)));m.position.set(-11+i*5.5,6.2,-9.98);g.add(m);});
   // the big wordmark on the end wall
   const wmk=ctex(1024,256,(x,w,h)=>{x.clearRect(0,0,w,h);txt(x,'SELECT',190,[w/2,h/2+10],'Anton','#fff','center',SKYB);});
@@ -1278,7 +1279,7 @@ function buildBedroom(){
   const post=(lines,bg,fg,acc)=>ctex(256,340,(x,w,h)=>{x.fillStyle=bg;x.fillRect(0,0,w,h);x.fillStyle=acc;x.fillRect(0,0,w,12);x.fillRect(0,h-12,w,12);lines.forEach((l,i)=>txt(x,l[0],l[1],[w/2,l[2]||60+i*60],l[3]||'Anton',l[4]||fg));});
   P(.7,.92,post([['HALSTON',44],['HEIGHTS',44],['HOOPS',64,200],['2025–26',30,270,'Barlow Condensed']],'#6e1f2a','#e8c35a','#e8c35a'),V(-2.19,1.75,-.9),PI/2,.03);
   P(.7,.92,post([['WORK',60],['IN',60],['SILENCE',52],['let success',28,240,'Barlow Condensed'],['make the noise',28,276,'Barlow Condensed']],'#111','#f2f2f2','#d86a24'),V(-2.19,1.8,.4),PI/2,-.04);
-  P(.8,1.05,post([['BOILER',52],['UP',72],['(someday)',30,230,'Barlow Condensed']],'#111','#cfb991','#cfb991'),V(.2,1.65,-1.99),0,.02);
+  P(.8,1.05,post([['TALONS',52],['UP',72],['(someday)',30,230,'Barlow Condensed']],'#7fb8e6','#111','#ffd400'),V(.2,1.65,-1.99),0,.02);
   const clip=ctex(256,320,(x,w,h)=>{x.fillStyle='#e8dcc0';x.fillRect(0,0,w,h);txt(x,'THE HALSTON HERALD',22,[w/2,24],'Georgia','#222');x.fillStyle='#222';x.fillRect(10,36,w-20,3);txt(x,'REYES DROPS 61',36,[w/2,72],'Anton','#111');txt(x,'Sectional, March 1995',18,[w/2,104],'Georgia','#333');portrait(x,24,116,w-48,128,{age:'gray',seed:61,people:[{num:12,skin:'#a36d47',hair:'#2a2420',hs:'flat',ball:true}]});for(let i=0;i<6;i++){x.fillStyle='#999';x.fillRect(20,252+i*10,w-40,4);}});
   const fr=new THREE.Group();fr.position.set(1.5,1.7,-1.99);g.add(fr);box(.5,.62,.03,toon(0x1a1a1a),fr,V(0,0,0),false);const cm=new THREE.Mesh(new THREE.PlaneGeometry(.44,.56),toon(0xffffff,clip));cm.position.z=.02;fr.add(cm);
   // window with night sky + string lights
@@ -3325,7 +3326,7 @@ async function i1(){ // kitchen, same night
   else if(end==='silent'){cd();await say(dad,"Sit. He doesn't bite. <i>(to Vance)</i> You don't bite.");cv();await say(EX.vance,'Only on Tuesdays.');}
   else{cv();await say(EX.vance,'Good man.',1500);}
   cv();await say(EX.vance,"Here's how it works. College coaches don't come to Halston Heights in February. They go to Atlanta in April.");
-  await say(EX.vance,"Your dad told me about 1995. Purdue was in the gym that night. Did you know that? Then the knee.");
+  await say(EX.vance,"Your dad told me about 1995. Northeastern was in the gym that night. Did you know that? Then the knee.");
   cd();await say(dad,"<i>(he did not know Vance knew that)</i>",1800);
   ct();
   const asked=S.f.knows_benefits?'“Is the stipend an improper benefit?”':'“What’s the catch?”';
@@ -3970,7 +3971,7 @@ async function k3(){ // Dante, empty gym
   await cap('Friday night. The gym after the lights go half off. Dante, alone in the bleachers.',2400);
   kPush(dante,11,3,1.15,{h:-.12});
   await say(dante,'You know Vance never called me? Not once. Four years.');
-  await say(dante,"No Atlanta. No Purdue. Nobody came. I'm a senior and nobody came.");
+  await say(dante,"No Atlanta. No Northeastern. Nobody came. I'm a senior and nobody came.");
   await say(dante,"I used to be mad you got the folder. Now I'm mad I wanted it.");
   cu(theo,{d:1,fov:26});
   let i=await choose([{t:'“Somebody will come.”'},{t:'“You made me better. That counts.”'},{t:'“What do you want to do? Not basketball. You.”'},{t:'Sit down next to him'}],7);i=i<0?3:i;
@@ -4270,15 +4271,15 @@ async function m6(){ // the letter
   kDolly(V(0,1.55,2.8),V(0,1.45,2.2),V(0,1,-.6),V(0,1,-.6),9,44,40);await fade(false,800);
   await cap('That night. Dad is holding an envelope again. Everybody notices.',2400);
   cu(dad,{d:1.2,fov:28});await say(dad,'Came today. Look at the corner.');
-  await say(null,'<i>PURDUE UNIVERSITY · ELITE CAMP · JUNE. Addressed to Theo Reyes. Not to Dad. Not to Vance. Theo.</i>',3000);
-  cu(dad,{d:1.2,fov:28});await say(dad,"Purdue was in the gym the night of my knee. I always wondered what they'd have said.");
+  await say(null,'<i>NORTHEASTERN INDIANA UNIVERSITY · ELITE CAMP · JUNE. Addressed to Theo Reyes. Not to Dad. Not to Vance. Theo.</i>',3000);
+  cu(dad,{d:1.2,fov:28});await say(dad,"Northeastern was in the gym the night of my knee. I always wondered what they'd have said.");
   await say(dad,"It's free. I called. Three times. Your mother made me call a fourth time to check.");
   cu(mom,{d:1.2,fov:28});await say(mom,'It\'s free. I checked.');
   sitOn(theo,0,.75,PI,.47);cu(dad,{d:1.2,fov:28});await say(dad,'<i>(sliding it across the table)</i> Your name. Your envelope. You open it.');
   heart=true;kStare(theo);await wait(1200);heart=false;
   const i=await choose([{t:'Open it'},{t:'Hand it back to Dad: “You open it.”'},{t:'Open it together'}],8);
   S.f.season1_end=['me','dad','together'][i<0?2:i];
-  S.log.letter=['opened the Purdue letter yourself','asked Dad to open the Purdue letter','opened the Purdue letter with Mom and Dad'][i<0?2:i];
+  S.log.letter=['opened the Northeastern letter yourself','asked Dad to open the Northeastern letter','opened the Northeastern letter with Mom and Dad'][i<0?2:i];
   if(i===1){cu(dad,{d:1.2,fov:28});await say(dad,'<i>(his hands are shaking. He gets it open anyway.)</i>',2200);fx({family:2});}
   else if(i===2){shot(V(0,1.6,2.8),V(0,1,-.2),{fov:44});await say(null,'<i>Three sets of hands on one envelope. It rips down the middle. Nobody cares.</i>',2600);fx({family:3});}
   else{fx({family:1});}
@@ -4338,11 +4339,11 @@ async function n1(){ // first day, sophomore year
     cu(lou,{d:1.2,fov:26});await say(lou,'<i>(reading over his shoulder, going pale)</i> Oh no. That\'s my sister. It\'s worse than the hearing.');}
   await fade(true,700);
 }
-async function n2(){ // FLASHBACK: June, Purdue camp
-  for(const c of chars)unsuit(c);setLoc('gym');gymAway('Purdue');hideAll();cine(true);setScore(0,0,false);flashback(true,'JUNE · WEST LAFAYETTE');
+async function n2(){ // FLASHBACK: June, Northeastern camp
+  for(const c of chars)unsuit(c);setLoc('gym');gymAway('Northeastern');hideAll();cine(true);setScore(0,0,false);flashback(true,'JUNE · FORT WAYNE');
   put(theo,-5.6,0,-PI/2,'idle');put(EX.morris,-5.4,-3.2,0,'cross');
   shot(V(-1.2,1.6,3),V(-8,1.3,-1),{fov:44});await fade(false,700);
-  await cap(S.f.season1_end==='dad'?'June. Purdue Elite Camp. Dad drove. He didn\'t say a word for three hours. He was too happy.':'June. Purdue Elite Camp. Two hundred kids. One of them is from Halston Heights.',3000);
+  await cap(S.f.season1_end==='dad'?'June. Northeastern Elite Camp. Dad drove. He didn\'t say a word for three hours. He was too happy.':'June. Northeastern Elite Camp. Two hundred kids. One of them is from Halston Heights.',3000);
   cu(EX.morris,{d:1.3,fov:28});await say(EX.morris,"Reyes. Halston Heights. I watched the regional tape. Hollis sent it. With footnotes.");
   await say(EX.morris,'Top of the key. Ten shots. Don\'t look at me while you shoot, I\'m not interesting.');
   let made=0;
@@ -4353,7 +4354,7 @@ async function n2(){ // FLASHBACK: June, Purdue camp
   cu(theo,{d:1,fov:26});
   const sm=S.f.summer||'okafor';
   let i=await choose([{t:sm==='kai'?'“A team in Indy. Parents pay what they can.”':sm==='roofs'?'“I work roofs with my dad. I play at night.”':'“My old coach runs a free league.”'},{t:'“I almost played for Midwest Select.”'},{t:'“Does it matter?”'}],7);i=i<0?0:i;
-  S.log.purdue=['told Purdue the truth about your summer','told Purdue you almost played for Midwest Select','asked Purdue if it matters'][i];
+  S.log.purdue=['told Northeastern the truth about your summer','told Northeastern you almost played for Midwest Select','asked Northeastern if it matters'][i];
   cu(EX.morris,{d:1.3,fov:28});
   if(i===0){await say(EX.morris,sm==='roofs'?'<i>(he looks at Theo\'s hands)</i> Roofs. Okay. That explains the legs.':'<i>(nodding)</i> Good. We don\'t need you in a shoe company\'s van. We need you in a gym.');fx({grounded:1,flag:'purdue_honest'});}
   else if(i===1){await say(EX.morris,'"Almost." <i>(he writes that down)</i> I know Rick. Everybody knows Rick. "Almost" is the right answer.');fx({flag:'purdue_honest'});}
@@ -4478,7 +4479,7 @@ async function n6(){ // scrimmage + the transfer
 async function nEnd(){music('title',.32);
   hideAll();setAmb({rain:0,hum:0});for(const c of chars)unsuit(c);save('ep9');const card=$('#card');
   card.innerHTML=`<h1 style="font-size:clamp(54px,11vw,120px)">SOPHOMORE</h1><h2>SEASON TWO · EPISODE 1 · SUMMER RERUNS</h2>`;card.classList.add('on');sfx('thud');await waitSkip(3000);
-  const L=S.log;const rows=[['THE FRESHMAN',L.malik],['PURDUE',L.purdue],['CAPTAIN',L.captain],['THE SUMMER',L.summer2],['YOUR HEART',L.heart2],['SCRIMMAGE',L.box9],['THE TRANSFER',L.stroud2]].filter(r=>r[1]);
+  const L=S.log;const rows=[['THE FRESHMAN',L.malik],['NORTHEASTERN',L.purdue],['CAPTAIN',L.captain],['THE SUMMER',L.summer2],['YOUR HEART',L.heart2],['SCRIMMAGE',L.box9],['THE TRANSFER',L.stroud2]].filter(r=>r[1]);
   card.innerHTML=`<h2 style="margin-top:0">YOUR CHOICES</h2><p>Episode 2 picks up every one of these.</p><div class="rows">${rows.map(r=>`<div class="row"><b>${r[0]}</b><span>${/^\d/.test(r[1])?r[1]:'You '+r[1]+'.'}</span></div>`).join('')}</div><h2>NEXT: SEASON TWO · EPISODE 2</h2><p>Your season is saved on this device.</p><button class="go" data-g="110">${glyphA()}Continue to Episode 2</button><button class="go" data-g="0" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Back to title</button>`;card.scrollTop=0;
   const bs=[...card.querySelectorAll('.go')];const g=await waitable(done=>{let armed=false;setTimeout(()=>armed=true,1500);bs.forEach(b=>b.addEventListener('pointerdown',e=>{e.stopPropagation();done(+b.dataset.g);}));const off=onIn((x,t)=>{if(t!=='down'||!armed)return;if(x==='A')done(110);else if(x==='X')done(0);});return()=>off();});
   card.classList.remove('on');return{goto:g};
@@ -4767,7 +4768,7 @@ async function clutch(o){ensureBox();skInit();await teach('clutch');
   const won=S.score[0]>S.score[1]||(S.score[0]===S.score[1]&&roll(.5));if(S.score[0]===S.score[1])setScore(S.score[0]+(won?1:0),S.score[1]+(won?0:1));
   return won;}
 
-/* ================= SEASON SYSTEMS: record, standings, role, Purdue, relationships ================= */
+/* ================= SEASON SYSTEMS: record, standings, role, Northeastern, relationships ================= */
 function season(){
   if(!S.rec)S.rec={w:S.f.west==='W'?1:0,l:S.f.west==='L'?1:0};
   if(S.purdue==null)S.purdue=clamp(2+(S.f.purdue_shots||0)*.5+(S.f.purdue_honest?1:0),0,5);
@@ -4789,7 +4790,7 @@ function seasonHTML(){const r=season(),t=confTable(),pu=Math.round(S.purdue);
   const who=[['Lou','lou'],['Stroud','stroud'],['Malik','malik'],['Priya','priya'],['Tess','tess'],['Dad','family']];
   return `<div class="rows" style="text-align:left">
     <div class="row"><b>RECORD</b><span>${r.w}–${r.l} · ${S.f.starter?'Starter':'<i>Sixth man</i>'}</span></div>
-    <div class="row"><b>PURDUE</b><span style="letter-spacing:.2em">${'●'.repeat(pu)}${'○'.repeat(5-pu)}</span></div>
+    <div class="row"><b>NORTHEASTERN</b><span style="letter-spacing:.2em">${'●'.repeat(pu)}${'○'.repeat(5-pu)}</span></div>
     <div class="row"><b>CONFERENCE</b><span style="font-size:.92em;line-height:1.35">${t.map((x,i)=>`${i+1}. ${x[3]?'<strong style="color:#7a1f2b">'+x[0]+'</strong>':x[0]} ${x[1]}–${x[2]}`).join('<br>')}</span></div>
     ${gameHTML()}
     <div class="row"><b>PEOPLE</b><span>${who.map(([n,k])=>`${n}: ${k==='family'?((S.family||0)>=4?'Good':(S.family||0)>=0?'Okay':'<i>Strained</i>'):relWord(k)}`).join(' · ')}</span></div></div>`;}
@@ -4864,19 +4865,19 @@ async function r3(){ // Hollis: your role
   else{S.f.starter=false;await say(hollis,"Malik starts on the twenty-eighth. You come off the bench. It's not a punishment. It's a lineup. I promise you those are different things.");
     await say(hollis,"Coach Okafor did this to your father once. Ask him how it went. Actually, don't. I already know. It went well, eventually.");}
   cu(theo,{d:1,fov:26});
-  let i=await choose(keep?[{t:'“I’ll take care of Malik.”'},{t:'“Start Malik anyway. He’s earned it.”'},{t:'“What do the four ways say about me?”'}]:[{t:'“Okay. I’ll be ready.”'},{t:'“That’s not fair and you know it.”'},{t:'“Does Purdue know?”'}],7);i=i<0?0:i;
+  let i=await choose(keep?[{t:'“I’ll take care of Malik.”'},{t:'“Start Malik anyway. He’s earned it.”'},{t:'“What do the four ways say about me?”'}]:[{t:'“Okay. I’ll be ready.”'},{t:'“That’s not fair and you know it.”'},{t:'“Does Northeastern know?”'}],7);i=i<0?0:i;
   if(keep){S.log.role=['kept your starting spot and promised to handle Malik','gave your starting spot to Malik','asked Hollis what the numbers say about you'][i];
     cu(hollis,{d:1.5,fov:28});
     if(i===1){S.f.starter=false;await say(hollis,'<i>(he takes his glasses off)</i> …That\'s the most captain thing anyone\'s ever said in this office. Fine. Done.');fx({coach:2,chem:{malik:3,team:2}});S.purdue=clamp(S.purdue-.5,0,5);}
     else if(i===2){await say(hollis,'That you\'re better when you\'re a little angry. Don\'t tell your mother I said that.');fx({coach:1});}
     else{await say(hollis,'Good. He\'s waiting in the hall. He\'s been waiting for an hour. He thinks he\'s in trouble.');fx({coach:1,chem:{malik:1}});}}
-  else{S.log.role=['took the bench demotion quietly','told Hollis the demotion wasn’t fair','asked Hollis if Purdue knows about the demotion'][i];
+  else{S.log.role=['took the bench demotion quietly','told Hollis the demotion wasn’t fair','asked Hollis if Northeastern knows about the demotion'][i];
     cu(hollis,{d:1.5,fov:28});
     if(i===0){await say(hollis,'<i>(he writes something down and underlines it)</i> That. That\'s the answer that gets you back.');fx({coach:3});}
     else if(i===1){await say(hollis,'It\'s fair. It\'s also temporary. Both things. I\'m told people can be both things.');fx({coach:-1,nerves:6});}
-    else{await say(hollis,'<i>(a pause)</i> Purdue watches film, not lineups. But yes. They\'ll know.');S.purdue=clamp(S.purdue-.5,0,5);fx({nerves:4});}}
+    else{await say(hollis,'<i>(a pause)</i> Northeastern watches film, not lineups. But yes. They\'ll know.');S.purdue=clamp(S.purdue-.5,0,5);fx({nerves:4});}}
   if(!(S.f.starter===false&&S.log.role==='told Hollis the demotion wasn’t fair')){await phonePost({init:'MH',who:'Mr. Hollis',time:'11:58 PM',text:'Attached: scouting packets for every conference opponent. 41 pages. Read page 6 first. Their best player always tells you where he is going. You just have to be watching.',rx:'Email · 1 attachment',comments:[]});await learn('read');}
-  if(S.f.dec===0||S.f.dec===3){sfx('phone');await phonePost({init:'PU',who:'Purdue Basketball (Asst.)',time:'now',text:S.f.dec===3?'Saw the Hale tape. Coach Painter asked who #12 was. Keep going. — D. Morris':'Rough December. Happens. We\'re watching how you come out of it, not how you went into it. — D. Morris',rx:'Email',comments:[]});}
+  if(S.f.dec===0||S.f.dec===3){sfx('phone');await phonePost({init:'NE',who:'Northeastern Basketball (Asst.)',time:'now',text:S.f.dec===3?'Saw the Hale tape. Coach Whitlock asked who #12 was. Keep going. — D. Morris':'Rough December. Happens. We\'re watching how you come out of it, not how you went into it. — D. Morris',rx:'Email',comments:[]});}
   await fade(true,700);
 }
 async function r4(){ // winter formal: the route
@@ -5067,7 +5068,7 @@ async function t4(){ // THE FORK — Sal's
   cu(V0,{d:1.2,fov:28});
   await say(V0,'<i>(menus untouched)</i> I\'m not going to sell you, Theo. You\'ve been sold to. You know what it sounds like.');
   await say(V0,'Spring. Midwest Select. Eighteen-U national circuit. Atlanta, Las Vegas, Peach Jam if we\'re good. Every college coach in the country in one gym.');
-  await say(V0,`${S.purdue>=3?'Purdue already likes you. I can make Purdue need you.':'Purdue cooled off in December. I can warm them back up in a weekend.'} And your father gets to do the job he was born for. On a payroll. Legally.`);
+  await say(V0,`${S.purdue>=3?'Northeastern already likes you. I can make Northeastern need you.':'Northeastern cooled off in December. I can warm them back up in a weekend.'} And your father gets to do the job he was born for. On a payroll. Legally.`);
   cu(dad,{d:1.2,fov:28});await say(dad,'<i>(quiet)</i> It\'s your call, mijo. I mean that. I want you to know I mean that.',2400);
   kPush(theo,2.6,2.4,1.1);heart=true;await wait(1600);heart=false;
   const canMole=S.f.route==='priya'||(S.chem.priya||0)>=3||S.f.vance_reported||S.f.priya_vance==='all';
@@ -5242,7 +5243,7 @@ async function w2(){ // the consequence of last episode's ending
       cu(dad,{d:1.2,fov:28});await say(dad,'<i>(he can\'t look at Theo)</i> Seventy-one thousand dollars doesn\'t come from tournament fees, mijo. It comes from a shoe company. And shoe companies want to know which kids are coming.',3200);
       cu(theo,{d:1,fov:26});let i=await choose([{t:'“Quit. Tonight.”'},{t:'“Help me end it.”'},{t:'“I’m not quitting Select.”'}],8);i=i<0?1:i;
       S.f.dad_side=['quit','help','stay'][i];S.log.home5=['told Dad to quit Vance tonight','asked Dad to help you end it','told Dad you’re not quitting Select'][i];
-      cu(dad,{d:1.2,fov:28});await say(dad,['If I quit, he calls Purdue. You know he does. <i>(beat)</i> …Let me think. One week.','<i>(a long breath out, like he\'s been holding it since June)</i> …Okay. Okay. Tell me what you need.','<i>(relief, and he hates that it\'s relief)</i> Okay. Then we\'re both in. Eyes open.'][i],2800);
+      cu(dad,{d:1.2,fov:28});await say(dad,['If I quit, he calls Northeastern. You know he does. <i>(beat)</i> …Let me think. One week.','<i>(a long breath out, like he\'s been holding it since June)</i> …Okay. Okay. Tell me what you need.','<i>(relief, and he hates that it\'s relief)</i> Okay. Then we\'re both in. Eyes open.'][i],2800);
       fx({family:i===1?3:i===0?1:-1});}
     else{sitOn(mom,0,-.75,0,.47);shot(V(2.1,1.6,1.8),V(-.3,.95,0),{fov:42});await fade(false,700);
       await cap(e==='photo'?'Monday night. 41 photos of a notebook on Theo\'s phone. He hasn\'t opened them since.':'Monday night. The notebook is back in the glovebox. Theo can still see it with his eyes closed.',2800);
@@ -5294,7 +5295,7 @@ async function w4(){ // the game: Clutch Time
     suit(theo,12,false,'Select');suit(MAL(),23,false,'Select');suit(EX.x1,3,false,'Select');suit(EX.x2,14,false,'Select');suit(EX.x3,21,false,'Select');}
   else{setLoc('gym');hideAll();cine(true);gameMode(true,'Hale');gymAway('Hale');suitUp();teamNames(true);if(!S.f.stroud_gone)suit(EX.stroud,7);}
   newBox();setScore(prog?61:52,prog?63:55);setClock('Q4  2:00');shot(V(-2,5.5,9),V(-9,0,0),{fov:46});await fade(false,600);
-  await cap(prog?'Sunday. The Dome. Midwest Select vs. Indy Elite. A Purdue assistant is in the bleachers. So is Rick Vance, standing next to him, talking.':'Friday, January 29. At Bishop Hale. Tess is in the student section wearing Hale orange and a Halston pin. Both teams have noticed.',3200);
+  await cap(prog?'Sunday. The Dome. Midwest Select vs. Indy Elite. A Northeastern assistant is in the bleachers. So is Rick Vance, standing next to him, talking.':'Friday, January 29. At Bishop Hale. Tess is in the student section wearing Hale orange and a Halston pin. Both teams have noticed.',3200);
   if(prog)await say(EX.dre,'<i>(at the whistle, quiet, only to Theo)</i> Forget who\'s watching. Watch the big man\'s feet. He\'s slow left.',2400);
   else await say(hollis,'<i>(whiteboard)</i> Their #4 goes right. He went right 31 times last week. I counted. Twice.',2400);
   const T=prog?{big:EX.x3,shooter:S.f.malik_deep?MAL():EX.x1,wing:EX.x2,post:EX.x1,lobber:null}:{big:lou,shooter:S.f.stroud_gone?kai:EX.stroud,wing:S.f.stroud_gone?MAL():kai,post:MAL(),lobber:S.f.stroud_gone?null:EX.stroud};
@@ -5305,7 +5306,7 @@ async function w4(){ // the game: Clutch Time
   camWide();await cap(won?(prog?'WIN · MIDWEST SELECT vs. INDY ELITE':'WIN · at BISHOP HALE'):(prog?'LOSS · MIDWEST SELECT vs. INDY ELITE':'LOSS · at BISHOP HALE'),2200);
   if(prog){teamNames(false);}
   gameMode(false);setScore(0,0,false);for(const c of chars)unsuit(c);await fade(true,600);
-  if(prog&&won){sfx('phone');await phonePost({init:'PU',who:'Purdue Basketball (Asst.)',time:'4:02 PM',text:'Good to see you today. Strong finish. We\'ll be in touch through Mr. Vance. — D. Morris',rx:'Email',comments:[]});heart=true;await say(null,'<i>"Through Mr. Vance."</i>',1800);heart=false;}
+  if(prog&&won){sfx('phone');await phonePost({init:'NE',who:'Northeastern Basketball (Asst.)',time:'4:02 PM',text:'Good to see you today. Strong finish. We\'ll be in touch through Mr. Vance. — D. Morris',rx:'Email',comments:[]});heart=true;await say(null,'<i>"Through Mr. Vance."</i>',1800);heart=false;}
 }
 async function w5(){ // Malik / the team
   for(const c of chars)unsuit(c);const M=MAL();
@@ -5352,11 +5353,11 @@ async function w6(){ // the cliffhanger
     await say(D,['<i>(he stops stacking chairs)</i> …Okay. Then do it smart. Get it to somebody who prints things.','Because you\'re the only kid in this building who looks at the money like it\'s heavy.','<i>(quiet)</i> I know. Page nine. He\'s the only one who wrote down that it bothered him.','<i>(he puts the chair down and waits a long time)</i> …Okay. I\'ll be here Saturday.'][i],3000);
   }else{setLoc('bedroom');hideAll();cine(true);sitOn(theo,-.78,-.2,PI/2,.5);shot(V(1.2,1.45,1.2),V(-.9,1,-.5),{fov:46});await fade(false,700);
     await cap('Sunday night, 9:14 PM. Theo\'s phone. An Indianapolis number.',2400);
-    sfx('phone');await phonePost({init:'DM',who:'D. Morris · Purdue Basketball',time:'9:14 PM',text:'Theo, wanted to reach you directly. I had a conversation this week with Rick Vance. He described you as "difficult" and "a family with problems." I wanted to hear from you before I take that back to Coach. Can you talk this week?',rx:'Message',comments:[]});
+    sfx('phone');await phonePost({init:'DM',who:'D. Morris · Northeastern Basketball',time:'9:14 PM',text:'Theo, wanted to reach you directly. I had a conversation this week with Rick Vance. He described you as "difficult" and "a family with problems." I wanted to hear from you before I take that back to Coach. Can you talk this week?',rx:'Message',comments:[]});
     heart=true;kStare(theo);await wait(1400);heart=false;
     let i=await choose([{t:'“Yes. And I’ll tell you everything.”'},{t:'“Yes. Just basketball.”'},{t:'“Ask my coach. Mr. Hollis.”'},{t:'[Don’t answer]',silent:true}],9);i=i<0?3:i;
-    S.f.s2e5_end=['all','ball','hollis','none'][i];S.log.end5=['told Purdue you’d tell them everything about Vance','told Purdue you’d only talk basketball','sent Purdue to Mr. Hollis','left Purdue on read'][i];
-    if(i<3){await phonePost({init:'DM',who:'D. Morris · Purdue Basketball',time:'9:31 PM',text:['…Okay. Thursday. I\'ll bring a notepad. Theo, be careful what you put in writing.','Thursday then. Basketball. We\'ll see what comes up.','I\'ll call him tomorrow. A coach who answers for his player tells me a lot.'][i],rx:'Message',comments:[]});}
+    S.f.s2e5_end=['all','ball','hollis','none'][i];S.log.end5=['told Northeastern you’d tell them everything about Vance','told Northeastern you’d only talk basketball','sent Northeastern to Mr. Hollis','left Northeastern on read'][i];
+    if(i<3){await phonePost({init:'DM',who:'D. Morris · Northeastern Basketball',time:'9:31 PM',text:['…Okay. Thursday. I\'ll bring a notepad. Theo, be careful what you put in writing.','Thursday then. Basketball. We\'ll see what comes up.','I\'ll call him tomorrow. A coach who answers for his player tells me a lot.'][i],rx:'Message',comments:[]});}
   }
   await fade(true,1300);cine(false);
 }
@@ -5387,22 +5388,22 @@ async function y1(){ // the plan
     await say(D,'My notebook, your father\'s notebook, and her four families. That\'s enough to end him. It\'s also enough to end a lot of people standing near him.');
     cu(priya,{d:1.2,fov:28});await say(priya,"There are four ways to do this and every one of them hurts somebody. I need you to pick, Theo. It's your dad on page nine.");
     cu(theo,{d:1,fov:26});
-    let i=await choose([{t:'Priya publishes. The Diaries, everything.'},{t:'Take it to Whitfield and the state. Officially.'},{t:'Go to Purdue first. Protect my shot.'},{t:'Wait until after the season.'}],12);i=i<0?3:i;
-    S.f.plan=['press','state','purdue','wait'][i];S.log.plan=['chose to let Priya publish everything','chose to take it to Whitfield and the state','chose to go to Purdue first','chose to wait until after the season'][i];
+    let i=await choose([{t:'Priya publishes. The Diaries, everything.'},{t:'Take it to Whitfield and the state. Officially.'},{t:'Go to Northeastern first. Protect my shot.'},{t:'Wait until after the season.'}],12);i=i<0?3:i;
+    S.f.plan=['press','state','purdue','wait'][i];S.log.plan=['chose to let Priya publish everything','chose to take it to Whitfield and the state','chose to go to Northeastern first','chose to wait until after the season'][i];
     cu(priya,{d:1.2,fov:28});
     await say(priya,['<i>(she breathes out)</i> Okay. Okay. Friday night. After the game. So nobody says we did it to win.','The slow way. It\'s the right way. It\'s also the way where Vance gets six weeks to make calls.','<i>(carefully)</i> That\'s… a fair thing to want. I hate that it\'s fair.','<i>(she closes her notebook)</i> Malik has six more weeks with him then. You know that, right?'][i],3000);
     cu(D,{d:1.3,fov:28});await say(D,['Then I\'m a source. Unnamed. For now.','Then I\'ll sign my name. I\'m tired of the folding chair.','Morris is a good man. Good men still work for programs.','Then I wait too. I\'m good at it. That\'s the problem.'][i]);
   }else{setLoc('office');hideAll();cine(true);sitOn(hollis,0,-1.55,0,.5);put(theo,.1,1.2,PI);
     shot(V(1.9,1.6,1.6),V(0,1.2,-.6),{fov:40});await fade(false,700);
     const e=S.f.s2e5_end;
-    await cap(e==='none'?'Thursday. Hollis\'s office. Purdue called him anyway, since Theo never answered.':'Thursday. Hollis\'s office. A desk phone on speaker. Purdue on the other end.',2600);
-    const M='D. MORRIS (PURDUE)';
+    await cap(e==='none'?'Thursday. Hollis\'s office. Northeastern called him anyway, since Theo never answered.':'Thursday. Hollis\'s office. A desk phone on speaker. Northeastern on the other end.',2600);
+    const M='D. MORRIS (NORTHEASTERN)';
     await say(M,e==='all'?'You said you\'d tell me everything. I\'ve got a notepad and forty minutes.':e==='ball'?'Basketball, you said. Let\'s start there and see where it goes.':'Mr. Hollis tells me you\'re the hardest-working kid he\'s ever coached and the least likely to complain about it. That\'s not what I was told.');
     cu(hollis,{d:1.5,fov:28});await say(hollis,'<i>(leaning toward the phone)</i> I also have a spreadsheet. It has tabs.');
     await say(M,'Rick Vance moves a lot of kids. He\'s moved a few to us. I need to know if I\'m about to have a problem.');
     cu(theo,{d:1,fov:26});
     let i=await choose([{t:'Tell him everything. Dad’s log, the complaint, all of it.'},{t:'“Watch me play Friday. Decide then.”'},{t:'“Ask Rick why he’s scared of a sophomore.”'}],10);i=i<0?1:i;
-    S.f.plan=['purdue_all','ball','dare'][i];S.log.plan=['told Purdue everything about Vance','told Purdue to watch you play Friday','told Purdue to ask Vance why he’s scared of a sophomore'][i];
+    S.f.plan=['purdue_all','ball','dare'][i];S.log.plan=['told Northeastern everything about Vance','told Northeastern to watch you play Friday','told Northeastern to ask Vance why he’s scared of a sophomore'][i];
     await say(M,['<i>(a long silence on the line)</i> …Okay. Okay. I\'m going to need to make some calls. Some of them are going to be to lawyers. Keep playing, Theo.','<i>(a short laugh)</i> Fair. I\'ll be there. Front row, behind the bench.','<i>(a pause)</i> …That\'s a good question. I think I\'ll ask it.'][i],3000);
     if(i===0){S.purdue=clamp(S.purdue+.5,0,5);}fx({coach:1});
   }
@@ -5494,11 +5495,11 @@ async function y6(){ // after the buzzer
   const p=S.f.plan;
   const posts={press:{init:'HD',who:'The Halston Diaries',text:'INVESTIGATION: Inside Midwest Select. Envelopes, a shoe company, and the families who were "taken care of." By Priya Shah. Sources include two Midwest Select employees.'},
     state:{init:'AW',who:'Ms. Whitfield (AD)',text:'Theo, the IHSAA has opened a formal inquiry into Midwest Select\'s contact with member-school athletes. They will want to speak with you and your father. You did this the right way.'},
-    purdue:{init:'DM',who:'D. Morris · Purdue',text:'Theo, Purdue has suspended all recruiting contact through Midwest Select pending review. Your recruitment is unaffected. Coach asked me to tell you that personally.'},
+    purdue:{init:'DM',who:'D. Morris · Northeastern',text:'Theo, Northeastern has suspended all recruiting contact through Midwest Select pending review. Your recruitment is unaffected. Coach asked me to tell you that personally.'},
     wait:{init:'??',who:'Unknown number',text:'Saw you at Sal\'s Monday. Late. With the reporter and my coach. We should talk, Theo. — R.V.'},
-    purdue_all:{init:'DM',who:'D. Morris · Purdue',text:'Theo, I took what you told me to our compliance office and to the NCAA. Purdue has cut ties with Midwest Select. Your dad\'s log is the reason. Tell him thank you from us.'},
-    ball:{init:'DM',who:'D. Morris · Purdue',text:S.f.rematch==='W'?'Front row. Behind the bench. Saw everything. We\'re offering, Theo. Official visit in March. Tell your dad.':'Front row. Behind the bench. You lost, and you played the last two minutes like a senior. We\'ll talk soon.'},
-    dare:{init:'DM',who:'D. Morris · Purdue',text:'I asked Rick why he\'s scared of a sophomore. He hung up. That told me plenty. We\'ll talk Monday.'}}[p]||{init:'??',who:'Unknown',text:'…'};
+    purdue_all:{init:'DM',who:'D. Morris · Northeastern',text:'Theo, I took what you told me to our compliance office and to the NCAA. Northeastern has cut ties with Midwest Select. Your dad\'s log is the reason. Tell him thank you from us.'},
+    ball:{init:'DM',who:'D. Morris · Northeastern',text:S.f.rematch==='W'?'Front row. Behind the bench. Saw everything. We\'re offering, Theo. Official visit in March. Tell your dad.':'Front row. Behind the bench. You lost, and you played the last two minutes like a senior. We\'ll talk soon.'},
+    dare:{init:'DM',who:'D. Morris · Northeastern',text:'I asked Rick why he\'s scared of a sophomore. He hung up. That told me plenty. We\'ll talk Monday.'}}[p]||{init:'??',who:'Unknown',text:'…'};
   sfx('phone');await phonePost(Object.assign({time:'10:01 PM',rx:'Notification',comments:[]},posts));
   cu(dad,{d:1.2,fov:28});await say(dad,'<i>(reading his own phone, then looking across the lot)</i> …Theo.',1600);
   put(V0,-.8,4.2,PI);face(V0,theo.g.position,true);walkNow(V0,-.7,1.4,{speed:1.2});
@@ -5648,8 +5649,8 @@ async function z6(){ // Vance's last offer
   kDolly(V(.2,1.6,-28),V(.2,1.6,-25.6),V(.25,1.45,-22),V(.25,1.5,-22.4),6,40,30);await fade(false,800);
   await cap('The hallway outside the visitors\' locker room. Everyone else is on the bus. Theo went back for his phone. Somebody was waiting.',3000);
   cu(V0,{d:1.2,fov:28});
-  await say(V0,S.f.sect2w==='W'?'Sectional champion. Look at you. Regional\'s next Saturday. Purdue will be there. So will I.':'Tough way to end. I\'ve seen it end worse. I\'ve made it end worse.');
-  await say(V0,`Here\'s my last offer, and it\'s a good one. ${PROG()?'You withdraw your statement. Page nine of a certain notebook goes in a fireplace. Your father never drove anything anywhere.':'Your father\'s log goes away. In return, so does the complaint, and so does anything I might say to a man at Purdue.'}`);
+  await say(V0,S.f.sect2w==='W'?'Sectional champion. Look at you. Regional\'s next Saturday. Northeastern will be there. So will I.':'Tough way to end. I\'ve seen it end worse. I\'ve made it end worse.');
+  await say(V0,`Here\'s my last offer, and it\'s a good one. ${PROG()?'You withdraw your statement. Page nine of a certain notebook goes in a fireplace. Your father never drove anything anywhere.':'Your father\'s log goes away. In return, so does the complaint, and so does anything I might say to a man at Northeastern.'}`);
   await say(V0,'Everybody walks away. Malik keeps his shoes. Your dad keeps his name. You keep your future. Nobody gets hurt who doesn\'t deserve it.');
   heart=true;kStare(theo);await wait(1600);heart=false;
   const canRec=S.f.mole||S.f.route==='priya'||S.f.plan==='press';
@@ -5747,7 +5748,7 @@ async function A3(){ // WEDNESDAY: the red room
     if(i===1){cu(dad,{d:1.2,fov:28});await say(dad,'<i>(he looks at the lighter, then at Theo, and puts the page in his jacket instead)</i> …No. We keep it. In case we need to be braver later.',3200);S.f.kept_page=true;}
     else{shot(V(0,1.2,2.2),V(0,.9,-1.2),{fov:34});await say(null,'<i>The page goes up fast. Faster than six weeks should.</i>',2600);}
     S.log.red=S.f.kept_page?'took the deal, but kept page nine':'took the deal, and watched page nine burn';}
-  else{await say(V0,'<i>(not standing)</i> Midnight came and went. My phone has been very busy since. Whitfield. A man at Purdue. A girl with a blog.',3400);
+  else{await say(V0,'<i>(not standing)</i> Midnight came and went. My phone has been very busy since. Whitfield. A man at Northeastern. A girl with a blog.',3400);
     if(S.f.vance_falls){await say(V0,S.f.s2e7_end==='record'?'Four minutes and twelve seconds. I said "invoice." I never say invoice.':'Two notebooks. A coach I pay. A father I pay. A boy I tried to pay. That\'s a lot of paper, Theo.',3200);
       await say(V0,'<i>(he looks up at the banners. Thirty-seven commits. He looks at them for a long time.)</i> The shoe people called at nine. They don\'t know me anymore. That was fast. That was very fast.',3600);
       cu(theo,{d:1,fov:26});let i=await choose([{t:'“It was always going to be somebody.”'},{t:'“Say sorry to Malik.”'},{t:'[Turn around and walk out]'}],8);i=i<0?2:i;
@@ -5828,7 +5829,7 @@ async function A6(){ // epilogue: the long pull back
   // the long pull back: one-point, perfectly centered, rising
   kDolly(V(5,1.7,0),V(14.5,8,0),V(0,1.2,-.5),V(-4,.5,0),12,44,62);await wait(6000);
   await say(null,S.f.vance_falls?'<i>Midwest Select dissolved in April. Coach Dre started a free league in the same building. Ray Reyes runs the scheduling. He says it\'s the best job he\'s ever had. He means it.</i>':S.f.finale==='deal'?'<i>Midwest Select changed its name in May. Rick Vance was at Peach Jam in July, in a new quarter-zip. Ray Reyes went back to roofs. Sometimes, on a roof, he takes a folded page out of his jacket and reads it.</i>':'<i>Midwest Select paid a fine in June. Rick Vance kept his job. Ray Reyes went back to roofs, and coaches in Dante\'s Saturday league for free. Somebody else will finish it.</i>',5200);
-  await say(null,S.purdue>=3.5?'<i>Purdue offered in April. Theo said he\'d think about it. He has two more years to think.</i>':S.purdue>=2?'<i>Purdue is still watching. So are a few others. Theo has two more years.</i>':'<i>Purdue went quiet. Butler didn\'t. Theo has two more years.</i>',3800);
+  await say(null,S.purdue>=3.5?'<i>Northeastern offered in April. Theo said he\'d think about it. He has two more years to think.</i>':S.purdue>=2?'<i>Northeastern is still watching. So are a few others. Theo has two more years.</i>':'<i>Northeastern went quiet. Butler didn\'t. Theo has two more years.</i>',3800);
   await fade(true,2400);cine(false);
 }
 async function AEnd(){music('title',.32);
@@ -5920,7 +5921,7 @@ async function B3(){ // practice: junior year
   await cap(`First practice. Junior year. ${S.f.stroud_gone?'Kai is a senior.':'Kai and Stroud are seniors.'} Malik grew three inches over the summer and has mentioned it nine times.`,3000);
   cu(hollis,{d:1.3,fov:28});
   const pu=Math.round(S.purdue||2);
-  await say(hollis,`Recruiting update, since your phones are not subtle. ${pu>=4?'Purdue has offered Reyes. Butler and Indiana have called. I am told this is "a lot." I am told I should "be cool about it." I am being cool about it.':pu>=3?'Purdue is still interested in Reyes. Butler has called twice. Indiana State sent a hat.':'Purdue has gone quiet. Butler has not. Valparaiso sent a very nice letter about Reyes\'s "character."'}`,3600);
+  await say(hollis,`Recruiting update, since your phones are not subtle. ${pu>=4?'Northeastern has offered Reyes. Butler and Indiana have called. I am told this is "a lot." I am told I should "be cool about it." I am being cool about it.':pu>=3?'Northeastern is still interested in Reyes. Butler has called twice. Indiana State sent a hat.':'Northeastern has gone quiet. Butler has not. Valparaiso sent a very nice letter about Reyes\'s "character."'}`,3600);
   await say(hollis,'Also. Isaia Tuilagi is a freshman. He is six-foot-eight. He has never played organized basketball. He is in the marching band. I have asked him to stop bringing the tuba. He has not stopped bringing the tuba.');
   cu(M,{d:1.2,fov:26});await say(M,'<i>(to Theo, bouncing on his toes)</i> One-on-one. Right now. I\'ve been waiting since June. I have a hesi now. A REAL one. You taught me. That was a mistake.',2800);
   const won=await isoStop(M,{noScore:true,noBoard:true,label:'GUARD MALIK',beats:[{dir:'left',t:.6},{dir:'right',t:.55},{dir:'none',t:.72},{dir:'right',t:.52},{dir:'left',t:.5}],line:'Sophomore Malik is a different animal, captain.',
@@ -6082,10 +6083,10 @@ async function C3(){ // revision
   await fade(true,700);classMode('math');
 }
 async function C4(){ // official visit
-  for(const c of chars)unsuit(c);setLoc('gym');gymAway('Purdue');hideAll();cine(true);setScore(0,0,false);const Mo=EX.morris;
+  for(const c of chars)unsuit(c);setLoc('gym');gymAway('Northeastern');hideAll();cine(true);setScore(0,0,false);const Mo=EX.morris;
   put(Mo,-5.2,-1.2,PI*.25,'idle');put(theo,-6.4,.2,-PI*.7,'idle');put(dad,-4.6,1.4,-PI*.4,'idle');face(Mo,theo.g.position,true);face(theo,Mo.g.position,true);
   kDolly(V(4,2.6,6),V(0,1.8,3.6),V(-12.6,4,0),V(-5.6,1.4,-.2),8,52,40);await fade(false,900);
-  await cap('Saturday, September 26. Official visit. West Lafayette. Fourteen thousand empty seats. The lights are on just for him.',3200);
+  await cap('Saturday, September 26. Official visit. Fort Wayne. Fourteen thousand empty seats. The lights are on just for him.',3200);
   cu(Mo,{d:1.3,fov:28});
   const pu=Math.round(S.purdue||2);
   await say(Mo,pu>=4?'Coach wanted to be here himself. He\'s in a recruit\'s living room in Chicago. He asked me to say: we\'re not here to sell you. We\'re here to see if you\'ll have us.':pu>=3?'We\'ve watched you for two years. I want to watch you here. In this building. Then we talk.':'I\'ll be honest with you, Theo. The staff is split. I\'m not. I asked for this visit. Show them why.');
@@ -6095,10 +6096,10 @@ async function C4(){ // official visit
   S.purdue=clamp(S.purdue+made*.3,0,5);const offer=S.purdue>=3.2;S.f.purdue_offer=offer;
   hideAll();put(Mo,-5.2,-1.2,PI*.25,'idle');put(theo,-6.4,.2,-PI*.7,'idle');put(dad,-4.6,1.4,-PI*.4,'idle');face(Mo,theo.g.position,true);face(theo,Mo.g.position,true);
   cu(Mo,{d:1.3,fov:28});
-  await say(Mo,offer?`<i>(${made} of 3. He doesn't write anything down this time.)</i> Theo. Purdue is offering you a full scholarship. I\'ve wanted to say that sentence for two years.`:`<i>(${made} of 3)</i> I\'m going to fight for you in that staff room. I\'m going to need a big junior season to win the fight.`,3200);
+  await say(Mo,offer?`<i>(${made} of 3. He doesn't write anything down this time.)</i> Theo. Northeastern is offering you a full scholarship. I\'ve wanted to say that sentence for two years.`:`<i>(${made} of 3)</i> I\'m going to fight for you in that staff room. I\'m going to need a big junior season to win the fight.`,3200);
   cu(theo,{d:1,fov:26});
   let i=await choose(offer?[{t:'“I commit. Right now.”'},{t:'“Can I have till after the season?”'},{t:'“Did you ever work with Rick Vance?”'}]:[{t:'“Then I’ll give you one.”'},{t:'“What do they need to see?”'},{t:'“Did you ever work with Rick Vance?”'}],10);i=i<0?1:i;
-  S.f.visit=i;S.log.visit=offer?['committed to Purdue on the spot','asked Purdue for time until after the season','asked Coach Morris about Rick Vance'][i]:['promised Purdue a big junior season','asked Purdue what they need to see','asked Coach Morris about Rick Vance'][i];
+  S.f.visit=i;S.log.visit=offer?['committed to Northeastern on the spot','asked Northeastern for time until after the season','asked Coach Morris about Rick Vance'][i]:['promised Northeastern a big junior season','asked Northeastern what they need to see','asked Coach Morris about Rick Vance'][i];
   cu(Mo,{d:1.3,fov:28});
   if(i===2)await say(Mo,'<i>(a long pause; he respects the question)</i> We took two kids through Midwest Select. Before. We don\'t anymore. Your father\'s log is part of why. I\'ll never lie to you about that.',3400);
   else if(offer&&i===0){await say(Mo,'<i>(he shakes Theo\'s hand, then Ray\'s, then Ray\'s again)</i> Welcome home.',2400);cu(dad,{d:1.2,fov:28});await say(dad,'<i>(he can\'t talk. He just nods at the rafters for a while.)</i>',2600);S.f.committed=true;}
@@ -6147,7 +6148,7 @@ async function C6(){ // Monday
 async function CEnd(){music('title',.32);
   hideAll();setAmb({rain:0,hum:0});for(const c of chars)unsuit(c);save('ep18');const card=$('#card');
   card.innerHTML=`<h1 style="font-size:clamp(54px,11vw,120px)">JUNIOR</h1><h2>SEASON THREE · EPISODE 2 · SECOND DRAFT</h2>`;card.classList.add('on');sfx('thud');await waitSkip(3000);
-  const L=S.log;const rows=[['DAD',L.dad1],['ISAIA',L.isaia],['DRAFT SEVEN',L.draft],['PURDUE',L.visit],['THE READING',L.reading],['MONDAY',L.end2]].filter(r=>r[1]);
+  const L=S.log;const rows=[['DAD',L.dad1],['ISAIA',L.isaia],['DRAFT SEVEN',L.draft],['NORTHEASTERN',L.visit],['THE READING',L.reading],['MONDAY',L.end2]].filter(r=>r[1]);
   card.innerHTML=`<h2 style="margin-top:0">YOUR CHOICES</h2><div class="rows">${rows.map(r=>`<div class="row"><b>${r[0]}</b><span>You ${r[1]}.</span></div>`).join('')}</div><h2>WHERE YOU STAND</h2>${seasonHTML()}<h2>NEXT: SEASON THREE · EPISODE 3</h2><p>Your season is saved on this device.</p><button class="go" data-g="200">${glyphA()}Continue to Episode 3</button><button class="go" data-g="0" style="background:var(--paper);animation:none;margin-top:12px">${glyphX()}Back to title</button>`;card.scrollTop=0;
   const bs=[...card.querySelectorAll('.go')];const g=await waitable(done=>{let armed=false;setTimeout(()=>armed=true,1500);bs.forEach(b=>b.addEventListener('pointerdown',e=>{e.stopPropagation();done(+b.dataset.g);}));const off=onIn((x,t)=>{if(t!=='down'||!armed)return;if(x==='A')done(200);else if(x==='X')done(0);});return()=>off();});
   card.classList.remove('on');return{goto:g};
@@ -6218,7 +6219,7 @@ async function D3(){ // opening night
   setLoc('gym');hideAll();cine(true);gameMode(true,'Cedar');gymAway(null);suitUp();teamNames(true);if(!S.f.stroud_gone)suit(EX.stroud,7);suit(EX.isaia,50);newBox();
   const O=[EX.o1,EX.o2,EX.o3,EX.o4,EX.o5];
   setScore(50,52);setClock('Q4  2:00');shot(V(-2,5.5,9),V(-9,0,0),{fov:46});await fade(false,600);
-  await cap(`Friday, November 20. Opening night. Junior year. ${S.f.committed?'The student section has a banner: "BOILER UP, #12."':'The student section has made a banner. It\'s about Isaia. It says "TUBA."'}`,3200);
+  await cap(`Friday, November 20. Opening night. Junior year. ${S.f.committed?'The student section has a banner: "TALONS UP, #12."':'The student section has made a banner. It\'s about Isaia. It says "TUBA."'}`,3200);
   const ic=S.chem.isaia||0;
   const T={big:ic>=4?EX.isaia:lou,shooter:S.f.stroud_gone?kai:EX.stroud,wing:MAL(),post:ic>=4?lou:EX.isaia,lobber:S.f.stroud_gone?null:EX.stroud};
   const won=await clutch({team:T,opp:O,us:50,them:52,secs:120,oppKey:'cedar',trash:'Heard you\'re a writer now, Reyes.'});
@@ -6908,7 +6909,7 @@ async function I6(){ // after
   shot(V(-1.2,1.6,2.6),V(-1.4,1.3,0),{fov:40});await fade(false,700);
   await cap(won?'The Dome, 9:20 PM. There is a ladder under the rim. Lou is on it. Lou has been on it for four minutes. He is cutting the net very slowly so he can remember it.':'The Dome, 9:20 PM. The Apex players are cutting down the net. Malik is not on the ladder. He is standing by the Halston bench.',3400);
   cu(EX.morris,{d:1.25,fov:28});
-  await say(EX.morris,S.f.committed?'Coach Painter watched on a phone in a hotel lobby in Ohio. He texted me "that\'s our guy" four times. He doesn\'t text.':'The offer\'s on the table. It\'s been on the table since July. Tonight it got a tablecloth.',3000);
+  await say(EX.morris,S.f.committed?'Coach Whitlock watched on a phone in a hotel lobby in Ohio. He texted me "that\'s our guy" four times. He doesn\'t text.':'The offer\'s on the table. It\'s been on the table since July. Tonight it got a tablecloth.',3000);
   if(!won&&gone){hideAll();put(theo,-2,0,PI/2);put(M,-.8,.3,-PI/2);face(M,theo.g.position,true);face(theo,M.g.position,true);cu(M,{d:1.2,fov:28});
     await say(M,'<i>(holding a piece of the net out to Theo)</i> I don\'t want the whole thing. I want you to have a piece. Next year it\'s yours. I already decided. I\'m coming home for senior year. If you\'ll have me.',3400);
     cu(theo,{d:1,fov:26});let j=await choose([{t:'“Locker’s still open. One sock in it.”'},{t:'“Talk to Hollis. Then talk to me.”'}],8);j=j<0?0:j;S.f.malik_home=true;S.log.malik8=['told Malik his locker is still open','sent Malik to Hollis first'][j];fx({chem:{malik:3}});}
