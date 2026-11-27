@@ -468,10 +468,10 @@ async function loadModels(){
 }
 const inkSkin=new THREE.ShaderMaterial({vertexShader:'#include <common>\n#include <skinning_pars_vertex>\n#include <morphtarget_pars_vertex>\nvoid main(){\n#include <beginnormal_vertex>\n#include <morphnormal_vertex>\n#include <skinbase_vertex>\n#include <skinnormal_vertex>\n#include <begin_vertex>\n#include <morphtarget_vertex>\n#include <skinning_vertex>\ntransformed+=normalize(objectNormal)*0.0085;gl_Position=projectionMatrix*modelViewMatrix*vec4(transformed,1.);}',fragmentShader:'void main(){gl_FragColor=vec4(.035,.035,.045,1.);}',side:THREE.BackSide});
 const IDQ=new THREE.Quaternion();const COMP=[new THREE.Quaternion().setFromAxisAngle(V(0,0,1),8*PI/180),new THREE.Quaternion().setFromAxisAngle(V(0,0,1),-8*PI/180)];
-const FACE_DY={priya:30,tess:30};
+const FACE_DY={priya:30,tess:30,theo:22,nico:12,dante:44,reggie:22,dad:28,mom:28,hollis:24,whit:24,x1:28,x3:22,x4:32,o1:24,o3:12,vance:38,stroud:24,malik:38,dre:32,panel:34,morris:22,albright:38,isaia:48,dempsey:38};
 function drawnFace(key){const el=document.getElementById('face-'+key);if(!el)return null;
   const c=document.createElement('canvas');c.width=1024;c.height=512;const t=new THREE.CanvasTexture(c);t.anisotropy=4;
-  const img=new Image();img.onload=()=>{const x=c.getContext('2d'),dy=FACE_DY[key]||0;x.fillStyle='#'+CFG[key].skin.toString(16).padStart(6,'0');x.fillRect(0,0,1024,512);x.drawImage(img,0,dy,1024,512);t.needsUpdate=true;};img.src=el.textContent.trim();return t;}
+  const img=new Image();img.onload=()=>{const x=c.getContext('2d'),dy=FACE_DY[key]||0;x.fillStyle='#'+CFG[key].skin.toString(16).padStart(6,'0');x.fillRect(0,0,1024,512);x.drawImage(img,0,dy,1024,512);if(dy>0)x.drawImage(img,0,0,img.naturalWidth,Math.max(2,img.naturalHeight*4/512),0,0,1024,dy+2);t.needsUpdate=true;};img.src=el.textContent.trim();return t;}
 async function makeCharGLB(key){
   const o=CFG[key],k=o.h/1.8;const gl=await GLB.parse(GLB.body);const model=gl.scene;
   const g=new THREE.Group();scene.add(g);const root=new THREE.Group();g.add(root);
@@ -495,7 +495,7 @@ async function makeCharGLB(key){
   const hs=HAIRMAP[o.hs]||'short';const pieces=hs==='long'?['short','long']:[hs];const hm=toon(o.hair);
   for(const pc of pieces){if(!GLB_HAIR[pc])continue;const h=GLB_HAIR[pc].clone(true);const hl=[];h.traverse(x=>{if(x.isMesh)hl.push(x);});hl.forEach(x=>{x.material=hm;x.add(new THREE.Mesh(x.geometry,inkMat(.006)));});bones.head.add(h);
     if(['short','buzz','fade'].includes(pc))h.position.addScaledVector(V(0,1,0).applyQuaternion(Ri.head),hs==='long'?.006:.011);if(hs==='long'&&pc==='short')h.scale.setScalar(1.03);}
-  if(o.band){const b=mesh(new THREE.TorusGeometry(.105,.014,8,24),toon(o.band),headRef,V(0,.045,0),.005);b.rotation.x=PI/2-.32;b.scale.set(.95,1.05,1);}
+  if(o.band){const b=mesh(new THREE.TorusGeometry(.105,.014,8,24),toon(o.band),headRef,V(0,.066,-.008),.005);b.rotation.x=PI/2-.42;b.scale.set(.95,1.05,1);}
   if(o.shoeS){bones.foot_L.scale.setScalar(o.shoeS);bones.foot_R.scale.setScalar(o.shoeS);}
   model.scale.setScalar(k);root.add(model);
   const P=()=>new THREE.Object3D();
