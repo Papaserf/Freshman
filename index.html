@@ -1029,7 +1029,7 @@ function buildDome(){ // Midwest Select "The Dome", Carmel — big, bright, corp
   const rib=ctex(2048,128,(x,w,h)=>{x.fillStyle='#000';x.fillRect(0,0,w,h);txt(x,'MIDWEST SELECT  ·  EST. 2009  ·  37 D-I COMMITS  ·  PEACH JAM 2024  ·  WE GET YOU SEEN',64,[w/2,h/2+3],'Anton',SKYB);});
   const rb=new THREE.Mesh(new THREE.PlaneGeometry(30,1.6),basic(0xffffff,rib));rb.position.set(0,9.6,-10.05);g.add(rb);
   const banT=(t1,t2)=>ctex(256,512,(x,w,h)=>{x.fillStyle=NAVY;x.fillRect(0,0,w,h);x.fillStyle=SKYB;x.fillRect(0,h-40,w,40);txt(x,t1,52,[w/2,120],'Anton','#fff');txt(x,t2,34,[w/2,190],'Anton',SKYB);});
-  const bans=[['NORTHEASTERN','2 COMMITS'],['INDIANA','4 COMMITS'],['BUTLER','3 COMMITS'],['XAVIER','2 COMMITS'],['MICHIGAN ST','1 COMMIT']];
+  const bans=[['NORTHEASTERN','2 COMMITS'],['BLOOMINGTON','4 COMMITS'],['MONUMENT','3 COMMITS'],['LAKESHORE','2 COMMITS'],['PETOSKEY ST','1 COMMIT']];
   bans.forEach(([a,b],i)=>{const m=new THREE.Mesh(new THREE.PlaneGeometry(1.7,3.4),toon(0xffffff,banT(a,b)));m.position.set(-11+i*5.5,6.2,-9.98);g.add(m);});
   // the big wordmark on the end wall
   const wmk=ctex(1024,256,(x,w,h)=>{x.clearRect(0,0,w,h);txt(x,'SELECT',190,[w/2,h/2+10],'Anton','#fff','center',SKYB);});
@@ -5494,7 +5494,7 @@ async function y6(){ // after the buzzer
   await cap('10:01 PM. The lot. Snow. Every phone in the parking lot buzzes at once.',2600);
   const p=S.f.plan;
   const posts={press:{init:'HD',who:'The Halston Diaries',text:'INVESTIGATION: Inside Midwest Select. Envelopes, a shoe company, and the families who were "taken care of." By Priya Shah. Sources include two Midwest Select employees.'},
-    state:{init:'AW',who:'Ms. Whitfield (AD)',text:'Theo, the IHSAA has opened a formal inquiry into Midwest Select\'s contact with member-school athletes. They will want to speak with you and your father. You did this the right way.'},
+    state:{init:'AW',who:'Ms. Whitfield (AD)',text:'Theo, the ISAA has opened a formal inquiry into Midwest Select\'s contact with member-school athletes. They will want to speak with you and your father. You did this the right way.'},
     purdue:{init:'DM',who:'D. Morris · Northeastern',text:'Theo, Northeastern has suspended all recruiting contact through Midwest Select pending review. Your recruitment is unaffected. Coach asked me to tell you that personally.'},
     wait:{init:'??',who:'Unknown number',text:'Saw you at Sal\'s Monday. Late. With the reporter and my coach. We should talk, Theo. — R.V.'},
     purdue_all:{init:'DM',who:'D. Morris · Northeastern',text:'Theo, I took what you told me to our compliance office and to the NCAA. Northeastern has cut ties with Midwest Select. Your dad\'s log is the reason. Tell him thank you from us.'},
@@ -5523,7 +5523,7 @@ async function yEnd(){music('title',.32);
   card.classList.remove('on');return{goto:g};
 }
 
-/* ================= IHSAA hearing room (Indianapolis) ================= */
+/* ================= ISAA hearing room (Indianapolis) ================= */
 function buildHearing(){
   const g=new THREE.Group();scene.add(g);g.visible=false;
   const cp=ctex(256,256,(x,w,h)=>{x.fillStyle='#3a4450';x.fillRect(0,0,w,h);for(let i=0;i<1800;i++){x.fillStyle=`rgba(255,255,255,${Math.random()*.05})`;x.fillRect(Math.random()*w,Math.random()*h,2,2);}},[4,4]);
@@ -5538,7 +5538,7 @@ function buildHearing(){
   const ch=toon(0x1a1a1e);const chair=(x,z,yaw)=>{const c=new THREE.Group();c.position.set(x,0,z);c.rotation.y=yaw;g.add(c);box(.5,.06,.5,ch,c,V(0,.47,0));box(.5,.62,.06,ch,c,V(0,.82,-.24));box(.05,.45,.05,toon(0x777),c,V(0,.23,0),false);};
   for(const x of[-1.4,0,1.4])chair(x,-3.0,0);for(const x of[-.5,.5])chair(x,1.45,PI);for(const x of[-2.6,-1.9,1.9,2.6])chair(x,2.9,PI);
   // seal + flags + nameplates
-  const seal=ctex(256,256,(x,w,h)=>{x.fillStyle='#1d2b4f';x.beginPath();x.arc(128,128,124,0,7);x.fill();x.strokeStyle='#c9a227';x.lineWidth=10;x.beginPath();x.arc(128,128,112,0,7);x.stroke();txt(x,'IHSAA',56,[128,118],'Anton','#c9a227');txt(x,'INDIANA',24,[128,166],'Anton','#f2ead6');});
+  const seal=ctex(256,256,(x,w,h)=>{x.fillStyle='#1d2b4f';x.beginPath();x.arc(128,128,124,0,7);x.fill();x.strokeStyle='#c9a227';x.lineWidth=10;x.beginPath();x.arc(128,128,112,0,7);x.stroke();txt(x,'STATE',56,[128,118],'Anton','#c9a227');txt(x,'TOURNAMENT',22,[128,166],'Anton','#f2ead6');});
   const sm=new THREE.Mesh(new THREE.CircleGeometry(.6,32),toon(0xffffff,seal));sm.position.set(0,2.2,-3.88);g.add(sm);
   const flag=(x,tex)=>{box(.03,2.2,.03,toon(0xc9a227),g,V(x,1.1,-3.6),false);const f=new THREE.Mesh(new THREE.PlaneGeometry(.6,.9),toon(0xffffff,tex));f.position.set(x+.32,1.75,-3.6);f.material.side=THREE.DoubleSide;g.add(f);};
   flag(-2.4,ctex(96,144,(x,w,h)=>{for(let i=0;i<13;i++){x.fillStyle=i%2?'#f6f1e4':'#b3262e';x.fillRect(0,i*h/13,w,h/13+1);}x.fillStyle='#1d2b4f';x.fillRect(0,0,w*.5,h*.42);}));
@@ -5565,7 +5565,7 @@ async function z1(){ // the hearing
   sitOn(P,0,-3.0,0,.5);sitOn(whit,-1.4,-3.0,0,.5);sitOn(theo,-.5,1.45,PI,.5);sitOn(dad,.5,1.45,PI,.5);sitOn(mom,-1.9,2.9,PI,.5);sitOn(hollis,1.9,2.9,PI,.5);
   if(PROG())sitOn(EX.dre,2.6,2.9,PI,.5);else if(S.f.dante_cousin)sitOn(dante,2.6,2.9,PI,.5);
   kDolly(V(0,2.4,3.8),V(0,1.6,2.9),V(0,1.2,-2.4),V(0,1.25,-2.6),9,48,36);await fade(false,900);
-  await cap('Tuesday, February 16. IHSAA offices, Indianapolis. Room 3B. The water pitchers are full. Nobody touches them.',3000);
+  await cap('Tuesday, February 16. ISAA offices, Indianapolis. Room 3B. The water pitchers are full. Nobody touches them.',3000);
   cu(P,{d:1.4,fov:28});
   const prog=PROG(),took=!!S.f.took_money;
   await say(P,prog?'This panel is reviewing contact between Midwest Select Basketball and member-school athletes. Mr. Reyes, you are here as a witness. You may also be here as something else. That depends on the next hour.':'This panel is reviewing a complaint about Mr. Reyes\'s summer activities. The complainant is anonymous. The panel has opinions about that, which it will keep to itself.');
@@ -5593,7 +5593,7 @@ async function z2(){ // the ruling
   await cap('Wednesday. 3:10 PM. Hollis walks in holding a single sheet of paper. Everybody stops taping.',2600);
   const v=S.f.verdict2;cu(hollis,{d:1.3,fov:28});
   await say(hollis,{clear:'Cleared. Fully. "No violation by the student-athlete." Those are the panel\'s words. I have laminated them.',onegame:'One game. The semifinal. "For accepting an impermissible benefit, mitigated by full cooperation." You play Saturday. If we get to Saturday.',out:'Ineligible for the remainder of the season. Sectionals, regionals. All of it. They said "regrettably." I believe them.'}[v],3200);
-  S.log.verdict={clear:'were cleared by the IHSAA',onegame:'were suspended for the sectional semifinal',out:'were ruled ineligible for the rest of the season'}[v];
+  S.log.verdict={clear:'were cleared by the ISAA',onegame:'were suspended for the sectional semifinal',out:'were ruled ineligible for the rest of the season'}[v];
   if(v==='clear'){cu(lou,{d:1.2,fov:26});await say(lou,'<i>(standing on the bench)</i> CLEARED! He is CLEARED! I knew it! I made a slideshow just in case!',2400);}
   else if(v==='onegame'){cu(kai,{d:1.2,fov:26});await say(kai,'<i>(taping his ankle, not looking up)</i> We\'ll get you to Saturday. Sit down. Watch us.',2400);}
   else{cu(MAL(),{d:1.2,fov:26});await say(MAL(),'<i>(very quiet, for once)</i> …That\'s not fair. That\'s— you\'re the one who TOLD them.',2600);cu(theo,{d:1,fov:26});await say(theo,'Yeah. That\'s how it works. You tell them, and they still count it.',2600);}
@@ -5786,7 +5786,7 @@ async function A5(){ // SATURDAY
   if(reg){setLoc('gym');hideAll();cine(true);gameMode(true,'Jeff');gymAway('Jeff');suitUp();teamNames(true);if(!S.f.stroud_gone)suit(EX.stroud,7);newBox();
     const O=[EX.o1,EX.o2,EX.o3,EX.o4,EX.o5];setScore(57,59);setClock('Q4  2:00');
     shot(V(0,9,1.2),V(0,0,0),{fov:66});await fade(false,1400);kDrone();
-    await say(null,'<i>Regional semifinal. Lafayette Jefferson. 7,000 seats. Theo has never heard a gym this loud be this quiet.</i>',3400);
+    await say(null,'<i>Regional semifinal. Riverside Prep. 7,000 seats. Theo has never heard a gym this loud be this quiet.</i>',3400);
     kDolly(V(4,1.6,0),V(-2,1.6,0),V(-12.6,3,0),V(-12.6,3.05,0),8,30,30);await wait(4000);
     if(S.f.verdict2==='out'){hideAll();sitOn(theo,-3.5,-8.1,0,.45);kPush(theo,6,2.4,1.1);await say(null,'<i>In a sport coat. At the end of the bench. Again. He has never wanted anything as badly as he wants to be out there.</i>',3400);
       const won=roll(clamp(.38+(S.chem.team||0)*.03,.25,.65));camWide();
@@ -5829,7 +5829,7 @@ async function A6(){ // epilogue: the long pull back
   // the long pull back: one-point, perfectly centered, rising
   kDolly(V(5,1.7,0),V(14.5,8,0),V(0,1.2,-.5),V(-4,.5,0),12,44,62);await wait(6000);
   await say(null,S.f.vance_falls?'<i>Midwest Select dissolved in April. Coach Dre started a free league in the same building. Ray Reyes runs the scheduling. He says it\'s the best job he\'s ever had. He means it.</i>':S.f.finale==='deal'?'<i>Midwest Select changed its name in May. Rick Vance was at Peach Jam in July, in a new quarter-zip. Ray Reyes went back to roofs. Sometimes, on a roof, he takes a folded page out of his jacket and reads it.</i>':'<i>Midwest Select paid a fine in June. Rick Vance kept his job. Ray Reyes went back to roofs, and coaches in Dante\'s Saturday league for free. Somebody else will finish it.</i>',5200);
-  await say(null,S.purdue>=3.5?'<i>Northeastern offered in April. Theo said he\'d think about it. He has two more years to think.</i>':S.purdue>=2?'<i>Northeastern is still watching. So are a few others. Theo has two more years.</i>':'<i>Northeastern went quiet. Butler didn\'t. Theo has two more years.</i>',3800);
+  await say(null,S.purdue>=3.5?'<i>Northeastern offered in April. Theo said he\'d think about it. He has two more years to think.</i>':S.purdue>=2?'<i>Northeastern is still watching. So are a few others. Theo has two more years.</i>':'<i>Northeastern went quiet. Monument didn\'t. Theo has two more years.</i>',3800);
   await fade(true,2400);cine(false);
 }
 async function AEnd(){music('title',.32);
@@ -5921,7 +5921,7 @@ async function B3(){ // practice: junior year
   await cap(`First practice. Junior year. ${S.f.stroud_gone?'Kai is a senior.':'Kai and Stroud are seniors.'} Malik grew three inches over the summer and has mentioned it nine times.`,3000);
   cu(hollis,{d:1.3,fov:28});
   const pu=Math.round(S.purdue||2);
-  await say(hollis,`Recruiting update, since your phones are not subtle. ${pu>=4?'Northeastern has offered Reyes. Butler and Indiana have called. I am told this is "a lot." I am told I should "be cool about it." I am being cool about it.':pu>=3?'Northeastern is still interested in Reyes. Butler has called twice. Indiana State sent a hat.':'Northeastern has gone quiet. Butler has not. Valparaiso sent a very nice letter about Reyes\'s "character."'}`,3600);
+  await say(hollis,`Recruiting update, since your phones are not subtle. ${pu>=4?'Northeastern has offered Reyes. Monument and Bloomington State have called. I am told this is "a lot." I am told I should "be cool about it." I am being cool about it.':pu>=3?'Northeastern is still interested in Reyes. Monument has called twice. Terre Haute State sent a hat.':'Northeastern has gone quiet. Monument has not. Dunes College sent a very nice letter about Reyes\'s "character."'}`,3600);
   await say(hollis,'Also. Isaia Tuilagi is a freshman. He is six-foot-eight. He has never played organized basketball. He is in the marching band. I have asked him to stop bringing the tuba. He has not stopped bringing the tuba.');
   cu(M,{d:1.2,fov:26});await say(M,'<i>(to Theo, bouncing on his toes)</i> One-on-one. Right now. I\'ve been waiting since June. I have a hesi now. A REAL one. You taught me. That was a mistake.',2800);
   const won=await isoStop(M,{noScore:true,noBoard:true,label:'GUARD MALIK',beats:[{dir:'left',t:.6},{dir:'right',t:.55},{dir:'none',t:.72},{dir:'right',t:.52},{dir:'left',t:.5}],line:'Sophomore Malik is a different animal, captain.',
@@ -6611,7 +6611,7 @@ async function G6(){ // the letter from Indianapolis
   const k=S.f.paper6||'hold';
   await cap('Monday, January 18. Coach Hollis\'s office. There is a letter on the desk with an Indianapolis return address. Hollis has not taken his eyes off it.',3000);
   cu(hollis,{d:1.3,fov:28});
-  await say(hollis,{publish:'I read about our hotel in the student newspaper. Same as everybody. Same as the IHSAA, apparently. They read fast.',hollis:'I called Indianapolis the day you showed me. Self-reported. This is their answer. They also read fast.',adult:'Somebody very responsible forwarded that invoice to the district. The district forwarded it to Indianapolis. This came back.',hold:'Somebody else found the invoice. Somebody anonymous. Somebody who signs with a very nice pen. I don\'t think he meant to help us.'}[k],3200);
+  await say(hollis,{publish:'I read about our hotel in the student newspaper. Same as everybody. Same as the ISAA, apparently. They read fast.',hollis:'I called Indianapolis the day you showed me. Self-reported. This is their answer. They also read fast.',adult:'Somebody very responsible forwarded that invoice to the district. The district forwarded it to Indianapolis. This came back.',hold:'Somebody else found the invoice. Somebody anonymous. Somebody who signs with a very nice pen. I don\'t think he meant to help us.'}[k],3200);
   await say(hollis,'Eligibility review. The Holiday Classic. "Impermissible benefit to a member school." Nine rooms. Three nights. Every one of you slept in one.',3000);
   await say(hollis,'They\'re giving us a choice. We can vacate. Forfeit both games, give back the trophy if there is one, and it\'s over. Or we appeal. Say we didn\'t know. Which is true. Which takes months. With the whole season under a question mark.',3600);
   await say(hollis,'<i>(he finally looks up)</i> The team votes Thursday. I\'d like to walk in there knowing what my captain thinks.',2400);
@@ -6820,7 +6820,7 @@ async function I1(){ // Indianapolis
   sitOn(P,0,-3.0,0,.5);sitOn(whit,-1.4,-3.0,0,.5);sitOn(theo,-.5,1.45,PI,.5);sitOn(hollis,.5,1.45,PI,.5);sitOn(dad,-1.9,2.9,PI,.5);sitOn(priya,1.9,2.9,PI,.5);
   kDolly(V(0,2.4,3.8),V(0,1.6,2.9),V(0,1.2,-2.4),V(0,1.25,-2.6),9,48,36);await fade(false,900);
   const v=S.f.vote7||'vacate',q=(S.f.q7||[]).length;
-  await cap('Monday, February 22. IHSAA offices, Indianapolis. Room 3B. Theo has been in this room before. The water pitchers are still full. Nobody touches them.',3200);
+  await cap('Monday, February 22. ISAA offices, Indianapolis. Room 3B. Theo has been in this room before. The water pitchers are still full. Nobody touches them.',3200);
   cu(P,{d:1.4,fov:28});
   await say(P,v==='vacate'?'Halston Heights self-reported and voted to vacate two games. This panel accepts that. We are not here about Halston Heights today. We are here about who paid.':'Halston Heights has appealed the vacating of two games on the grounds that no one at the school knew who paid. This panel has watched a student video. Twice. Some of us three times.',3400);
   await say(P,`Mr. Reyes. ${q>=3?'Several people in that video said things on camera that they have not said to us. ':'The video was… short on specifics. '}What do you want this panel to understand?`,2800);
@@ -6832,7 +6832,7 @@ async function I1(){ // Indianapolis
   await say(P,['<i>(turning a page)</i> We have. The signature belongs to Apex Partnerships. Its director has declined three invitations to appear. That will be in our report.','<i>(a pause; the panelist sets down her pen)</i> We\'ve requested records going back to 2019. Every camp. Every card.','<i>(nods)</i> That\'s the one thing everyone in this room agrees on, Mr. Reyes. Even the water pitchers.','<i>(reading. Reading for a long time.)</i> …Thank you. This will save us several subpoenas.'][i],3000);
   await say(P,strong?(v==='vacate'?'Halston Heights is eligible for the tournament. Apex Academy is eligible pending review. Apex Partnerships is barred from contact with member schools while that review proceeds. Effective today.':'Appeal granted. The two games stand. Apex Partnerships is barred from contact with member schools while this panel reviews them. Effective today.'):(v==='vacate'?'Halston Heights is eligible. The rest of this will take time. These things take time.':'Appeal denied, I\'m afraid. The two games are vacated. Your team is eligible for the tournament. The rest will take time.'),3600);
   if(!strong&&v==='appeal'){S.rec.w=Math.max(0,S.rec.w-1);}
-  S.log.ihsaa8=strong?'saw the IHSAA bar Apex Partnerships from member schools':'saw the IHSAA take the slow road';
+  S.log.ihsaa8=strong?'saw the ISAA bar Apex Partnerships from member schools':'saw the ISAA take the slow road';
   cu(hollis,{d:1.3,fov:28,a:.3});await say(hollis,'<i>(under his breath, to Theo)</i> Sectional\'s in eleven days. Try to enjoy them.',2000);
   await fade(true,800);
 }
