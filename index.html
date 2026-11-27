@@ -1640,7 +1640,8 @@ async function catchShoot(o){ensureBox();hideAll();setScore(S.score[0],S.score[1
   await react(pts?o.good:o.bad);return pts>0;
 }
 async function helpD(o){ensureBox();hideAll();setScore(S.score[0],S.score[1]);if(o.coach){put(coach,-6.2,-7.4,0,'cross');face(coach,V(-9,0,0),true);coach.props.clip.visible=true;coach.props.mug.visible=false;}
-  lay(o.lay||[]);at(o.driver,o.from,'dribble');hold(ball,o.driver,'dribble');at(o.man,o.manSpot,'ready');guardAt(theo,o.manSpot,1.3);
+  /* the decision camera (camSide) sits on the right wing side, so anyone on the right wing stands right in front of the lens: push them to the corner */
+  lay((o.lay||[]).map(([c,k,m,d])=>[c,k==='rw'&&SPOT[o.from].z<0?'rc':k,m,d]));at(o.driver,o.from,'dribble');hold(ball,o.driver,'dribble');at(o.man,o.manSpot,'ready');guardAt(theo,o.manSpot,1.3);
   if(o.driverDef)guardAt(o.driverDef,o.from,.9);
   camWide();await fade(false,200);await wait(400);
   const side=SPOT[o.from].z<0?-1:1;walkNow(o.driver,HOOP.x+1.8,side*1.1,{speed:3.4,dribble:true,after:'dribble'});
@@ -2517,7 +2518,12 @@ async function takeCharge(att,o={}){ensureBox();hideAll();if(!o.practice)setScor
   await teach('charge');const ok=await qPass0({label:'PLANT YOUR FEET'});await until(()=>!att.move);sfx('thud');hold(ball,att);
   if(ok){theo.pose='fallen';await cap(o.practice?'CHARGE.':'OFFENSIVE FOUL. OUR BALL.',1300);if(!o.practice){cheer(1.2);S.box.stops++;fx({respect:1,nerves:-3});}theo.pose='idle';return true;}
   theo.pose='fallen';await cap('BLOCKING FOUL.',1000);if(!o.practice){await shootBall(ball,att,'make');them(2);if(roll(.7)){them(1);await cap('AND ONE. HE HITS THE FREE THROW.',1300);}fx({nerves:5});}theo.pose='idle';return false;}
-async function isoStop(att,o){ensureBox();hideAll();setScore(S.score[0],S.score[1],!o.noBoard);lay(o.lay||[]);
+/* the guarding close-up happens on the left wing. Anyone laid on the left wing or left elbow would be
+   standing in the same spot (or between the camera and the play), so move them to a free spot on the other side. */
+function isoLay(list){const busy=new Set(list.map(e=>e[1])),alt=['rw','re','rc','rb','top'],map={};
+  for(const k of['lw','le']){if(!busy.has(k))continue;const f=alt.find(a=>!busy.has(a)&&!Object.values(map).includes(a));if(f)map[k]=f;}
+  return list.map(([c,k,m,d])=>[c,map[k]||k,m,d]).filter(([c,k])=>!(k==='lw'||k==='le'));}
+async function isoStop(att,o){ensureBox();hideAll();setScore(S.score[0],S.score[1],!o.noBoard);lay(isoLay((o.lay||[]).filter(e=>e[0]!==att&&e[0]!==theo)));
   put(att,-8.4,-5.2,PI/2,'ready');put(theo,-9.6,-4.3,0,'stance');face(theo,att.g.position,true);face(att,theo.g.position,true);hold(ball,att,'dribble');
   shot(V(-7.4,1.15,-2.6),headPos(att),{fov:34,roll:.1});await wait(400);if(o.line)await say(att,o.line);
   const st=await qStop(o.beats,Object.assign({label:o.label||'GUARD HIM',fixed:o.fixed},slideFns(att)));hold(ball,att);camSide();
