@@ -814,7 +814,7 @@ function buildLocker(){
     upd:(dt,t)=>{for(const s of steam){s.position.y+=dt*.25;s.position.x-=dt*.08;if(s.position.y>3.2){s.position.y=.4;s.position.x=3.6+Math.random()*1.6;}}}};
 }
 function makeCar(col,type,text){
-  const g=new THREE.Group();scene.add(g);const bodyM=toon(col);
+  const g=new THREE.Group();scene.add(g);g.userData.dynamic=true;const bodyM=toon(col);
   const T=type==='truck'?{L:5.2,W:1.86,bot:.5,r:.44,belt:1.15,top:1.93,cab:[1.9,.78,.35]}:type==='suv'?{L:4.8,W:1.88,bot:.44,r:.42,belt:1.4,top:2.2,cab:[3.2,.8,-.2]}:{L:4.7,W:1.8,bot:.32,r:.36,belt:1.15,top:1.77,cab:[2.4,.62,-.15]};
   const L=T.L,W=T.W,h2=L/2,H=T.belt-.35,cab=T.cab,wx=L*.32;
   const trimM=toon(0x232428),chromeM=toon(0xc8ccd4),tireM=toon(0x141416),rimM=toon(type==='sedan'?0x9aa0aa:0xb8bcc4);
@@ -1451,9 +1451,13 @@ let kTok=0;function shot(p,l,o={}){kTok++;camT.p.copy(p);camT.l.copy(l);camT.rol
 function camBlocker(cam,tgt,self){for(const b of chars){if(b===self||!b.g.visible||b.g.parent!==scene)continue;const bp=b.g.position,top=headPos(b).y+.18;
     for(let t=0;t<=.85;t+=.05){const x=cam.x+(tgt.x-cam.x)*t,y=cam.y+(tgt.y-cam.y)*t,z=cam.z+(tgt.z-cam.z)*t;if(y>bp.y-.05&&y<top&&Math.hypot(x-bp.x,z-bp.z)<.3)return b;}}return null;}
 function cu(c,o={}){const hp=headPos(c);const q=new THREE.Quaternion();c.g.getWorldQuaternion(q);const fw=V(0,0,1).applyQuaternion(q);fw.y=0;fw.normalize().applyAxisAngle(V(0,1,0),o.a||0);const d=o.d||1.1;
-  {const cp=hp.clone().add(fw.clone().multiplyScalar(d)).add(V(0,o.h||0,0));const bl=camBlocker(cp,hp,c);if(bl){ots(bl,c,{fov:o.fov||30,cut:o.cut});return;}}
+  {let cp=hp.clone().add(fw.clone().multiplyScalar(d)).add(V(0,o.h||0,0));const bl=camBlocker(cp,hp,c);if(bl){ots(bl,c,{fov:o.fov||30,cut:o.cut});return;}
+   if(inSet(cp))for(const a of[.5,-.5,1,-1,1.5,-1.5]){const f2=fw.clone().applyAxisAngle(V(0,1,0),a);const p2=hp.clone().add(f2.multiplyScalar(d)).add(V(0,o.h||0,0));if(!inSet(p2)&&!camBlocker(p2,hp,c)){fw.copy(f2.normalize());break;}}}
   shot(hp.clone().add(fw.multiplyScalar(d)).add(V(0,o.h||0,0)),hp.clone().add(V(0,o.lo||-.02,0)),{roll:o.roll||0,fov:o.fov||30,cut:o.cut,sp:o.sp});}
-function ots(from,to,o={}){const pf=headPos(from),pt=headPos(to);const dir=pt.clone().sub(pf);dir.y=0;dir.normalize();const side=V(-dir.z,0,dir.x).multiplyScalar((o.s||1)*.45);
+/* keep the camera out of walls, lockers and other solid set pieces */
+function inSet(p){if(!curLoc||!curLoc.g)return false;if(!curLoc._boxes){curLoc._boxes=[];curLoc.g.updateMatrixWorld(true);curLoc.g.traverse(m=>{let dyn=false;for(let q=m;q;q=q.parent)if(q.userData&&q.userData.dynamic){dyn=true;break;}if(!dyn&&m.isMesh&&m.geometry&&m.geometry.type==='BoxGeometry'&&!(m.material&&m.material.transparent)){const b=new THREE.Box3().setFromObject(m);const sz=b.getSize(V());if(sz.x>.12&&sz.y>.12&&sz.z>.12&&sz.x*sz.y*sz.z<400)curLoc._boxes.push({b:b.expandByScalar(.08),m});}});}
+  for(const e of curLoc._boxes)if(e.m.visible&&e.b.containsPoint(p))return true;return false;}
+function ots(from,to,o={}){const pf=headPos(from),pt=headPos(to);const dir=pt.clone().sub(pf);dir.y=0;dir.normalize();let sd=o.s||1;{const tp=pf.clone().sub(dir.clone().multiplyScalar(o.d||1)).add(V(-dir.z,0,dir.x).multiplyScalar(sd*.45)).add(V(0,o.h||.06,0));if(inSet(tp)){const tq=pf.clone().sub(dir.clone().multiplyScalar(o.d||1)).add(V(-dir.z,0,dir.x).multiplyScalar(-sd*.45)).add(V(0,o.h||.06,0));if(!inSet(tq))sd=-sd;}}const side=V(-dir.z,0,dir.x).multiplyScalar(sd*.45);
   shot(pf.clone().sub(dir.clone().multiplyScalar(o.d||1)).add(side).add(V(0,o.h||.06,0)),pt.clone().add(V(0,-.06,0)),{fov:o.fov||34,cut:o.cut,roll:o.roll||0,sp:o.sp});}
 function two(a,b,o={}){const pa=headPos(a),pb=headPos(b),mid=pa.clone().lerp(pb,.5),dir=pb.clone().sub(pa);dir.y=0;const len=dir.length();dir.normalize();const perp=V(-dir.z,0,dir.x).multiplyScalar(o.side||1);
   shot(mid.clone().add(perp.multiplyScalar(o.d||Math.max(2,len*1.3))).add(V(0,o.h||0,0)),mid.clone().add(V(0,-.1,0)),{fov:o.fov||38,cut:o.cut,roll:o.roll||0,sp:o.sp});}
