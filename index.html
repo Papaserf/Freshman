@@ -819,15 +819,20 @@ function makeCar(col,type,text){
   const L=T.L,W=T.W,h2=L/2,H=T.belt-.35,cab=T.cab,wx=L*.32;
   const trimM=toon(0x232428),chromeM=toon(0xc8ccd4),tireM=toon(0x141416),rimM=toon(type==='sedan'?0x9aa0aa:0xb8bcc4);
   /* body: side profile with wheel arches, extruded across the width */
-  const top=type==='truck'?[[-h2,.95],[-h2+.04,.98],[-.72,.98],[-.72,T.belt],[1.2,T.belt+.02],[2.2,1.12],[h2,1.02],[h2+.02,.62],[h2-.02,T.bot]]
-    :type==='suv'?[[-h2,.5],[-h2-.03,1.0],[-h2+.04,T.belt],[1.35,T.belt],[2.05,1.26],[h2-.02,1.1],[h2+.02,.72],[h2-.04,T.bot]]
-    :[[-h2+.02,.42],[-h2-.02,.78],[-h2+.06,1.0],[-1.95,1.1],[-1.55,T.belt],[1.15,T.belt-.02],[1.95,1.0],[h2-.04,.88],[h2+.01,.62],[h2-.03,T.bot]];
+  const top=type==='truck'?[[-h2,.95],[-h2+.04,.98],[-.72,.98],[-.72,T.belt],[-.6,T.belt],[-.6,.72],[1.12,.72],[1.12,T.belt+.02],[1.2,T.belt+.02],[2.2,1.12],[h2,1.02],[h2+.02,.62],[h2-.02,T.bot]]
+    :type==='suv'?[[-h2,.5],[-h2-.03,1.0],[-h2+.04,T.belt],[-1.75,T.belt],[-1.75,.68],[1.28,.68],[1.28,T.belt],[1.35,T.belt],[2.05,1.26],[h2-.02,1.1],[h2+.02,.72],[h2-.04,T.bot]]
+    :[[-h2+.02,.42],[-h2-.02,.78],[-h2+.06,1.0],[-1.95,1.1],[-1.55,T.belt],[-1.4,T.belt],[-1.4,.55],[1.0,.55],[1.0,T.belt-.02],[1.15,T.belt-.02],[1.95,1.0],[h2-.04,.88],[h2+.01,.62],[h2-.03,T.bot]];
   const sh=new THREE.Shape();const ra=T.r+.09,dy=T.bot-T.r,dx=Math.sqrt(ra*ra-dy*dy),a0=Math.atan2(dy,dx);
   sh.moveTo(h2-.03,T.bot);
   for(const w of[wx,-wx]){sh.lineTo(w+dx,T.bot);sh.absarc(w,T.r,ra,a0,PI-a0,false);}
   sh.lineTo(top[0][0],T.bot);for(const p of top)sh.lineTo(p[0],p[1]);
   const bev=.07,geo=new THREE.ExtrudeGeometry(sh,{depth:W-2*bev,bevelEnabled:true,bevelThickness:bev,bevelSize:bev*.8,bevelSegments:2,curveSegments:12});geo.translate(0,0,-(W-2*bev)/2);
   mesh(geo,bodyM,g,null,.012);
+  // hollow cabin: door panels and a dark floor where the body is notched out
+  {const [xa,xb,fl]=type==='truck'?[-.6,1.12,.72]:type==='suv'?[-1.75,1.28,.68]:[-1.4,1.0,.55];
+   for(const sz of[-1,1])box(xb-xa,T.belt-fl,.07,bodyM,g,V((xa+xb)/2,(T.belt+fl)/2,sz*(W/2-.035)));
+   box(xb-xa-.02,.02,W-.16,toon(0x1a1a1c),g,V((xa+xb)/2,fl+.01,0),false);
+   for(const sz of[-1,1])box(xb-xa,.03,.09,toon(0x2a2a2e),g,V((xa+xb)/2,T.belt-.01,sz*(W/2-.07)),false);}
   // dark wheel wells behind the arches
   for(const w of[wx,-wx]){const ww=new THREE.Mesh(new THREE.CylinderGeometry(ra-.02,ra-.02,W-.14,18),toon(0x0a0a0c));ww.rotation.x=PI/2;ww.position.set(w,T.r,0);g.add(ww);}
   /* wheels: tire, rim, spokes, hub */
