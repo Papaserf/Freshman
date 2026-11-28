@@ -93,6 +93,9 @@ body[data-inp=touch] #ch button .k{display:none}body[data-inp=touch] #ch button{
 #q.shake{animation:shk .25s}@keyframes shk{25%{transform:translate(-52%,-50%)}75%{transform:translate(-48%,-50%)}}
 #toast{position:fixed;top:calc(16px + env(safe-area-inset-top));left:16px;z-index:12;background:var(--ink);color:#fff;font:600 19px 'Barlow Condensed';padding:9px 16px 9px 14px;border-left:7px solid var(--gold);transform:translateX(-130%);transition:transform .45s cubic-bezier(.2,.9,.3,1.2);pointer-events:none;max-width:80vw}
 #toast b{color:var(--gold)}#toast.on{transform:none}
+#ttag{position:fixed;top:calc(70px + env(safe-area-inset-top));right:14px;z-index:12;background:var(--ink);color:#fff;font:600 19px 'Barlow Condensed';letter-spacing:.03em;padding:9px 14px 9px 16px;border-right:7px solid var(--gold);transform:translateX(135%);transition:transform .45s cubic-bezier(.2,.9,.3,1.2);pointer-events:none;max-width:80vw;white-space:nowrap}
+#ttag.on{transform:none}#ttag b{color:var(--gold)}#ttag .tdots{margin:0 9px;color:var(--gold)}#ttag.hot{border-right-color:#ff6a1a}#ttag.hot b,#ttag.hot .tdots{color:#ff9a4d}#ttag.cold{border-right-color:#6fa8dc}#ttag.cold b,#ttag.cold .tdots{color:#a9cdf0}
+.tdots{font-weight:700;font-size:1.08em;letter-spacing:.1em;white-space:nowrap;color:#7d6000}.tdots.t0{color:#3f74a8}.tdots.t3{color:#a87400}.tdots.t4{color:#e8590c}#ch.read .tdots{color:var(--gold)}#ch.read .tdots.t0{color:#8fbfe8}#ch.read .tdots.t4{color:#ff8a3d}#ch button.pick .tdots{color:var(--ink)}
 #sb{position:fixed;top:calc(10vh + env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:5;display:none;gap:0;font:400 20px/1 'Anton';border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink)}
 #sb.on{display:flex}#sb span{padding:6px 12px;background:var(--paper);color:var(--ink)}#sb span.v{background:var(--ink);color:var(--gold);min-width:64px;text-align:center}
 #mont{position:fixed;inset:0;z-index:7;pointer-events:none;display:none;align-items:center;justify-content:center;gap:clamp(8px,2vw,18px);padding:0 4vw;flex-wrap:wrap}
@@ -175,7 +178,7 @@ body[data-inp=touch] #ch button .k{display:none}body[data-inp=touch] #ch button{
 <div id="tp"><button data-b="left" aria-label="Slide left">◀</button><button data-b="up" aria-label="Contest">▲</button><button data-b="right" aria-label="Slide right">▶</button></div>
 <div id="mont"></div>
 <div id="note"></div>
-<div id="toast"></div><div id="phone"></div><div id="teach"></div><div id="clutchTag">CLUTCH TIME</div><div id="dbg"></div>
+<div id="toast"></div><div id="ttag"></div><div id="phone"></div><div id="teach"></div><div id="clutchTag">CLUTCH TIME</div><div id="dbg"></div>
 <div id="card"></div>
 <button id="pause" aria-label="Pause">II</button>
 <div id="menu"><div class="box">
@@ -1557,7 +1560,7 @@ async function montage(panels){
   await waitSkip(800);m.classList.remove('on');m.innerHTML='';await wait(200);
 }
 function note(html,on){const n=$('#note');n.innerHTML=html;n.classList.toggle('on',on);}
-function clearUI(){if(typeof music==='function')music(null);if(document.getElementById('doc'))docOn(false);document.body.classList.remove('flash');if(typeof gameMode==='function'&&gameOn)gameMode(false);for(const c of chars)unsuit(c);$('#sb').classList.remove('on');for(const id of['#horse','#exam','#sub','#cap','#ch','#mont','#note','#toast','#tp','#teach','#phone'])$(id).classList.remove('on');$('#ch').innerHTML='';$('#q').className='';$('#q').innerHTML='';$('#mont').innerHTML='';$('#card').classList.remove('on');panel(false);cine(false);heart=false;}
+function clearUI(){if(typeof music==='function')music(null);if(document.getElementById('doc'))docOn(false);document.body.classList.remove('flash');if(typeof gameMode==='function'&&gameOn)gameMode(false);for(const c of chars)unsuit(c);$('#sb').classList.remove('on');for(const id of['#horse','#exam','#sub','#cap','#ch','#mont','#note','#toast','#ttag','#tp','#teach','#phone'])$(id).classList.remove('on');$('#ch').innerHTML='';$('#q').className='';$('#q').innerHTML='';$('#mont').innerHTML='';$('#card').classList.remove('on');panel(false);cine(false);heart=false;}
 
 /* ================= state ================= */
 const S0=()=>({nerves:30,coach:0,respect:0,hype:0,style:0,family:0,grounded:0,shoot:58,chem:{nico:0,kai:0,dante:0,lou:0,reggie:0,priya:0,team:0},f:{},score:[0,0],res:null,log:{}});
@@ -1687,7 +1690,7 @@ async function shootBall(b,c,res,o={}){
 const _fcam=new THREE.PerspectiveCamera(40,1,.05,220);
 function camSees(p,m=.08){_fcam.fov=camT.fov;_fcam.aspect=cam.aspect;_fcam.updateProjectionMatrix();_fcam.position.copy(camT.p);_fcam.lookAt(camT.l);_fcam.updateMatrixWorld();const v=p.clone().project(_fcam);return v.z>-1&&v.z<1&&Math.abs(v.x)<1-m&&Math.abs(v.y)<1-m;}
 function frameFinish(c){if(!c||!c.g)return;const r=HOOP.clone(),hp=headPos(c),ft=c.g.position.clone().setY(.15);
-  const ots=camT.p.distanceTo(hp)<3.2;if(camSees(r)&&(ots||(camSees(hp)&&camSees(ft,.02))))return;
+  const ots=camT.p.distanceTo(hp)<3.2;if(camSees(r,.14)&&(ots||(camSees(hp)&&camSees(ft,.02))))return;
   let dx=r.x-hp.x,dz=r.z-hp.z;const L=Math.hypot(dx,dz)||1;dx/=L;dz/=L;let px=-dz,pz=dx;if(pz<0){px=-px;pz=-pz;}
   const mid=V((r.x+hp.x)/2,1.7,(r.z+hp.z)/2);let d=Math.max(5.4,L*1.1+3.2),fov=42;const zmax=8.2;if(mid.z+pz*d>zmax){const d2=(zmax-mid.z)/Math.max(pz,.2);fov=Math.min(60,42*d/Math.max(d2,3));d=Math.max(d2,3);}
   shot(V(mid.x+px*d,2.6,mid.z+pz*d),mid,{fov});}
@@ -1746,14 +1749,71 @@ const camRim=()=>ots(theo,{head:{getWorldPosition:v=>v.copy(HOOP)}},{fov:36,d:1.
 async function react(x){if(x&&x[0])await say(x[0],x[1]);}
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 function ensureBox(){if(!S.box)newBox();}
+/* ================= YOUR GUYS: trust =================
+   How much a teammate believes in Theo. It comes from how Theo treats him (S.chem, the story) and from how often
+   Theo feeds him (S.court: half a point per bucket Theo sets up, three at most). Two buckets off Theo's passes in
+   one game heat him up (S.box.rh). Trust moves the odds on every shot Theo sets up for him. */
+const TRUST_GUYS=['kai','lou','dante','nico','reggie','stroud','malik','isaia','benny','arlo','dez'],TRUST_NM={stroud:'Stroud'};
+const TRUST_PCT=[-.12,0,.08,.15,.22],TRUST_WORD=['COLD','','','LOCKED IN','ON FIRE'];
+function tKey(c){return c&&c.key&&TRUST_GUYS.includes(c.key)&&!(typeof theo!=='undefined'&&c===theo)?c.key:null;}
+function tShown(c){return gameOn&&!!tKey(c);}
+function trustBase(k){if(k==='lou'&&S.f&&S.f.lou_cold)return 0;const e=((S.chem||{})[k]||0)+Math.min(3,(S.court||{})[k]||0);return e<0?0:e<3?1:e<6?2:3;}
+function trustLv(c){const k=tKey(c);if(!k)return 1;const L=trustBase(k),h=gameOn&&S.box&&S.box.rh?S.box.rh[k]||0:0;return h>=2?Math.min(4,L+1):L;}
+function tPct(c,p){return tShown(c)?clamp(p+TRUST_PCT[trustLv(c)],.08,.94):p;}
+function tDotStr(L){const n=Math.min(3,L);return '●'.repeat(n)+'○'.repeat(3-n)+(L>=4?'●':'');}
+function tDots(c){if(!tShown(c))return '';const L=trustLv(c);return ` <span class="tdots t${L}">${tDotStr(L)}</span>`;}
+let ttT=0;
+function tToast(c,word,cls){const t=$('#ttag');if(!t||!tShown(c))return;const L=trustLv(c);
+  t.className='';t.innerHTML=`<b>${c.name}</b><span class="tdots t${L}">${tDotStr(L)}</span>${word!=null?word:TRUST_WORD[L]}`;
+  const k2=cls||(L>=4?'hot':L===0?'cold':'');void t.offsetWidth;t.className='on'+(k2?' '+k2:'');clearTimeout(ttT);ttT=setTimeout(()=>t.classList.remove('on'),2400);}
+async function tMenu(list){const ok=list.filter(c=>tShown(c));if(!ok.length)return;S.seen=S.seen||{};for(const c of ok)S.seen[tKey(c)]=S.ep||0;await teach('trust');}
+async function tShot(c){if(!tShown(c))return;await tMenu([c]);tToast(c);}
+async function tPass(c){if(!tShown(c))return 0;await tMenu([c]);const L=trustLv(c);if(L>=3){tToast(c,'ON THE HANDS');return -1;}if(L===0){tToast(c,'LATE PASS');return 1;}return 0;}
+function tBack(c){if(tShown(c)&&trustLv(c)>=3)tToast(c,'HAS YOUR BACK');}
+function feed(c,made){const k=tKey(c);if(!k||!gameOn||!made)return;S.court=S.court||{};S.court[k]=Math.min(3,(S.court[k]||0)+.5);ensureBox();const rh=S.box.rh||(S.box.rh={});rh[k]=(rh[k]||0)+1;
+  if(rh[k]===2)setTimeout(()=>{if(gameOn){tToast(c,'IS HEATING UP','hot');sfx('good');cheer(.8);}},1200);}
+function tLine(c,made){const L=trustLv(c),k=tKey(c);
+  if(made)return L>=3?[c,({kai:'<i>(backpedaling, three fingers up, right at Theo)</i> Keep it coming.',stroud:'<i>(jogging back, not even smiling)</i> Took you long enough.',benny:'<i>(sprinting back, screaming)</i> REYES KNOWS! REYES KNOWS!',malik:'<i>(to the bench)</i> See? I catch, too!'})[k]||'<i>(pointing at Theo on the way back)</i> That\'s you. That\'s all you.']:[c,'<i>(three fingers up, jogging back)</i>'];
+  return L===0?[c,'<i>(not looking at Theo)</i> Whatever.']:L>=2?[c,'Good look. Run it again.']:[c,'My bad.'];}
+function guysHTML(){const sn=S.seen||{},now=S.ep||0,ks=TRUST_GUYS.filter(k=>sn[k]!=null&&now-sn[k]<=3);if(!ks.length)return '';
+  return `<div class="row"><b>ON THE COURT</b><span>${ks.map(k=>{const L=trustBase(k),n=TRUST_NM[k]||k[0].toUpperCase()+k.slice(1);return `${n} <span class="tdots t${L}">${tDotStr(L)}</span>`;}).join(' · ')}</span></div>`;}
+Object.assign(TEACH,{trust:()=>`<h3>YOUR GUYS</h3><div class="demo" style="font:700 30px 'Barlow Condensed';letter-spacing:.12em"><span class="tdots t1">●○○</span><span style="font-size:20px">→</span><span class="tdots t3">●●●</span></div><ol>
+  <li>The dots next to a teammate's name show how much he trusts you. The more he trusts you, the more of your passes he turns into buckets.</li>
+  <li>Trust comes from how you treat him off the court, and from feeding him on it. Every bucket you set up for him adds a little.</li>
+  <li>Set a guy up for two buckets in one game and he <b>heats up</b>. Remember who's hot when it gets late.</li></ol>`});
+/* run a shooter off a pin-down: he curls to the wing, you hit him in stride, and his trust rides on the shot */
+async function offScreen(o){ensureBox();hideAll();setScore(S.score[0],S.score[1]);
+  const sh=o.shooter,sc=o.screener,sp=SPOT.rw,L0=o.lay||[],keep=[];
+  for(let i=0;i<L0.length;i++){const e=L0[i];if(e[0]===sh||e[0]===sc){if(L0[i+1]&&L0[i+1][2]==='g'&&L0[i+1][1]===e[1])i++;continue;}keep.push(e);}
+  lay(keep);at(theo,'top','dribble');hold(ball,theo,'dribble');guardAt(o.myDef,'top',1);
+  put(sh,-11.6,3.1,0,'idle');face(sh,sp,true);put(o.def,-11.05,3.55,0,'stance');face(o.def,sh.g.position,true);
+  put(sc,-10.3,4.35,0,'idle');face(sc,V(-11.8,0,3.2),true);if(o.scDef){put(o.scDef,-9.8,3.0,0,'stance');face(o.scDef,sc.g.position,true);}
+  camWide();await fade(false,200);await wait(400);
+  walkNow(sh,-10.75,5.25,{speed:5.2,after:'ready'});walkNow(o.def,-10.8,4.15,{speed:4.4,after:'stance'});
+  shot(V(-5.4,4.4,-2.6),V(-10.2,1.6,2.6),{fov:52,sp:3});await wait(420);
+  walkNow(sh,sp.x,sp.z,{speed:5.4,after:'ready'});
+  await tMenu([sh]);
+  const ok=await qPass({label:'HIT HIM IN STRIDE'});
+  await until(()=>!sh.move);face(sh,HOOP);
+  const cp=gSpot('rw',ok?1.7:.85);walkNow(o.def,cp.x,cp.z,{speed:ok?3.0:5.4,after:'contest'});
+  walkNow(sc,HOOP.x+1.7,1.3,{speed:2.6,after:'idle'});
+  await passTo(ball,theo,sh,.55,.2);sh.pose='ready';hold(ball,sh,'hand');
+  await tShot(sh);await wait(ok?120:380);
+  const mk=roll(tPct(sh,ok?.5:.3));
+  await shootBall(ball,sh,mk?'make':'front');
+  let pts=0;if(mk){pts=isThree(sp)?3:2;us(pts,0,1);if(trustLv(sh)>=3)cheer(1.5);fx({style:1});}
+  feed(sh,mk);
+  await react(mk?(o.good||tLine(sh,true)):(o.bad||tLine(sh,false)));
+  return pts;}
+
 
 async function catchShoot(o){ensureBox();hideAll();setScore(S.score[0],S.score[1],!o.noBoard);if(o.coach){put(coach,-6.2,-7.4,0,'cross');face(coach,V(-9,0,0),true);coach.props.clip.visible=true;coach.props.mug.visible=false;}
   lay(o.lay||[]);at(theo,o.spot,'ready');at(o.passer,o.from,'dribble');hold(ball,o.passer,'dribble');guardAt(o.def,o.spot,2.7,'stance');
   camWide();await fade(false,200);await wait(500);
   if(o.line)await say(o.lineBy||o.passer,o.line);
-  await passTo(ball,o.passer,theo,.55,.2);theo.pose='ready';hold(ball,theo,'hand');
+  await passTo(ball,o.passer,theo,.55,.2);theo.pose='ready';hold(ball,theo,'hand');const tm=await tPass(o.passer);
   const cp=gSpot(o.spot,.8);walkNow(o.def,cp.x,cp.z,{speed:5.5,after:'contest'});
-  camRim();const r=await qShot({mod:o.mod!=null?o.mod:1,shooter:theo,label:o.label||'CATCH & SHOOT'});
+  camRim();const r=await qShot({mod:(o.mod!=null?o.mod:1)+tm,shooter:theo,label:o.label||'CATCH & SHOOT'});
   camSide();await shootBall(ball,theo,r==='green'?'make':r==='early'?'front':'back');
   const pts=r==='green'?(isThree(SPOT[o.spot])?3:2):0;
   if(pts){if(!o.noScore)us(pts,pts);fx({respect:1});}else fx({nerves:4});
@@ -1774,8 +1834,8 @@ async function helpD(o){ensureBox();hideAll();setScore(S.score[0],S.score[1]);if
     const mk=roll(o.manPct||.4);await shootBall(ball,o.man,mk?'make':'front');
     if(mk){them(isThree(SPOT[o.manSpot])?3:2);await react(o.helpBurn);}else{S.box.stops++;fx({coach:1});good=true;await react(o.helpGood);}
     S.log.lastHelp='help';}
-  else if(k===1){const blk=roll(o.blockPct||.35);o.driver.pose='up';await wait(150);
-    if(blk&&o.blocker){o.blocker.pose='up';await shootBall(ball,o.driver,'block',{noPose:true});S.box.stops++;good=true;await react(o.stayGood);}
+  else if(k===1){const blk=roll(o.blocker?tPct(o.blocker,o.blockPct||.35):o.blockPct||.35);o.driver.pose='up';await wait(150);
+    if(blk&&o.blocker){o.blocker.pose='up';tBack(o.blocker);await shootBall(ball,o.driver,'block',{noPose:true});S.box.stops++;good=true;await react(o.stayGood);}
     else{await layup(ball,o.driver,true);them(2);await react(o.stayBurn);}}
   else if(k===2){const ok=await qPass({label:'JUMP THE LANE',wm:.5,sp:1.3});
     if(ok){o.driver.pose='pass';await fly(ball,handPos(theo),.35,.15);hold(ball,theo,'dribble');sfx('squeak');S.box.stl++;fx({hype:1,respect:1});
@@ -1803,11 +1863,11 @@ async function driveKick(o){ensureBox();hideAll();setScore(S.score[0],S.score[1]
   walkNow(theo,HOOP.x+3.4,s*.5,{speed:3.6,dribble:true,after:'dribble'});walkNow(o.myDef,HOOP.x+2.7,s*.45,{speed:3.3,back:true,face:PI/2,after:'stance'});
   await wait(350);walkNow(o.kickDef,HOOP.x+2.9,-s*.6,{speed:4.2,after:'stance'});await wait(380);
   panel(true);shot(V(-5.4,4.6,s*3.6),V(-10.4,0,0),{fov:46,sp:3});
-  const k=await choose([{t:`Kick to <b>${o.kick.name}</b>`},{t:`Dump to <b>${o.dump.name}</b>`},{t:'Finish through contact'}],2.6,{read:true});
+  await tMenu([o.kick,o.dump]);const k=await choose([{t:`Kick to <b>${o.kick.name}</b>${tDots(o.kick)}`},{t:`Dump to <b>${o.dump.name}</b>${tDots(o.dump)}`},{t:'Finish through contact'}],2.6,{read:true});
   panel(false);theo.move=null;camSide();let good=false;
   if(k===0||k===1){const tgt=k===0?o.kick:o.dump;const ok=await qPass({label:k===0?'KICK OUT':'DUMP OFF'});
-    if(ok){if(k===0){await passTo(ball,theo,tgt,.55,.2);const mk=roll(o.kickPct||.45);await shootBall(ball,tgt,mk?'make':'front');if(mk){us(isThree(SPOT[o.kickSpot])?3:2,0,1);good=true;}fx({style:1});await react(mk?o.kickGood:o.kickMiss);}
-      else{await bouncePass(ball,theo,tgt,.45);walkNow(tgt,HOOP.x+.6,SPOT[o.dumpSpot].z*.3,{speed:2.4});await wait(300);const mk=roll(.78);await layup(ball,tgt,mk);if(mk){us(2,0,1);good=true;}fx({style:1});await react(mk?o.dumpGood:o.dumpMiss);}}
+    if(ok){if(k===0){await passTo(ball,theo,tgt,.55,.2);await tShot(tgt);const mk=roll(tPct(tgt,o.kickPct||.45));await shootBall(ball,tgt,mk?'make':'front');if(mk){us(isThree(SPOT[o.kickSpot])?3:2,0,1);good=true;}feed(tgt,mk);fx({style:1});await react(mk?o.kickGood:o.kickMiss);}
+      else{await bouncePass(ball,theo,tgt,.45);walkNow(tgt,HOOP.x+.6,SPOT[o.dumpSpot].z*.3,{speed:2.4});await wait(300);await tShot(tgt);const mk=roll(tPct(tgt,.78));await layup(ball,tgt,mk);if(mk){us(2,0,1);good=true;}feed(tgt,mk);fx({style:1});await react(mk?o.dumpGood:o.dumpMiss);}}
     else{await passTo(ball,theo,tgt,.45,.1);await fly(ball,V(HOOP.x+3,.12,SPOT[o.kickSpot].z*1.2),.6,.4);fx({nerves:5});await react(o.tov);}}
   else if(k===2){const ok=await qScrap({label:'FINISH',need:8,time:1.8});
     if(ok){sfx('thud');await layup(ball,theo,true);us(2,2);fx({respect:1,style:-1});good=true;await react(o.finishGood);}
@@ -4810,11 +4870,11 @@ async function pickRoll(o){ensureBox();hideAll();setScore(S.score[0],S.score[1])
   const knows=has('read')||roll(sk('iq')/140);
   panel(true);shot(V(-4.2,4.8,3.4),V(-10,0,0),{fov:48,sp:3});
   if(knows)await cap({drop:'READ: their big DROPS. The pull-up is open.',hedge:'READ: their big HEDGES. The roller is open.',tag:'READ: the corner man TAGS the roll. Corner is open.'}[cov],1400);
-  const k=await choose([{t:'Pull up'},{t:`Hit <b>${o.big.name}</b> rolling`},{t:`Kick to <b>${o.corner.name}</b> in the corner`}],has('read')?3.6:2.8,{read:true});panel(false);theo.move=null;camSide();
+  await tMenu([o.big,o.corner]);const k=await choose([{t:'Pull up'},{t:`Hit <b>${o.big.name}</b> rolling${tDots(o.big)}`},{t:`Kick to <b>${o.corner.name}</b> in the corner${tDots(o.corner)}`}],has('read')?3.6:2.8,{read:true});panel(false);theo.move=null;camSide();
   const right=k===({drop:0,hedge:1,tag:2}[cov]);let pts=0;
   if(k===0){camRim();const r=await qShot({mod:Math.max(0,(right?0:2)-(has('pullup')?1:0)),shooter:theo,label:right?'PULL-UP':'CONTESTED'});camSide();await shootBall(ball,theo,r==='green'?'make':r==='early'?'front':'back');if(r==='green'){pts=2;us(2,2);}}
-  else if(k===1){const ok=await qPass({label:'POCKET PASS'});if(ok){await bouncePass(ball,theo,o.big,.45);await wait(200);const mk=roll(right?.86:.42);await layup(ball,o.big,mk);if(mk){pts=2;us(2,0,1);}}else{await passTo(ball,theo,o.bigDef,.45,.1);}}
-  else if(k===2){const ok=await qPass({label:'SKIP PASS'});if(ok){await passTo(ball,theo,o.corner,.6,.2);const mk=roll(right?.58:.3);await shootBall(ball,o.corner,mk?'make':'front');if(mk){pts=3;us(3,0,1);}}else await passTo(ball,theo,o.cornerDef,.5,.1);}
+  else if(k===1){const ok=await qPass({label:'POCKET PASS'});if(ok){await bouncePass(ball,theo,o.big,.45);await wait(200);await tShot(o.big);const mk=roll(tPct(o.big,right?.86:.42));await layup(ball,o.big,mk);if(mk){pts=2;us(2,0,1);}feed(o.big,mk);}else{await passTo(ball,theo,o.bigDef,.45,.1);}}
+  else if(k===2){const ok=await qPass({label:'SKIP PASS'});if(ok){await passTo(ball,theo,o.corner,.6,.2);await tShot(o.corner);const mk=roll(tPct(o.corner,right?.58:.3));await shootBall(ball,o.corner,mk?'make':'front');if(mk){pts=3;us(3,0,1);}feed(o.corner,mk);}else await passTo(ball,theo,o.cornerDef,.5,.1);}
   else{await cap('Theo waits too long. Shot clock violation.',1600);}
   if(right&&pts)fx({respect:1});return pts;}
 async function isoMove(o){ensureBox();hideAll();setScore(S.score[0],S.score[1]);lay(o.lay||[]);
@@ -4828,7 +4888,7 @@ async function isoMove(o){ensureBox();hideAll();setScore(S.score[0],S.score[1]);
   else if(o.move==='pullup'){walkNow(theo,SPOT.le.x+.4,SPOT.le.z,{speed:4,dribble:true,after:'ready'});walkNow(o.myDef,SPOT.le.x-.9,SPOT.le.z,{speed:3.6,after:'contest'});await until(()=>!theo.move);camRim();
     const r=await qShot({mod:has('pullup')?0:1,shooter:theo,label:'PULL-UP'});camSide();await shootBall(ball,theo,r==='green'?'make':r==='early'?'front':'back');if(r==='green'){pts=2;us(2,2);}}
   else if(o.move==='lob'){if(!o.lobber.g.visible)at(o.lobber,'lb','ready');walkNow(o.lobber,HOOP.x+2.6,-1.6,{speed:5.4,after:'ready'});await wait(600);const ok=await qPass({label:'THROW IT UP'});
-    if(ok){await passTo(ball,theo,o.lobber,.7,.6);const mk=roll(.9);await layup(ball,o.lobber,mk);if(mk){pts=2;us(2,0,1);cheer(1.4);}}else{await passTo(ball,theo,o.myDef,.6,.4);}}
+    if(ok){await passTo(ball,theo,o.lobber,.7,.6);await tShot(o.lobber);const mk=roll(tPct(o.lobber,.9));await layup(ball,o.lobber,mk);if(mk){pts=2;us(2,0,1);cheer(1.4);}feed(o.lobber,mk);}else{await passTo(ball,theo,o.myDef,.6,.4);}}
   else if(o.move==='floater'){walkNow(theo,HOOP.x+2.7,.2,{speed:4.6,dribble:true});walkNow(o.myDef,HOOP.x+1.4,.1,{speed:4,after:'contest'});await until(()=>!theo.move);camRim();
     const r=await qShot({mod:1,shooter:theo,label:'FLOAT IT'});camSide();await shootBall(ball,theo,r==='green'?'make':'front');if(r==='green'){pts=2;us(2,2);}}
   else if(o.move==='euro'){walkNow(theo,HOOP.x+3.4,0,{speed:4.4,dribble:true,after:'dribble'});put(o.myDef,HOOP.x+2,0,-PI/2,'stance');await until(()=>!theo.move);
@@ -4850,11 +4910,12 @@ async function clutch(o){ensureBox();skInit();await teach('clutch');
     if(ICE&&!o._iceSaid){o._iceSaid=1;await cap('Last thirty. Breathe out through your nose.',1300);}
     if(ours){
       const lou_=T.big,sh_=T.shooter,lobber=T.lobber;
-      const plays=[{t:`Pick-and-roll with <b>${lou_.name}</b>`,k:'pnr'},{t:`Drive and kick`,k:'dk'},{t:`Run <b>${sh_.name}</b> off a screen`,k:'cs'}];
+      const scr=T.wing&&T.wing!==lou_&&trustLv(T.wing)>trustLv(sh_)?T.wing:sh_; // the screen play goes to whichever shooter trusts Theo more
+      const plays=[{t:`Pick-and-roll with <b>${lou_.name}</b>${tDots(lou_)}`,k:'pnr'},{t:`Drive and kick`,k:'dk'},{t:`Run <b>${scr.name}</b> off a screen${tDots(scr)}`,k:'cs'}];
       if(has('stepback'))plays.push({t:'Iso: <b>Step-back</b>',k:'stepback'});
       if(has('hesi'))plays.push({t:'Iso: <b>Hesitation</b>',k:'hesi'});
       if(has('pullup'))plays.push({t:'Pull-up at the elbow',k:'pullup'});
-      if(has('lob')&&lobber)plays.push({t:`Two-man lob to <b>${lobber.name}</b>`,k:'lob'});
+      if(has('lob')&&lobber)plays.push({t:`Two-man lob to <b>${lobber.name}</b>${tDots(lobber)}`,k:'lob'});
       if(has('pumpfake'))plays.push({t:'Catch, <b>pump fake</b>, go',k:'pumpfake'});
       if(has('euro'))plays.push({t:'Iso: <b>Euro step</b>',k:'euro'});
       if(has('bully'))plays.push({t:'Iso: <b>Bully drive</b>',k:'bully'});
@@ -4865,12 +4926,12 @@ async function clutch(o){ensureBox();skInit();await teach('clutch');
       shot(V(-4.6,1.5,-5.2),headPos(hollis),{fov:36});
       const HL=S.f.captain==='yes'||S.f.captain==='silent'?['<i>(holding up the whiteboard)</i> Your call, captain.','Captain\'s choice. Choose well. Or quickly. Ideally both.','<i>(tapping the board)</i> You know what they\'re giving us. Take it.','I have a preference. I am not going to tell you what it is.']:['<i>(pointing at the whiteboard)</i> Pick one. Quickly.','<i>(tapping the board twice)</i> One of these. Now.','The numbers like two of these. Pick one of the two.','<i>(sighing)</i> Choose. I\'ll pretend I agree.'];
       await say(hollis,HL[(Math.random()*HL.length)|0],1400);
-      let c=await choose(offer,4.5);if(c<0){c=0;await cap('Hollis calls it for you.',1000);}
+      await tMenu([lou_,scr,lobber,T.benny]);let c=await choose(offer,4.5);if(c<0){c=0;await cap('Hollis calls it for you.',1000);}
       const k=offer[c].k,lay=[[T.wing,'lw'],[O[3],'lw','g'],[T.post,'rb'],[O[4],'rb','g',.6]];
       if(k==='pnr')await pickRoll({myDef:O[0],big:lou_,bigDef:O[2],corner:sh_,cornerDef:O[1],lay});
       else if(k==='dk')await driveKick({myDef:O[0],kick:sh_,kickSpot:'lc',kickDef:O[1],dump:lou_,dumpSpot:'rb',dumpDef:O[2],kickPct:.4+sk('pass')/400,lay:[[T.wing,'rw'],[O[3],'rw','g']],
         kickGood:[sh_,'<i>(backpedaling, three fingers up)</i>'],kickMiss:[sh_,'My bad.'],dumpGood:[lou_,'Big man touch!'],dumpMiss:[lou_,'Rimmed out.'],finishGood:[T.wing,'And one energy!'],finishBad:[O[2],'Not here.'],tov:[O[0],'Thank you.']});
-      else if(k==='cs')await catchShoot({spot:'rw',passer:sh_,from:'top',def:O[1],lay,mod:1});
+      else if(k==='cs')await offScreen({shooter:scr,screener:lou_,def:O[1],scDef:O[2],myDef:O[0],lay:[[scr===sh_?T.wing:sh_,'lw'],[O[3],'lw','g'],[T.post,'lc'],[O[4],'lc','g',1]]});
       else await isoMove({move:k,myDef:O[0],lobber,lay:k==='lob'?[[T.wing,'rw'],[O[3],'rw','g']]:lay});
       if(S.score[0]===before[0]&&roll(.3+sk('iq')/400)){const rb=await boardBattle({putback:true,shooter:theo,spot:'top',big:O[2],lay:[[T.wing,'lw'],[O[3],'lw','g']],need:Math.round(10-sk('handle')/25),
         good:[lou_,'SECOND CHANCE!'],bad:[O[2],'<i>(grabbing it)</i> Mine.']});}
@@ -4919,7 +4980,7 @@ function seasonHTML(){const r=season(),t=confTable(),pu=Math.round(S.purdue);
     <div class="row"><b>NORTHEASTERN</b><span style="letter-spacing:.2em">${'●'.repeat(pu)}${'○'.repeat(5-pu)}</span></div>
     <div class="row"><b>CONFERENCE</b><span style="font-size:.92em;line-height:1.35">${t.map((x,i)=>`${i+1}. ${x[3]?'<strong style="color:#7a1f2b">'+x[0]+'</strong>':x[0]} ${x[1]}–${x[2]}`).join('<br>')}</span></div>
     ${gameHTML()}
-    <div class="row"><b>PEOPLE</b><span>${who.map(([n,k])=>`${n}: ${k==='family'?((S.family||0)>=4?'Good':(S.family||0)>=0?'Okay':'<i>Strained</i>'):relWord(k)}`).join(' · ')}</span></div></div>`;}
+    <div class="row"><b>PEOPLE</b><span>${who.map(([n,k])=>`${n}: ${k==='family'?((S.family||0)>=4?'Good':(S.family||0)>=0?'Okay':'<i>Strained</i>'):relWord(k)}`).join(' · ')}</span></div>${guysHTML()}</div>`;}
 async function seasonCard(head){const card=$('#card');card.innerHTML=`<h2 style="margin-top:0">${head||'THE SEASON SO FAR'}</h2>${seasonHTML()}<p style="opacity:.7">${glyphA()}continue</p>`;card.classList.add('on');card.scrollTop=0;sfx('thud');
   await waitable(done=>{let armed=false;setTimeout(()=>armed=true,900);const pd=e=>{if(armed)done();};card.addEventListener('pointerdown',pd);const off=onIn((x,t)=>{if(x==='A'&&t==='down'&&armed)done();});return()=>{off();card.removeEventListener('pointerdown',pd);};});
   card.classList.remove('on');}
