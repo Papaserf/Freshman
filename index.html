@@ -815,22 +815,81 @@ function buildLocker(){
 }
 function makeCar(col,type,text){
   const g=new THREE.Group();scene.add(g);const bodyM=toon(col);
-  const L=type==='truck'?5.2:type==='suv'?4.8:4.7,H=type==='suv'?1.05:.8;
-  box(L,H,1.85,bodyM,g,V(0,.35+H/2,0));
-  const glassM=new THREE.MeshBasicMaterial({color:0x101820,transparent:true,opacity:.45});
-  const cab=type==='truck'?[1.9,.78,.35]:type==='suv'?[3.2,.8,-.2]:[2.4,.62,-.15];
-  const c=new THREE.Mesh(new THREE.BoxGeometry(cab[0],cab[1],1.7),glassM);c.position.set(cab[2],.35+H+cab[1]/2,0);g.add(c);c.add(new THREE.LineSegments(new THREE.EdgesGeometry(c.geometry),edgeMat));
-  box(cab[0]+.04,.08,1.74,bodyM,g,V(cab[2],.35+H+cab[1],0));
-  for(const sx of[-1,1])for(const sz of[-1,1]){const w=mesh(new THREE.CylinderGeometry(.36,.36,.26,16),toon(0x151515),g,V(sx*L*.32,.36,sz*.9),.01);w.rotation.x=PI/2;}
-  const hl=basic(0xfff6d0),tl=basic(0xff2a1a);
-  for(const sz of[-.65,.65]){box(.05,.16,.34,hl,g,V(L/2,.35+H*.65,sz),false);box(.05,.14,.3,tl,g,V(-L/2,.35+H*.65,sz),false);}
-  if(text){const t=ctex(512,128,(x,w,h)=>{x.clearRect(0,0,w,h);txt(x,text,64,[w/2,h/2],'Anton','#f2ead6','center','#111');});
-    for(const s of[-1,1]){const p=new THREE.Mesh(new THREE.PlaneGeometry(2,.5),basic(0xffffff,t,{transparent:true}));p.position.set(.4,.35+H*.55,s*.935);if(s<0)p.rotation.y=PI;g.add(p);}}
+  const T=type==='truck'?{L:5.2,W:1.86,bot:.5,r:.44,belt:1.15,top:1.93,cab:[1.9,.78,.35]}:type==='suv'?{L:4.8,W:1.88,bot:.44,r:.42,belt:1.4,top:2.2,cab:[3.2,.8,-.2]}:{L:4.7,W:1.8,bot:.32,r:.36,belt:1.15,top:1.77,cab:[2.4,.62,-.15]};
+  const L=T.L,W=T.W,h2=L/2,H=T.belt-.35,cab=T.cab,wx=L*.32;
+  const trimM=toon(0x232428),chromeM=toon(0xc8ccd4),tireM=toon(0x141416),rimM=toon(type==='sedan'?0x9aa0aa:0xb8bcc4);
+  /* body: side profile with wheel arches, extruded across the width */
+  const top=type==='truck'?[[-h2,.95],[-h2+.04,.98],[-.72,.98],[-.72,T.belt],[1.2,T.belt+.02],[2.2,1.12],[h2,1.02],[h2+.02,.62],[h2-.02,T.bot]]
+    :type==='suv'?[[-h2,.5],[-h2-.03,1.0],[-h2+.04,T.belt],[1.35,T.belt],[2.05,1.26],[h2-.02,1.1],[h2+.02,.72],[h2-.04,T.bot]]
+    :[[-h2+.02,.42],[-h2-.02,.78],[-h2+.06,1.0],[-1.95,1.1],[-1.55,T.belt],[1.15,T.belt-.02],[1.95,1.0],[h2-.04,.88],[h2+.01,.62],[h2-.03,T.bot]];
+  const sh=new THREE.Shape();const ra=T.r+.09,dy=T.bot-T.r,dx=Math.sqrt(ra*ra-dy*dy),a0=Math.atan2(dy,dx);
+  sh.moveTo(h2-.03,T.bot);
+  for(const w of[wx,-wx]){sh.lineTo(w+dx,T.bot);sh.absarc(w,T.r,ra,a0,PI-a0,false);}
+  sh.lineTo(top[0][0],T.bot);for(const p of top)sh.lineTo(p[0],p[1]);
+  const bev=.07,geo=new THREE.ExtrudeGeometry(sh,{depth:W-2*bev,bevelEnabled:true,bevelThickness:bev,bevelSize:bev*.8,bevelSegments:2,curveSegments:12});geo.translate(0,0,-(W-2*bev)/2);
+  mesh(geo,bodyM,g,null,.012);
+  // dark wheel wells behind the arches
+  for(const w of[wx,-wx]){const ww=new THREE.Mesh(new THREE.CylinderGeometry(ra-.02,ra-.02,W-.14,18),toon(0x0a0a0c));ww.rotation.x=PI/2;ww.position.set(w,T.r,0);g.add(ww);}
+  /* wheels: tire, rim, spokes, hub */
+  for(const w of[wx,-wx])for(const sz of[-1,1]){const wg=new THREE.Group();wg.position.set(w,T.r,sz*(W/2-.16));g.add(wg);
+    const t=mesh(new THREE.CylinderGeometry(T.r,T.r,.3,22),tireM,wg,null,.01);t.rotation.x=PI/2;
+    const rm=new THREE.Mesh(new THREE.CylinderGeometry(T.r*.62,T.r*.62,.31,18),rimM);rm.rotation.x=PI/2;wg.add(rm);
+    for(let k=0;k<5;k++){const sp=new THREE.Mesh(new THREE.BoxGeometry(T.r*1.05,.06,.02),trimM);sp.rotation.z=k*PI*2/5;sp.position.z=sz*.157;wg.add(sp);}
+    const hb=new THREE.Mesh(new THREE.CylinderGeometry(.06,.06,.33,10),chromeM);hb.rotation.x=PI/2;wg.add(hb);}
+  /* greenhouse: slanted glass, roof, pillars */
+  const gb=T.belt,gt=T.top,x0=cab[2]-cab[0]/2,x1=cab[2]+cab[0]/2;
+  const rake=type==='sedan'?[.42,.32]:type==='suv'?[.05,.38]:[0,.3];// rear, front lean-in at the roof
+  const gs=new THREE.Shape();gs.moveTo(x0-(type==='sedan'?.15:0),gb);gs.lineTo(x1+(type==='truck'?.05:.12),gb);gs.lineTo(x1-rake[1],gt);gs.lineTo(x0+rake[0],gt);gs.lineTo(x0-(type==='sedan'?.15:0),gb);
+  const gw=W-.26,glassM=new THREE.MeshBasicMaterial({color:0x101820,transparent:true,opacity:.42,depthWrite:false});
+  const gg=new THREE.ExtrudeGeometry(gs,{depth:gw,bevelEnabled:false});gg.translate(0,0,-gw/2);const gl=new THREE.Mesh(gg,glassM);g.add(gl);
+  box(x1-rake[1]-(x0+rake[0])+.12,.07,gw+.06,bodyM,g,V((x1-rake[1]+x0+rake[0])/2,gt+.03,0));
+  const pil=(ax,ay,bx,by,z)=>{const len=Math.hypot(bx-ax,by-ay);const p=box(.08,len,.08,bodyM,g,V((ax+bx)/2,(ay+by)/2,z),false);p.rotation.z=Math.atan2(ax-bx,by-ay);};
+  for(const sz of[-1,1]){const z=sz*(gw/2+.005);
+    pil(x1+(type==='truck'?.05:.12),gb,x1-rake[1],gt,z);pil(x0-(type==='sedan'?.15:0),gb,x0+rake[0],gt,z);
+    if(type!=='truck')pil(cab[2]-.55,gb,cab[2]-.55,gt,z);if(type==='suv')pil(x0+1.0,gb,x0+1.0,gt,z);
+    box(x1-x0+.2,.035,.03,chromeM,g,V(cab[2],gb+.015,sz*(W/2-.04)),false);
+    // mirror
+    const mr=box(.12,.13,.2,bodyM,g,V(x1-.05,gb+.08,sz*(W/2+.1)));mr.rotation.y=sz*.2;}
+  /* doors, handles, trim */
+  const doorX=type==='truck'?[-.66,1.2]:type==='suv'?[-1.25,-.2,1.2]:[-1.12,-.15,1.05];
+  for(const sz of[-1,1]){const z=sz*(W/2+.002);
+    for(const x of doorX)box(.02,gb-T.bot-.22,.01,toon(0x0b0b0d),g,V(x,(gb+T.bot)/2+.08,z),false);
+    for(let k=0;k<doorX.length-1;k++)box(.16,.04,.03,chromeM,g,V(doorX[k+1]-.28,gb-.14,z),false);
+    box(L-.5,.06,.012,trimM,g,V(0,T.bot+.16,z),false);}
+  /* front: grille, headlights; rear: taillights, plate; bumpers */
+  const fz=h2+.06,ch=T.bot+(type==='sedan'?.36:.42);
+  box(.06,type==='sedan'?.2:.34,type==='sedan'?.8:1.0,trimM,g,V(fz,ch,0));
+  for(let k=0;k<(type==='sedan'?3:4);k++)box(.07,.025,type==='sedan'?.78:.98,chromeM,g,V(fz+.005,ch-(type==='sedan'?.07:.13)+k*.07,0),false);
+  const hl=basic(0xfff6d0),tl=basic(0xff2a1a),am=basic(0xffa030);
+  for(const sz of[-1,1]){box(.06,.13,.36,hl,g,V(fz-.02,ch+(type==='sedan'?.12:.08),sz*(W/2-.3)),false);box(.065,.05,.36,trimM,g,V(fz-.015,ch+(type==='sedan'?.04:0),sz*(W/2-.3)),false);
+    box(.06,.06,.12,am,g,V(fz-.05,T.bot+.2,sz*(W/2-.14)),false);
+    box(.06,type==='truck'?.42:.16,type==='truck'?.14:.42,tl,g,V(-h2-.02,type==='truck'?.75:ch+.1,sz*(W/2-(type==='truck'?.1:.3))),false);}
+  if(type==='sedan')box(.04,.05,W-.7,tl,g,V(-h2-.02,ch+.12,0),false);
+  for(const s of[-1,1])box(.2,.2,W+.04,trimM,g,V(s*(h2+.02),T.bot+.09,0));
+  const pt=ctex(128,64,(x,w,h)=>{x.fillStyle='#f2efe6';x.fillRect(0,0,w,h);x.strokeStyle='#1b3a6a';x.lineWidth=4;x.strokeRect(3,3,w-6,h-6);txt(x,type==='truck'?'RFR 812':type==='suv'?'KM 5':'DP 3 33',30,[w/2,44],'Anton','#1b3a6a');x.font='bold 9px sans-serif';x.fillStyle='#1b3a6a';x.textAlign='center';x.fillText('INDIANA',w/2,14);});
+  const plate=new THREE.Mesh(new THREE.PlaneGeometry(.34,.17),basic(0xffffff,pt));plate.position.set(-h2-.135,T.bot+.3,0);plate.rotation.y=-PI/2;g.add(plate);
+  /* truck bed */
+  let tail=null;
+  if(type==='truck'){const bx0=-h2,bx1=-.72,bl=bx1-bx0,bm=(bx0+bx1)/2;
+    box(bl,.05,W-.2,trimM,g,V(bm,.99,0),false);
+    for(const sz of[-1,1]){box(bl,.36,.08,bodyM,g,V(bm,1.15,sz*(W/2-.04)));box(bl,.04,.12,trimM,g,V(bm,1.34,sz*(W/2-.04)),false);}
+    box(.08,.36,W-.1,bodyM,g,V(bx1+.02,1.15,0));
+    tail=new THREE.Group();tail.position.set(bx0+.02,.98,0);g.add(tail);box(.08,.4,W-.1,bodyM,tail,V(0,.2,0));
+    const tt=ctex(256,64,(x,w,h)=>{x.clearRect(0,0,w,h);txt(x,'REYES',40,[w/2,46],'Anton','#2a2a2e');});const tp=new THREE.Mesh(new THREE.PlaneGeometry(.9,.22),basic(0xffffff,tt,{transparent:true}));tp.position.set(-.045,.22,0);tp.rotation.y=-PI/2;tail.add(tp);
+    box(.1,.14,W-.4,trimM,g,V(-.3,gt-.02,0),false);// roof marker bar
+    for(const k of[-.3,0,.3])box(.06,.05,.1,am,g,V(-.3,gt+.07,k),false);}
+  if(type==='suv')for(const sz of[-1,1])box(2.4,.05,.05,chromeM,g,V(cab[2],gt+.1,sz*.62),false);
+  /* side text */
+  if(text){const t=ctex(512,128,(x,w,h)=>{x.clearRect(0,0,w,h);txt(x,text,64,[w/2,h/2+20],'Anton','#f2ead6','center','#111');});
+    for(const s of[-1,1]){const p=new THREE.Mesh(new THREE.PlaneGeometry(1.6,.4),basic(0xffffff,t,{transparent:true}));p.position.set(.28,.35+H*.55,s*(W/2+.012));if(s<0)p.rotation.y=PI;g.add(p);}}
+  /* interior */
   const dt=ctex(256,64,(x,w,h)=>{x.fillStyle='#0b0d10';x.fillRect(0,0,w,h);for(const cx of[60,130,196]){x.strokeStyle='#5fe0b0';x.lineWidth=3;x.beginPath();x.arc(cx,40,20,PI,PI*2);x.stroke();x.beginPath();x.moveTo(cx,40);x.lineTo(cx+12,26);x.stroke();}});
-  const dash=box(.3,.22,1.6,toon(0x15171b),g,V(cab[2]+cab[0]/2-.2,.35+H+.05,0));const gauge=new THREE.Mesh(new THREE.PlaneGeometry(.9,.18),basic(0xffffff,dt));gauge.position.set(cab[2]+cab[0]/2-.36,.35+H+.12,-.38);gauge.rotation.y=-PI/2;g.add(gauge);
-  for(const sz of[-.38,.38])box(.12,.6,.55,toon(0x2a2622),g,V(cab[2]-.42,.35+H*.6+.25,sz));
+  box(.5,.24,W-.3,toon(0x15171b),g,V(x1-.15,gb+.02,0));const gauge=new THREE.Mesh(new THREE.PlaneGeometry(.9,.18),basic(0xffffff,dt));gauge.position.set(x1-.41,gb+.1,-.38);gauge.rotation.y=-PI/2;g.add(gauge);
+  const sw=new THREE.Mesh(new THREE.TorusGeometry(.17,.022,6,18),toon(0x111214));sw.position.set(x1-.5,gb+.12,-.38);sw.rotation.y=PI/2;sw.rotation.x=-.35;g.add(sw);
+  const seatM=toon(0x2a2622);for(const sz of[-.38,.38]){box(.12,.6,.55,seatM,g,V(cab[2]-.42,.35+H*.6+.25,sz));box(.5,.14,.55,seatM,g,V(cab[2]-.15,.35+H*.6-.05,sz));box(.1,.16,.34,seatM,g,V(cab[2]-.45,.35+H*.6+.64,sz));}
+  if(type!=='truck')box(.14,.5,W-.4,seatM,g,V(x0+.35,.35+H*.6+.2,0));
   const light=new THREE.PointLight(0xfff0c0,0,12);light.position.set(L/2+1,1,0);g.add(light);
-  return{g,light,seatD:V(cab[2]+.1,.15,-.38),seatP:V(cab[2]+.1,.15,.38)};
+  return{g,light,tail,bedY:1.02,seatD:V(cab[2]+.1,.15,-.38),seatP:V(cab[2]+.1,.15,.38)};
 }
 function buildLot(){
   const g=new THREE.Group();scene.add(g);
