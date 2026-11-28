@@ -1286,7 +1286,7 @@ function decorate(){
   {const g=LOC.track.g;
     box(8,2.4,2.4,toon(0xd8d4c8),g,V(0,3.6,-26.4));box(7.6,.9,.05,basic(0x2a3a5a),g,V(0,3.9,-25.18),false);box(8.4,.2,2.8,toon(0x6e1f2a),g,V(0,4.9,-26.4));
     const bn=ctex(1024,128,(x,w,h)=>{x.fillStyle='#6e1f2a';x.fillRect(0,0,w,h);txt(x,'HALSTON HEIGHTS TRACK & FIELD',70,[w/2,h/2+4],'Anton','#e8c35a');});
-    P(14,1.1,bn,g,V(0,2.6,-25.5));
+    P(7.7,.96,bn,g,V(0,2.95,-25.16));
     for(let i=0;i<4;i++){const h=new THREE.Group();h.position.set(-12+i*2.6,0,-16.6);g.add(h);box(.9,.06,.06,toon(0xf2f2f2),h,V(0,.76,0));for(const s of[-1,1])box(.04,.76,.04,toon(0x333),h,V(s*.42,.38,0),false);}
     for(const s of[-1,1]){const gp=new THREE.Group();gp.position.set(s*22,0,0);g.add(gp);const y=toon(0xf2c230);box(.15,3,.15,y,gp,V(0,1.5,0));box(.15,.15,5.6,y,gp,V(0,3,0));for(const z of[-2.8,2.8])box(.12,5,.12,y,gp,V(0,5.5,z));}
   }
