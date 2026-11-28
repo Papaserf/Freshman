@@ -1669,7 +1669,7 @@ async function qScrap(o){await teach('scrap');return qScrap0(o);}
 
 /* ================= basketball animation helpers ================= */
 async function shootBall(b,c,res,o={}){
-  const rimP=HOOP.clone();const dir=c.g.position.clone().sub(rimP);dir.y=0;dir.normalize();
+  if(!o.keepCam)frameFinish(c);const rimP=HOOP.clone();const dir=c.g.position.clone().sub(rimP);dir.y=0;dir.normalize();
   if(!o.noPose){face(c,rimP);c.snap=20;
     if(c.pose!=='set'){c.pose='gather';hold(b,c,'chest');await wait(230);c.pose='set';hold(b,c,'set');await wait(190);}
     c.air={t:0,dur:.66,h:o.jump!=null?o.jump:.3};c.pose='rise';await wait(190);c.pose='release';b.follow=null;
@@ -1683,8 +1683,16 @@ async function shootBall(b,c,res,o={}){
   else if(res==='air'){await fly(b,V(rimP.x,.12,rimP.z).add(dir.clone().multiplyScalar(.6)).add(V(0,0,.9)),dur+.15,arc+.3);sfx('bounce');}
   else if(res==='block'){const p=rimP.clone().add(dir.clone().multiplyScalar(.9)).setY(2.7);await fly(b,p,.25,.2);sfx('thud');await fly(b,p.clone().add(dir.clone().multiplyScalar(3)).setY(.12),.7,.9);sfx('bounce');}
 }
+/* keep the basket in the shot: if the current camera can't see both the finisher and the rim, cut to one that can */
+const _fcam=new THREE.PerspectiveCamera(40,1,.05,220);
+function camSees(p,m=.08){_fcam.fov=camT.fov;_fcam.aspect=cam.aspect;_fcam.updateProjectionMatrix();_fcam.position.copy(camT.p);_fcam.lookAt(camT.l);_fcam.updateMatrixWorld();const v=p.clone().project(_fcam);return v.z>-1&&v.z<1&&Math.abs(v.x)<1-m&&Math.abs(v.y)<1-m;}
+function frameFinish(c){if(!c||!c.g)return;const r=HOOP.clone(),hp=headPos(c),ft=c.g.position.clone().setY(.15);
+  const ots=camT.p.distanceTo(hp)<3.2;if(camSees(r)&&(ots||(camSees(hp)&&camSees(ft,.02))))return;
+  let dx=r.x-hp.x,dz=r.z-hp.z;const L=Math.hypot(dx,dz)||1;dx/=L;dz/=L;let px=-dz,pz=dx;if(pz<0){px=-px;pz=-pz;}
+  const mid=V((r.x+hp.x)/2,1.7,(r.z+hp.z)/2);let d=Math.max(5.4,L*1.1+3.2),fov=42;const zmax=8.2;if(mid.z+pz*d>zmax){const d2=(zmax-mid.z)/Math.max(pz,.2);fov=Math.min(60,42*d/Math.max(d2,3));d=Math.max(d2,3);}
+  shot(V(mid.x+px*d,2.6,mid.z+pz*d),mid,{fov});}
 async function layup(b,c,make=true,o={}){
-  const r=HOOP.clone();const p=c.g.position;let dx=p.x-r.x,dz=p.z-r.z;let d=Math.hypot(dx,dz)||1;dx/=d;dz/=d;
+  if(!o.keepCam)frameFinish(c);const r=HOOP.clone();const p=c.g.position;let dx=p.x-r.x,dz=p.z-r.z;let d=Math.hypot(dx,dz)||1;dx/=d;dz/=d;
   c.snap=18;
   if(d>2.4){const t=V(r.x+dx*2.1,0,r.z+dz*2.1);hold(b,c,'dribble');await walk(c,t.x,t.z,{speed:4.2,dribble:true,after:'layGather'});}
   face(c,r);hold(b,c,'chest');c.pose='layGather';await wait(230);
@@ -1784,7 +1792,7 @@ async function boardBattle(o){ensureBox();hideAll();setScore(S.score[0],S.score[
   const ok=await qScrap({label:'BOX OUT',need:(o.need||9),time:2.2});
   if(ok){await fly(ball,handPos(theo),.35,.3);hold(ball,theo);theo.pose='catch';S.box.reb++;fx({respect:1});await react(o.good);
     if(o.putback){theo.pose='idle';const mk=roll(.6+sk('handle')/500);await layup(ball,theo,mk);if(mk){us(2,2);}else await cap('PUTBACK ROLLS OFF · THEIR BALL',1000);}}
-  else{await fly(ball,handPos(o.big),.35,.3);hold(ball,o.big);await layup(ball,o.big,true);them(2);await react(o.bad);}
+  else{await fly(ball,handPos(o.big),.35,.3);hold(ball,o.big);o.big.pose='catch';await react(o.bad);await cap('THEIR BALL',900);}
   theo.pose='idle';return ok;
 }
 async function driveKick(o){ensureBox();hideAll();setScore(S.score[0],S.score[1]);if(o.coach){put(coach,-6.2,-7.4,0,'cross');face(coach,V(-9,0,0),true);coach.props.clip.visible=true;coach.props.mug.visible=false;}
@@ -2244,7 +2252,7 @@ async function sEnd(){music('title',.32);
 function outfit(c,o){if(!c.orig)c.orig={map:c.chest.material.map,short:c.shortM.color.getHex(),up:c.upArms.map(m=>m.material)};const t=shirtTex(Object.assign({},CFG[c.key],{shirtTxt:'',shirtTxt2:'',letter:false,faded:false,polo:false},o));t.flipY=false;c.chest.material.map=t;c.chest.material.needsUpdate=true;const sm=toon(o.sleeves||o.shirt);c.upArms.forEach(m=>m.material=sm);}
 function goodShirt(c){outfit(c,{shirt:0xd8e4f0,polo:true,logo:''});}
 /* Hollis paints the office in December (r3): from then on it stays painted */
-{const _sl=setLoc;setLoc=function(n){if(n==='office'&&LOC.office){const L=LOC.office;if(!L._wall){L.g.traverse(o=>{if(!L._wall&&o.isMesh&&o.material&&o.material.color&&o.material.color.getHex()===0x8e8a7a)L._wall=o.material;});}
+{const _sl=setLoc;setLoc=function(n){if(n==='gym'&&LOC.gym)LOC.gym.g.rotation.y=0;if(n==='office'&&LOC.office){const L=LOC.office;if(!L._wall){L.g.traverse(o=>{if(!L._wall&&o.isMesh&&o.material&&o.material.color&&o.material.color.getHex()===0x8e8a7a)L._wall=o.material;});}
   if(L._wall)L._wall.color.setHex(typeof curScene==='number'&&curScene>=SCENES.indexOf(r3)?0xe6dfcd:0x8e8a7a);}return _sl(n);};}
 function seat(c,car,pos){put(c,0,0,PI/2,'sit');car.g.add(c.g);c.g.position.copy(pos).setY(.3);c.g.rotation.y=PI/2;c.yaw=PI/2;}
 async function phonePost(p){const el=$('#phone');
@@ -4838,7 +4846,7 @@ async function clutch(o){ensureBox();skInit();await teach('clutch');
   const scouted=has('read')||S.f['scout_'+o.oppKey];
   $('#clutchTag').classList.add('on');
   await say(null,`<i>${fmt(secs).trim()}. ${S.score[0]===S.score[1]?'Tied':S.score[0]>S.score[1]?'Up '+(S.score[0]-S.score[1]):'Down '+(S.score[1]-S.score[0])}. This is the game.</i>`,2000);
-  while(secs>0){pos++;const before=S.score.slice();ICE=has('ice')&&secs<=30&&q===o.q||has('ice')&&secs<=30;
+  while(secs>0){pos++;if(LOC.gym)LOC.gym.g.rotation.y=ours?0:PI;const before=S.score.slice();ICE=has('ice')&&secs<=30&&q===o.q||has('ice')&&secs<=30;
     if(ICE&&!o._iceSaid){o._iceSaid=1;await cap('Last thirty. Breathe out through your nose.',1300);}
     if(ours){
       const lou_=T.big,sh_=T.shooter,lobber=T.lobber;
@@ -4865,7 +4873,7 @@ async function clutch(o){ensureBox();skInit();await teach('clutch');
       else if(k==='cs')await catchShoot({spot:'rw',passer:sh_,from:'top',def:O[1],lay,mod:1});
       else await isoMove({move:k,myDef:O[0],lobber,lay:k==='lob'?[[T.wing,'rw'],[O[3],'rw','g']]:lay});
       if(S.score[0]===before[0]&&roll(.3+sk('iq')/400)){const rb=await boardBattle({putback:true,shooter:theo,spot:'top',big:O[2],lay:[[T.wing,'lw'],[O[3],'lw','g']],need:Math.round(10-sk('handle')/25),
-        good:[lou_,'SECOND CHANCE!'],bad:[O[2],'<i>(grabbing it)</i> Mine.']});if(!rb)o._keep=true;}
+        good:[lou_,'SECOND CHANCE!'],bad:[O[2],'<i>(grabbing it)</i> Mine.']});}
     }else{
       const beats=[];const nb=3+(Math.random()*2|0);const pref=o.tell||(['left','right'][(Math.random()*2)|0]);
       for(let i=0;i<nb;i++){const r=Math.random();beats.push({dir:r<.18?'none':r<.62?pref:(pref==='left'?'right':'left'),t:(.52+Math.random()*.2)*(.85+sk('def')/330)*(scouted?1.15:1)});}
@@ -4881,6 +4889,7 @@ async function clutch(o){ensureBox();skInit();await teach('clutch');
     if(secs>0)await cap(`${fmt(secs).trim()} · ${d===0?'TIED':d>0?'UP '+d:'DOWN '+(-d)}`,1200);
     if(secs<=0&&d===0&&q!=='OT'&&!o.noOT){q='OT';secs=o.ot||48;setClock(fmt(secs));await cap('OVERTIME.',1600);}
     if(o._keep){o._keep=false;}else ours=!ours;}
+  if(LOC.gym)LOC.gym.g.rotation.y=0;
   ICE=false;$('#clutchTag').classList.remove('on');setClock('FINAL');sfx('horn');
   const won=S.score[0]>S.score[1]||(S.score[0]===S.score[1]&&roll(.5));if(S.score[0]===S.score[1])setScore(S.score[0]+(won?1:0),S.score[1]+(won?0:1));
   return won;}
