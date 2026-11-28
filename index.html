@@ -378,7 +378,7 @@ function shirtTex(o){return ctex(512,256,(x,w,h)=>{
   const tc=o.txtCol||(o.shirt>0xaaaaaa?'#151515':'#f2ead6');x.fillStyle=tc;x.textAlign='center';x.textBaseline='middle';
   if(o.letter){x.fillStyle='#e0c06a';x.font='120px Anton';x.fillText('H',w/2+58,108);x.strokeStyle='#111';x.lineWidth=4;x.strokeText('H',w/2+58,108);
     x.fillStyle='#f2ead6';x.fillRect(w/2-4,0,8,h);x.fillStyle='#111';for(let y=30;y<h;y+=36){x.beginPath();x.arc(w/2,y,4,0,7);x.fill();}return;}
-  if(o.polo){x.fillStyle=hx(shade(o.shirt,.6));x.beginPath();x.moveTo(w/2-40,0);x.lineTo(w/2,46);x.lineTo(w/2+40,0);x.fill();x.fillStyle='#e8c35a';x.font='30px Anton';x.fillText('HH',w/2+52,86);return;}
+  if(o.polo){x.fillStyle=hx(shade(o.shirt,.6));x.beginPath();x.moveTo(w/2-40,0);x.lineTo(w/2,46);x.lineTo(w/2+40,0);x.fill();if(o.logo!==''){x.fillStyle=o.logoCol||'#e8c35a';const L=o.logo||'HH';x.font=(L.length>3?18:30)+'px Anton';x.fillText(L,w/2+(L.length>3?62:52),86);if(o.logo2){x.fillText(o.logo2,w/2+62,106);}}return;}
   const T=(s,px,y,st)=>{x.save();x.translate(w/2,y);x.scale(GLB?1.12:1.55,GLB?.95:.72);x.font=px+'px Anton';if(st){x.strokeStyle='#000';x.lineWidth=6;x.strokeText(s,0,0);}x.fillText(s,0,0);x.restore();};
   if(o.num){T(o.shirtTxt,40,70);T(o.num,130,150,1);return;}
   T(o.shirtTxt||'',o.shirtTxt2?50:60,o.shirtTxt2?88:112);if(o.shirtTxt2)T(o.shirtTxt2,50,134);
@@ -390,7 +390,7 @@ const chars=[];
 const CFG={
  theo:{name:'THEO',h:1.75,skin:0xa46d45,hair:0x1a1410,hs:'short',eye:0x3a2414,shirt:0x7d848c,shirtTxt:'HALSTON',shirtTxt2:'HOOPS',shorts:0x1d1f24,shoe:0xf0f0f0,shoeAcc:0xc8202a,brow:5},
  nico:{name:'NICO',h:1.71,skin:0xc88b5f,hair:0x2b1b12,hs:'curly',shirt:0x2b3a5c,shirtTxt:'VELA',shorts:0x55585e,shoe:0xd8cdb4,shoeAcc:0x8a7a5a,shoeS:1.3,brow:4,mouth:'worried'},
- kai:{name:'KAI',h:1.8,skin:0xc58859,hair:0x5a3a22,hs:'fade',shirt:0xf3f3f0,shirtTxt:'K / M',shorts:0xe6e6e6,shoe:0x14d1c4,shoeAcc:0xffffff,brow:4,mouth:'flat'},
+ kai:{name:'KAI',h:1.8,skin:0xc58859,hair:0x5a3a22,hs:'fade',shirt:0xf3f3f0,shirtTxt:'NO DAYS',shirtTxt2:'OFF',shorts:0xe6e6e6,shoe:0x14d1c4,shoeAcc:0xffffff,brow:4,mouth:'flat'},
  dante:{name:'DANTE',h:1.9,bw:1.08,skin:0x7d4f34,hair:0x0d0a08,hs:'buzz',shirt:0x141416,shirtTxt:'PRICE',num:'3',txtCol:'#d9a93a',sleeveless:true,shorts:0x6e1f2a,shoe:0x111111,shoeAcc:0xd9a93a,brow:6,mouth:'smirk',band:0xd9a93a},
  reggie:{name:'REGGIE',h:2.0,bw:1.24,skin:0x77482a,hair:0x120c08,hs:'locs',shirt:0x6e1f2a,shirtTxt:'HHHS',txtCol:'#e8c35a',shorts:0x1a1a1a,shoe:0x8a8f96,shoeAcc:0x6e1f2a,brow:5},
  lou:{name:'LOU',h:1.93,bw:1.42,skin:0xf5c7a4,hair:0xb0602a,hs:'messy',eye:0x3a5a7a,shirt:0x4f8a86,shirtTxt:'CAMP',shirtTxt2:'2019',faded:true,shorts:0x3a3d44,shoe:0x9a9a9a,shoeAcc:0x555555,brow:4,mouth:'smile',freckles:true},
@@ -2241,7 +2241,8 @@ async function sEnd(){music('title',.32);
 }
 
 /* ================= EPISODE 1: CUT LIST ================= */
-function goodShirt(c){if(!c.orig)c.orig={map:c.chest.material.map,short:c.shortM.color.getHex(),up:c.upArms.map(m=>m.material)};const t=shirtTex(Object.assign({},CFG[c.key],{shirt:0xd8e4f0,shirtTxt:'',shirtTxt2:'',polo:true,letter:false,faded:false}));t.flipY=false;c.chest.material.map=t;c.chest.material.needsUpdate=true;const sm=toon(0xd8e4f0);c.upArms.forEach(m=>m.material=sm);}
+function outfit(c,o){if(!c.orig)c.orig={map:c.chest.material.map,short:c.shortM.color.getHex(),up:c.upArms.map(m=>m.material)};const t=shirtTex(Object.assign({},CFG[c.key],{shirtTxt:'',shirtTxt2:'',letter:false,faded:false,polo:false},o));t.flipY=false;c.chest.material.map=t;c.chest.material.needsUpdate=true;const sm=toon(o.sleeves||o.shirt);c.upArms.forEach(m=>m.material=sm);}
+function goodShirt(c){outfit(c,{shirt:0xd8e4f0,polo:true,logo:''});}
 /* Hollis paints the office in December (r3): from then on it stays painted */
 {const _sl=setLoc;setLoc=function(n){if(n==='office'&&LOC.office){const L=LOC.office;if(!L._wall){L.g.traverse(o=>{if(!L._wall&&o.isMesh&&o.material&&o.material.color&&o.material.color.getHex()===0x8e8a7a)L._wall=o.material;});}
   if(L._wall)L._wall.color.setHex(typeof curScene==='number'&&curScene>=SCENES.indexOf(r3)?0xe6dfcd:0x8e8a7a);}return _sl(n);};}
@@ -5114,7 +5115,7 @@ async function t0(){
 async function t1(){ // Dad's first day
   for(const c of chars)unsuit(c);setLoc('lot');lotMode('home');hideAll();cine(true);setSky('snow');
   const car=CARS.kai;car.g.visible=true;car.g.position.set(2.8,0,1.2);car.g.rotation.y=PI*.5;
-  put(dad,.6,.4,PI*.9);put(theo,-.4,-1.4,0);face(dad,theo.g.position,true);face(theo,dad.g.position,true);
+  put(dad,.6,.4,PI*.9);outfit(dad,{shirt:0x1d2b4f,polo:true,logo:'MIDWEST',logo2:'SELECT',logoCol:'#7fb8e6'});put(theo,-.4,-1.4,0);face(dad,theo.g.position,true);face(theo,dad.g.position,true);
   shot(V(-2.2,1.5,-3),V(1.2,1.1,.6),{fov:44});await fade(false,800);
   await cap('Monday, January 4. 6:40 AM. The driveway. A company car. A polo with a logo on it.',2800);
   cu(dad,{d:1.2,fov:28});await say(dad,'<i>(pulling at the collar)</i> It\'s a moisture-wicking polo, Theo. I wick now.');
@@ -5124,7 +5125,7 @@ async function t1(){ // Dad's first day
   S.log.drive=['told Dad he looked good in the polo','told Dad not to let Vance make him a salesman','reminded Dad you hadn’t said yes'][i];
   cu(dad,{d:1.2,fov:28});await say(dad,['<i>(he stands up a little straighter)</i> …Yeah? Okay. Okay.','<i>(a short laugh, not a happy one)</i> I\'m already a salesman, mijo. I sold myself. That\'s the first sale.','I know. Thursday. Sal\'s. Rick wants to hear it from you. So do I.'][i]);
   fx({family:i===0?2:i===1?-1:0});car.g.visible=false;
-  await fade(true,700);
+  await fade(true,700);unsuit(dad);
 }
 async function t2(){ // back from break: who is still here
   for(const c of chars)unsuit(c);setLoc('locker');hideAll();cine(true);const St=EX.stroud;
@@ -5527,7 +5528,7 @@ async function y1(){ // the plan
 }
 async function y2(){ // Dad
   for(const c of chars)unsuit(c);setLoc('home');hideAll();cine(true);LOC.home.quiz.visible=false;
-  sitOn(dad,-1,0,PI/2,.47);sitOn(theo,0,.75,PI,.47);sitOn(mom,0,-.75,0,.47);
+  sitOn(dad,-1,0,PI/2,.47);if(PROG())outfit(dad,{shirt:0x6a6e74,shirtTxt:'',sleeves:0x6a6e74});sitOn(theo,0,.75,PI,.47);sitOn(mom,0,-.75,0,.47);
   shot(V(2.1,1.6,1.8),V(-.3,.95,0),{fov:42});await fade(false,700);
   if(PROG()){
     await cap('Wednesday. Dinner. Dad came home in a sweatshirt. The polo is in the trash. Nobody mentions the polo.',2800);
@@ -5552,7 +5553,7 @@ async function y2(){ // Dad
     cu(dad,{d:1.2,fov:28});await say(dad,['Over my dead body. You play. That\'s your job. That was always the deal.','<i>(sharp)</i> No. Hey. A man made a choice. Two men. One of them was me. None of them was you.','<i>(he laughs, finally)</i> Don\'t win it for me. Win it because Westbury is annoying.'][i],2800);
     fx({family:i===1?1:3});
   }
-  await fade(true,700);
+  await fade(true,700);unsuit(dad);
 }
 async function y3(){ // Westbury week: a practice that counts
   for(const c of chars)unsuit(c);setLoc('gym');gymAway(null);hideAll();cine(true);setScore(0,0,false);
