@@ -494,8 +494,8 @@ async function makeCharGLB(key){
   const headRef=new THREE.Object3D();bones.head.add(headRef);headRef.position.copy(V(0,1.685,.006).applyMatrix4(new THREE.Matrix4().copy(bones.head.matrixWorld).invert()));headRef.quaternion.copy(Ri.head);
   const hs=HAIRMAP[o.hs]||'short';const pieces=hs==='long'?['short','long']:[hs];const hm=toon(o.hair);
   for(const pc of pieces){if(!GLB_HAIR[pc])continue;const h=GLB_HAIR[pc].clone(true);const hl=[];h.traverse(x=>{if(x.isMesh)hl.push(x);});hl.forEach(x=>{x.material=hm;x.add(new THREE.Mesh(x.geometry,inkMat(.006)));});bones.head.add(h);
-    if(['short','buzz','fade'].includes(pc))h.position.addScaledVector(V(0,1,0).applyQuaternion(Ri.head),hs==='long'?.006:.011);if(hs==='long'&&pc==='short')h.scale.setScalar(1.03);}
-  if(o.band){const b=mesh(new THREE.TorusGeometry(.105,.014,8,24),toon(o.band),headRef,V(0,.066,-.008),.005);b.rotation.x=PI/2-.42;b.scale.set(.95,1.05,1);}
+    if(['short','buzz','fade'].includes(pc))h.position.addScaledVector(V(0,1,0).applyQuaternion(Ri.head),hs==='long'?.006:.011);if(hs==='long'&&pc==='short')h.scale.setScalar(1.03);if(pc==='curly'&&o.hs!=='taper'){h.scale.setScalar(1.05);h.position.addScaledVector(V(0,1,0).applyQuaternion(Ri.head),.004);}}
+  if(o.band){const bm=toon(o.band);bm.side=THREE.DoubleSide;const b=mesh(new THREE.CylinderGeometry(.110,.111,.022,32,1,true),bm,headRef,V(0,.03,-.004),.004);b.scale.set(.88,1,1);b.rotation.x=-.12;}
   if(o.shoeS){bones.foot_L.scale.setScalar(o.shoeS);bones.foot_R.scale.setScalar(o.shoeS);}
   model.scale.setScalar(k);root.add(model);
   const P=()=>new THREE.Object3D();
