@@ -1451,13 +1451,14 @@ let kTok=0;function shot(p,l,o={}){kTok++;camT.p.copy(p);camT.l.copy(l);camT.rol
 function camBlocker(cam,tgt,self){for(const b of chars){if(b===self||!b.g.visible||b.g.parent!==scene)continue;const bp=b.g.position,top=headPos(b).y+.18;
     for(let t=0;t<=.85;t+=.05){const x=cam.x+(tgt.x-cam.x)*t,y=cam.y+(tgt.y-cam.y)*t,z=cam.z+(tgt.z-cam.z)*t;if(y>bp.y-.05&&y<top&&Math.hypot(x-bp.x,z-bp.z)<.3)return b;}}return null;}
 function cu(c,o={}){const hp=headPos(c);const q=new THREE.Quaternion();c.g.getWorldQuaternion(q);const fw=V(0,0,1).applyQuaternion(q);fw.y=0;fw.normalize().applyAxisAngle(V(0,1,0),o.a||0);const d=o.d||1.1;
-  {let cp=hp.clone().add(fw.clone().multiplyScalar(d)).add(V(0,o.h||0,0));const bl=camBlocker(cp,hp,c);if(bl){ots(bl,c,{fov:o.fov||30,cut:o.cut});return;}
-   if(inSet(cp))for(const a of[.5,-.5,1,-1,1.5,-1.5]){const f2=fw.clone().applyAxisAngle(V(0,1,0),a);const p2=hp.clone().add(f2.multiplyScalar(d)).add(V(0,o.h||0,0));if(!inSet(p2)&&!camBlocker(p2,hp,c)){fw.copy(f2.normalize());break;}}}
+  {let cp=hp.clone().add(fw.clone().multiplyScalar(d)).add(V(0,o.h||0,0));const bl=camBlocker(cp,hp,c);if(bl){const pb=headPos(bl),dr=hp.clone().sub(pb);dr.y=0;dr.normalize();const sd2=V(-dr.z,0,dr.x).multiplyScalar(.45);const t1=pb.clone().sub(dr).add(sd2).add(V(0,.06,0)),t2=pb.clone().sub(dr).sub(sd2).add(V(0,.06,0));if(!camBad(t1,hp)||!camBad(t2,hp)){ots(bl,c,{fov:o.fov||30,cut:o.cut});return;}}
+   if(camBad(cp,hp))for(const a of[.5,-.5,1,-1,1.5,-1.5,2.2,-2.2]){const f2=fw.clone().applyAxisAngle(V(0,1,0),a);const p2=hp.clone().add(f2.multiplyScalar(d)).add(V(0,o.h||0,0));if(!camBad(p2,hp)&&!camBlocker(p2,hp,c)){fw.copy(f2.normalize());break;}}}
   shot(hp.clone().add(fw.multiplyScalar(d)).add(V(0,o.h||0,0)),hp.clone().add(V(0,o.lo||-.02,0)),{roll:o.roll||0,fov:o.fov||30,cut:o.cut,sp:o.sp});}
 /* keep the camera out of walls, lockers and other solid set pieces */
 function inSet(p){if(!curLoc||!curLoc.g)return false;if(!curLoc._boxes){curLoc._boxes=[];curLoc.g.updateMatrixWorld(true);curLoc.g.traverse(m=>{let dyn=false;for(let q=m;q;q=q.parent)if(q.userData&&q.userData.dynamic){dyn=true;break;}if(!dyn&&m.isMesh&&m.geometry&&m.geometry.type==='BoxGeometry'&&!(m.material&&m.material.transparent)){const b=new THREE.Box3().setFromObject(m);const sz=b.getSize(V());if(sz.x>.12&&sz.y>.12&&sz.z>.12&&sz.x*sz.y*sz.z<400)curLoc._boxes.push({b:b.expandByScalar(.08),m});}});}
   for(const e of curLoc._boxes)if(e.m.visible&&e.b.containsPoint(p))return true;return false;}
-function ots(from,to,o={}){const pf=headPos(from),pt=headPos(to);const dir=pt.clone().sub(pf);dir.y=0;dir.normalize();let sd=o.s||1;{const tp=pf.clone().sub(dir.clone().multiplyScalar(o.d||1)).add(V(-dir.z,0,dir.x).multiplyScalar(sd*.45)).add(V(0,o.h||.06,0));if(inSet(tp)){const tq=pf.clone().sub(dir.clone().multiplyScalar(o.d||1)).add(V(-dir.z,0,dir.x).multiplyScalar(-sd*.45)).add(V(0,o.h||.06,0));if(!inSet(tq))sd=-sd;}}const side=V(-dir.z,0,dir.x).multiplyScalar(sd*.45);
+function camBad(p,t){if(inSet(p))return true;const q=V();for(let k=1;k<10;k++){q.copy(p).lerp(t,k/12);if(inSet(q))return true;}return false;}
+function ots(from,to,o={}){const pf=headPos(from),pt=headPos(to);const dir=pt.clone().sub(pf);dir.y=0;dir.normalize();let sd=o.s||1;{const tp=pf.clone().sub(dir.clone().multiplyScalar(o.d||1)).add(V(-dir.z,0,dir.x).multiplyScalar(sd*.45)).add(V(0,o.h||.06,0));if(camBad(tp,pt)){const tq=pf.clone().sub(dir.clone().multiplyScalar(o.d||1)).add(V(-dir.z,0,dir.x).multiplyScalar(-sd*.45)).add(V(0,o.h||.06,0));if(!camBad(tq,pt))sd=-sd;}}const side=V(-dir.z,0,dir.x).multiplyScalar(sd*.45);
   shot(pf.clone().sub(dir.clone().multiplyScalar(o.d||1)).add(side).add(V(0,o.h||.06,0)),pt.clone().add(V(0,-.06,0)),{fov:o.fov||34,cut:o.cut,roll:o.roll||0,sp:o.sp});}
 function two(a,b,o={}){const pa=headPos(a),pb=headPos(b),mid=pa.clone().lerp(pb,.5),dir=pb.clone().sub(pa);dir.y=0;const len=dir.length();dir.normalize();const perp=V(-dir.z,0,dir.x).multiplyScalar(o.side||1);
   shot(mid.clone().add(perp.multiplyScalar(o.d||Math.max(2,len*1.3))).add(V(0,o.h||0,0)),mid.clone().add(V(0,-.1,0)),{fov:o.fov||38,cut:o.cut,roll:o.roll||0,sp:o.sp});}
@@ -2392,7 +2393,7 @@ async function e5(){ // monday hallway, Priya
   priya.pose='idle';
   put(kai,1.2,-1,PI);walkNow(kai,1.2,-12,{speed:1.4});shot(V(.4,1.6,-8.6),V(.6,1.4,-4),{fov:34});await wait(1700);
   face(kai,theo.g.position);if(S.f.kai_challenge||S.f.quote_name){await say(kai,'<i>(not stopping)</i> Eight days.');cu(priya,{d:1.2,fov:26});await say(priya,'Oh. You two have a <i>thing</i>.');}
-  if(S.f.broke_nico_promise){put(nico,-.4,1,PI);walkNow(nico,-.5,-4.6,{speed:1.3});await wait(1800);face(nico,theo.g.position);cu(nico,{d:1.3,fov:26});await say(nico,'You were busy. It\'s cool.',1800);await say(nico,'<i>(it isn\'t)</i>',1300);}
+  if(S.f.broke_nico_promise){put(nico,-.4,1,PI);walkNow(nico,-.5,-4.6,{speed:1.3});await until(()=>!nico.move);face(nico,theo.g.position,true);cu(nico,{d:1.3,fov:26});await say(nico,'You were busy. It\'s cool.',1800);await say(nico,'<i>(it isn\'t)</i>',1300);}
   await fade(true,600);hideBall(ball);
 }
 
