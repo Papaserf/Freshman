@@ -603,10 +603,10 @@ function updChar(c,dt){
   if(c.glb)syncBones(c);
 }
 function sitOn(c,x,z,yaw,top,pose='sitbench'){put(c,x-Math.sin(yaw)*.08,z-Math.cos(yaw)*.08,yaw,pose);c.seat=true;c.g.position.y=top+.05-((c.glb?.94:.93)-.44)*c.k;}
-const put=(c,x,z,yaw=0,pose='idle')=>{c.seat=false;c.g.position.set(x,0,z);c.yaw=yaw;c.g.rotation.y=yaw;c.pose=pose;c.move=null;c.g.visible=true;c.cur.rx=0;if(c.g.parent!==scene)scene.add(c.g);c.g.rotation.x=0;};
+const put=(c,x,z,yaw=0,pose='idle')=>{c.seat=false;c.g.position.set(x,0,z);c.yaw=yaw;c.g.rotation.y=yaw;c.pose=pose;c.move=null;c.g.visible=true;c.cur.rx=0;if(c.g.parent!==scene)scene.add(c.g);c.g.rotation.x=0;;{const sn=c.snap;c.snap=1e4;updChar(c,.02);c.snap=sn;}};
 const yawTo=(c,p)=>Math.atan2(p.x-c.g.position.x,p.z-c.g.position.z);
 const face=(c,p,inst)=>{c.yaw=yawTo(c,p);if(inst)c.g.rotation.y=c.yaw;};
-const walk=(c,x,z,o={})=>waitable(done=>{c.move={to:V(x,0,z),speed:o.speed||1.4,after:o.after,face:o.face,back:o.back,dribble:o.dribble,keep:o.keep,done};return null;});
+const walk=(c,x,z,o={})=>waitable(done=>{if(!c.g.visible){c.g.position.x=x;c.g.position.z=z;c.move=null;if(o.after)c.pose=o.after;if(o.face!=null)c.yaw=o.face;done();return null;}c.move={to:V(x,0,z),speed:o.speed||1.4,after:o.after,face:o.face,back:o.back,dribble:o.dribble,keep:o.keep,done};return null;});
 const walkNow=(c,x,z,o={})=>{walk(c,x,z,o).catch(()=>{});};
 const headPos=c=>{const v=V();(c.headRef||c.head).getWorldPosition(v);return v;};
 const DRIB=6.5/Math.PI;const dribU=c=>(c.t*DRIB)%1;const dribPush=u=>u<.16?u/.16:u<.45?1-(u-.16)/.29:u>.84?-(u-.84)/.16*.4:0;
@@ -4819,7 +4819,7 @@ async function isoMove(o){ensureBox();hideAll();setScore(S.score[0],S.score[1]);
     const mk=roll(ok?.84:.32);await layup(ball,theo,mk);if(mk){pts=2;us(2,2);}}
   else if(o.move==='pullup'){walkNow(theo,SPOT.le.x+.4,SPOT.le.z,{speed:4,dribble:true,after:'ready'});walkNow(o.myDef,SPOT.le.x-.9,SPOT.le.z,{speed:3.6,after:'contest'});await until(()=>!theo.move);camRim();
     const r=await qShot({mod:has('pullup')?0:1,shooter:theo,label:'PULL-UP'});camSide();await shootBall(ball,theo,r==='green'?'make':r==='early'?'front':'back');if(r==='green'){pts=2;us(2,2);}}
-  else if(o.move==='lob'){walkNow(o.lobber,HOOP.x+2.6,-1.6,{speed:5.4,after:'ready'});await wait(600);const ok=await qPass({label:'THROW IT UP'});
+  else if(o.move==='lob'){if(!o.lobber.g.visible)at(o.lobber,'lb','ready');walkNow(o.lobber,HOOP.x+2.6,-1.6,{speed:5.4,after:'ready'});await wait(600);const ok=await qPass({label:'THROW IT UP'});
     if(ok){await passTo(ball,theo,o.lobber,.7,.6);const mk=roll(.9);await layup(ball,o.lobber,mk);if(mk){pts=2;us(2,0,1);cheer(1.4);}}else{await passTo(ball,theo,o.myDef,.6,.4);}}
   else if(o.move==='floater'){walkNow(theo,HOOP.x+2.7,.2,{speed:4.6,dribble:true});walkNow(o.myDef,HOOP.x+1.4,.1,{speed:4,after:'contest'});await until(()=>!theo.move);camRim();
     const r=await qShot({mod:1,shooter:theo,label:'FLOAT IT'});camSide();await shootBall(ball,theo,r==='green'?'make':'front');if(r==='green'){pts=2;us(2,2);}}
