@@ -2241,6 +2241,10 @@ async function sEnd(){music('title',.32);
 }
 
 /* ================= EPISODE 1: CUT LIST ================= */
+function goodShirt(c){if(!c.orig)c.orig={map:c.chest.material.map,short:c.shortM.color.getHex(),up:c.upArms.map(m=>m.material)};const t=shirtTex(Object.assign({},CFG[c.key],{shirt:0xd8e4f0,shirtTxt:'',shirtTxt2:'',polo:true,letter:false,faded:false}));t.flipY=false;c.chest.material.map=t;c.chest.material.needsUpdate=true;const sm=toon(0xd8e4f0);c.upArms.forEach(m=>m.material=sm);}
+/* Hollis paints the office in December (r3): from then on it stays painted */
+{const _sl=setLoc;setLoc=function(n){if(n==='office'&&LOC.office){const L=LOC.office;if(!L._wall){L.g.traverse(o=>{if(!L._wall&&o.isMesh&&o.material&&o.material.color&&o.material.color.getHex()===0x8e8a7a)L._wall=o.material;});}
+  if(L._wall)L._wall.color.setHex(typeof curScene==='number'&&curScene>=SCENES.indexOf(r3)?0xe6dfcd:0x8e8a7a);}return _sl(n);};}
 function seat(c,car,pos){put(c,0,0,PI/2,'sit');car.g.add(c.g);c.g.position.copy(pos).setY(.3);c.g.rotation.y=PI/2;c.yaw=PI/2;}
 async function phonePost(p){const el=$('#phone');
   el.innerHTML=`<div class="ph"><div class="top"><span>9:41 PM</span><span>Feed</span><span>▮▮▮ 38%</span></div><div class="post"><div class="who"><div class="av">${p.init}</div><div><b>${p.who}</b><span>${p.time}</span></div></div><div>${p.text}</div>${p.pic?`<div class="pic">${p.pic}</div>`:''}<div class="rx">${p.rx}</div>${p.comments.map(c=>`<div class="cm${c.new?' new':''}"><b>${c.n}</b>${c.t}</div>`).join('')}</div></div>`;
@@ -4699,8 +4703,8 @@ async function p5(){ // at Westbury
   await helpD({driver:O[0],from:'lw',man:O[1],manSpot:'lc',lay:[[St,'rw'],[O[2],'rw','g'],[lou,'rb'],[O[3],'rb','g',.6]],blocker:lou,manPct:.42,
     helpGood:[lou,'ROTATION. Hollis has a spreadsheet about this exact rotation.'],helpBurn:[O[1],'Thanks for the space, sophomore.'],stayGood:[St,'<i>(pointing at his old teammate)</i> Not tonight.'],stayBurn:[O[0],'Traitor\'s team. Traitor\'s defense.'],stealGood:[kai,'HANDS!'],stealBurn:[O[0],'Guessed wrong.']});
   camWide();await montage([{fx:'FIRST HALF',t:'Westbury runs every set at Stroud. He doesn\'t say a word.',do:()=>{setScore(Math.max(S.score[0],24),27);setClock('HALF');}}]);
-  hideAll();put(hollis,-6.2,-6.4,0,'idle');for(const [c,x,z] of[[theo,-7.4,-3.6],[St,-6.6,-3.4],[kai,-5.8,-3.6],[lou,-5,-3.4],[M,-4.2,-3.8]])put(c,x,z,PI);for(const c of[theo,St,kai,lou,M])face(c,hollis.g.position,true);
-  cu(hollis,{d:1.3,fov:28});await say(hollis,'Their coach is putting their worst defender on Stroud to bait him into hero ball. I respect it. I\'ve also already solved it.');
+  hideAll();put(hollis,-6.2,-6.4,0,'idle');for(const [c,x,z] of[[theo,-7.4,-3.6],[St,-6.6,-3.4],[kai,-5.8,-3.6],[lou,-5,-3.4],[M,-4.2,-3.8]])put(c,x,z,PI);for(const c of[theo,St,kai,lou,M])face(c,hollis.g.position,true);face(hollis,V(-6.2,0,-3.5),true);
+  shot(V(-6.05,1.66,-5.05),headPos(hollis).add(V(0,-.04,0)),{fov:30});await say(hollis,'Their coach is putting their worst defender on Stroud to bait him into hero ball. I respect it. I\'ve also already solved it.');
   await say(hollis,'Reyes. Your call. You know him better than my laptop does.');
   cu(theo,{d:1,fov:26});
   let j=await choose([{t:'“Run everything through Jalen.”'},{t:'“Use him as a decoy.”'},{t:'“Put Malik in. They haven’t scouted him.”'}],7);j=j<0?1:j;
@@ -4848,7 +4852,7 @@ async function clutch(o){ensureBox();skInit();await teach('clutch');
       if(has('floater'))plays.push({t:'Iso: <b>Floater</b>',k:'floater'});
       // pick up to four: the three base plays rotate, moves always offered first
       const moves=plays.slice(3).sort(()=>Math.random()-.5),base=plays.slice(0,3).sort(()=>Math.random()-.5);const offer=moves.slice(0,2).concat(base).slice(0,4);
-      hideAll();put(hollis,-6.2,-7.4,0,'cross');face(hollis,V(-9,0,0),true);
+      hideAll();put(hollis,-6.2,-7.4,0,'cross');face(hollis,V(-4.9,0,-5.6),true);
       shot(V(-4.6,1.5,-5.2),headPos(hollis),{fov:36});
       const HL=S.f.captain==='yes'||S.f.captain==='silent'?['<i>(holding up the whiteboard)</i> Your call, captain.','Captain\'s choice. Choose well. Or quickly. Ideally both.','<i>(tapping the board)</i> You know what they\'re giving us. Take it.','I have a preference. I am not going to tell you what it is.']:['<i>(pointing at the whiteboard)</i> Pick one. Quickly.','<i>(tapping the board twice)</i> One of these. Now.','The numbers like two of these. Pick one of the two.','<i>(sighing)</i> Choose. I\'ll pretend I agree.'];
       await say(hollis,HL[(Math.random()*HL.length)|0],1400);
@@ -4919,7 +4923,7 @@ async function r0(){
 }
 async function r1(){ // Dad and the job
   for(const c of chars)unsuit(c);setLoc('home');hideAll();cine(true);LOC.home.quiz.visible=false;
-  sitOn(dad,-1,0,PI/2,.47);sitOn(theo,0,.75,PI,.47);sitOn(mom,0,-.75,0,.47);
+  sitOn(dad,-1,0,PI/2,.47);sitOn(theo,0,.75,PI,.47);sitOn(mom,0,-.75,0,.47);goodShirt(dad);
   const wide=()=>shot(V(2.1,1.6,1.8),V(-.3,.95,0),{fov:42});wide();plateOn('house',{dir:-1});await fade(false,700);
   await cap('Saturday morning. The kitchen. Dad has his good shirt on, and it\'s not Sunday.',2600);await plateOff(1000);
   const asked=S.f.s2e2_end==='dad',card=S.f.s2e2_end==='silent';
@@ -4938,7 +4942,7 @@ async function r1(){ // Dad and the job
   else if(i===2){await say(dad,'He knows I testified. He said he respected it. He said that\'s exactly the kind of man he wants running his program.');cu(mom,{d:1.15,fov:28});await say(mom,'<i>(her face says she heard that sentence differently than Dad did)</i>',2000);fx({family:1,flag:'job_doubt'});}
   else{await say(dad,'<i>(he waits for Theo to say something. Theo doesn\'t.)</i> Okay. Okay. I haven\'t signed anything.',2400);}
   wide();await say(null,'<i>"I haven\'t signed anything." Theo will think about that sentence a lot.</i>',2600);
-  await fade(true,700);
+  await fade(true,700);unsuit(dad);
 }
 async function r2(){ // December: three games that count
   for(const c of chars)unsuit(c);setLoc('gym');hideAll();cine(true);
@@ -4952,7 +4956,7 @@ async function r2(){ // December: three games that count
     const passer=g===1&&!S.f.starter?M:(S.chem.stroud||0)>=2?St:kai;
     const made=await catchShoot({spot:['lw','rc','top'][g],passer,from:g===2?'lw':'top',def:O[1],lay:[[lou,'rb'],[O[2],'rb','g',.6],[g===2?St:kai,g===2?'rw':'rw'],[O[3],'rw','g']],
       line:['Down one. Your ball.','Down one. Swing it.','Down one. Tess is behind the bench. Don\'t look.'][g],lineBy:passer,
-      good:[lou,['UP ONE!','ROAD WIN ENERGY!','<i>(screaming at his sister)</i> DID YOU SEE THAT?!'][g]],bad:[hollis,'<i>(typing)</i> Fine look. Wrong result. Next.']});
+      good:[lou,['WE\'RE UP!','ROAD WIN ENERGY!','<i>(screaming at his sister)</i> DID YOU SEE THAT?!'][g]],bad:[hollis,'<i>(typing)</i> Fine look. Wrong result. Next.']});
     let p=.36+(made?.4:0)+clamp((S.chem.team||0)*.02,0,.08)+((S.chem.stroud||0)>=3?.06:0)-(S.f.lou_cold?.1:0)-(S.nerves>60?.06:0);
     if(s.t==='Hale')p-=.08;
     const won=roll(clamp(p,.1,.92));result(won);results.push(won);
