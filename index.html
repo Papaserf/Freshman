@@ -495,10 +495,10 @@ function paintFace(f,from,to,k){const x=f.c.getContext('2d'),key=f.key,img=f.img
 function hasFeel(c,n){return !!(c&&c.faceT&&c.faceT.userData.face&&XP[c.key]&&XP[c.key][n]);}
 function feel(c,name=null,ms=150){const f=c&&c.faceT&&c.faceT.userData.face;if(!f||!f.ready)return;if(name&&!hasFeel(c,name))name=null;if(name===f.cur)return;
   const from=f.cur,to=name;f.cur=name;const t0=performance.now();const step=()=>{if(f.cur!==to)return;const k=Math.min(1,(performance.now()-t0)/ms);paintFace(f,from,to,k);c.faceT.needsUpdate=true;if(k<1)requestAnimationFrame(step);};step();}
-const XPRX={none:/dry laugh|no smile/i,shock:/stun|star(e|ing)|jaw|gap(e|ing)|wide-eyed|eyes wide|blink|frozen|freez|double-take|floored|speechless|shock|disbelie|mouth open|horrified|aghast/i,
-  sad:/trying to (laugh|smile)|with nothing in it|hollow|mouth only|forced (smile|laugh)|tear|wince|hurt|voice crack|cracks|looks away|small voice|deflat|swallow|miserable|heartbroken/i,mad:/glar|snap|furious|angry|seeth|jaw tight|scowl/i,happy:/grin|beam|laugh|smil|delight|lights up|giddy/i};
+const XPRX={none:/dry laugh|no smile|n.t smile|not smil|n.t laugh/i,shock:/stun|star(e|ing)|jaw|gap(e|ing)|wide-eyed|eyes wide|blink|frozen|freez|double-take|floored|speechless|shock|disbelie|mouth open|horrified|aghast/i,
+  sad:/trying to (laugh|smile)|with nothing in it|hollow|but not really|mouth only|forced (smile|laugh)|tear|wince|hurt|voice crack|cracks|looks away|small voice|deflat|swallow|miserable|heartbroken/i,mad:/glar|snap|furious|angry|seeth|jaw tight|scowl/i,happy:/grin|beam|laugh|smil|delight|lights up|giddy|\bhapp|proud|thrilled|overjoy/i};
 function sayXP(c,text,o){if(!c||!c.g||!XP[c.key])return null;if(o&&o.x)return hasFeel(c,o.x)?o.x:null;
-  const dir=(String(text).match(/<i>\(([^)]*)\)/)||[])[1]||'';for(const n in XPRX)if(XPRX[n].test(dir)){if(n==='none')return null;if(hasFeel(c,n))return n;}
+  const dir=(String(text).match(/<i>\(([^)]*)\)/)||[])[1]||'';for(const n in XPRX)if(XPRX[n].test(dir))return n!=='none'&&hasFeel(c,n)?n:null;
   if(/\bWHAT\b|\?!/.test(text)&&hasFeel(c,'shock'))return 'shock';return null;}
 /* a choice can carry an expression ({t:'…',x:'mad'}): Theo wears it for a beat after you pick it */
 {const _ch=choose;choose=function(opts,secs,o){return _ch(opts,secs,o).then(async i=>{const op=opts&&opts[i];if(op&&op.x&&typeof theo!=='undefined'&&theo&&theo.g.visible&&hasFeel(theo,op.x)){feel(theo,op.x,120);await wait(700);setTimeout(()=>feel(theo,null,300),2200);}return i;});};}
